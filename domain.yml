@@ -1,0 +1,397 @@
+version: '3.1'
+intents:
+- continue_info
+- deny
+- affirm
+- domain_details
+# - feeling_intent
+- get_item_all_locs
+- get_item_prices
+- get_more_info
+- get_specific_price
+- goodbye
+- greet
+- hello
+- inventory_details
+- inventory_loc_type1
+- inventory_loc_type2
+- nlu_fallback
+- order_details
+- price_details
+- question_intent
+- session_start_without_reloading
+- supplier_details
+- user_entered_numeric_values
+- user_query
+# - ask_howbuilt
+# - ask_howold
+# - ask_botname
+# - ask_whatspossible
+# - ask_time
+# - ask_weather
+- thanks
+- leave
+# - ask_whatismyname
+
+entities:
+- numeric_values
+- user_input_question
+- user_input
+- item_loc
+- loc_type
+- inv_loc
+- supplier_nlu
+- alpha_values
+
+forms:
+  supplier_form:
+    required_slots:
+    - numeric_values
+
+slots:
+  item:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: numeric_values
+  numeric_values:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: numeric_values
+  alpha_values:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: alpha_values
+  item_prev:
+    type: text
+    mappings:
+    - type: custom
+  item_value_prev:
+    type: text
+    mappings:
+    - type: custom
+  loc:
+    type: text
+    mappings:
+    - type: custom
+  item_value:
+    type: text
+    mappings:
+    - type: custom
+  item_loc:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  supplier_value:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  order_value:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  inventory_value:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  supplier_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  inventory_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  inv_loc:
+    type: text
+    mappings:
+    - type: custom
+  inv_locType:
+    type: text
+    mappings:
+    - type: custom
+  order_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  uc2_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  uc3_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  user_input_question:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: user_input_question
+  user_input_question_true:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  res_domain:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  user_input:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  getting_intent_name:
+    type: text
+    mappings:
+    - type: custom
+  supplier_with_number:
+    type: text
+    mappings:
+    - type: custom
+  order_with_number:
+    type: text
+    mappings:
+    - type: custom
+
+responses:
+  utter_greet:
+  - text: |-
+      Hey! How are you? I am here to assist you with your queries related to the retail domain. Feel free to ask me anything.
+      I can specifically help you with the below details. 
+    buttons:
+    - title: price details
+      payload: /price_details
+      type: postBack
+    - title: supplier details
+      payload: /supplier_details
+      type: postBack
+    - title: inventory details
+      payload: /inventory_details
+      type: postBack
+    - title: order details
+      payload: /order_details
+      type: postBack
+  utter_price_details:
+  - text: Let me know which option, you'd like to explore.
+    buttons:
+    - title: price details
+      payload: /price_details
+      type: postBack
+    - title: supplier details
+      payload: /supplier_details
+      type: postBack
+    - title: inventory details
+      payload: /inventory_details
+      type: postBack
+    - title: order details
+      payload: /order_details
+      type: postBack
+  utter_item_details:
+  - text: Please select an option to know about the item.
+    buttons:
+    - title: price details
+      payload: /price_details
+      type: postBack
+  utter_use_cases:
+  - text: |-
+      Select Get item prices - to retrieve prices for all items at all locations.
+      Select Get specific price - to retrieve the price of a specific item at a specific location.
+      Get price at all locs - to retrieve prices for a specific item at all available locations.
+      Please select a use case:
+    buttons:
+    - title: Get Item Prices
+      payload: /get_item_prices
+      type: postBack
+    - title: Get Specific Price
+      payload: /get_specific_price
+      type: postBack
+    - title: Get Price at All Location
+      payload: /get_item_all_locs
+      type: postBack
+  utter_item_buttons_repeat:
+  - text: |-
+      Get item prices - to retrieve prices for all items at all locations.
+      Get specific price - to retrieve the price of a specific item at a specific location.
+      Get price at all locs - to retrieve prices for a specific item at all available locations.
+      Please select a use case:
+    buttons:
+    - title: Get Item Prices
+      payload: /get_item_prices
+      type: postBack
+    - title: Get Specific Price
+      payload: /get_specific_price
+      type: postBack
+    - title: Get Price at All Location
+      payload: /get_item_all_locs
+      type: postBack
+    - title: Go to main menu
+      payload: /hello
+      type: postBack
+  utter_redisplay_buttons_nonretail:
+  - text: 'Please select:'
+    buttons:
+    - title: price details
+      payload: /price_details
+      type: postBack
+    - title: supplier details
+      payload: /supplier_details
+      type: postBack
+    - title: inventory details
+      payload: /inventory_details
+      type: postBack
+    - title: order details
+      payload: /order_details
+      type: postBack
+    - title: Get more information
+      payload: /get_more_info
+      type: postBack
+  utter_continue:
+  - text: Do you want to continue?
+    buttons:
+    - title: repeat the same scenario
+      payload: /continue_info
+      type: postBack
+    - title: Exit to the main menu
+      payload: /deny
+      type: postBack
+  utter_session_started:
+  - text: Welcome to Logic Retail Bot. Please feel free to ask queries related to the below usecases. I am here to assist you.
+  utter_item_number:
+  - text: enter item number
+  utter_loc:
+  - text: enter location number
+  utter_item_loc:
+  - text: enter item number for price details
+  utter_order_number:
+  - text: enter the order number
+  utter_supplier_number:
+  - text: enter the supplier number
+  utter_loc_for_inventory:
+  - text: enter the location number
+  utter_locType_for_inventory:
+  - text: Sure! Is it a store or a warehouse?
+    buttons:
+    - title: Store
+      payload: /inventory_loc_type1
+      type: postBack
+    - title: Warehouse
+      payload: /inventory_loc_type2
+      type: postBack
+  utter_exit_message:
+  - text: Thank you. We appreciate your time and look forward to assisting you again in the future. Feel free to connect anytime. Have a great day.
+  utter_welcome_back:
+  - text: Hello, It's my pleasue to assist you again. How can I help you?
+  utter_action_unlikely_intent:
+  - text: I apologize, but it looks like the information that you are trying to get is not retail specific. You can ask me anything related the domain, I will do my best to help you in any way that I can.
+  utter_name:
+  - text: I don't have access to personal information about users, and I cannot determine your identity. I am designed to respect user privacy and confidentiality. I am here to assist you with your queries related to the retail domain to the best of my knowledge and abilities. If you have any specific questions or need assistance with a particular topic, feel free to ask, and I will do my best to help.
+  utter_how_are_you:
+  - text: Hey there! I'm just a bunch of ones and zeros, but I'm here to assist you with your queries related to retail domain. How can I assist you today?😊
+  utter_who_r_u:
+  - text: I'm RetailBot 🤖 I wasn't created with nuts and bolts, but with lines of code.  I'm developed using Rasa AI technology. I'm here to help you with all your questions. What's on your mind today?
+  utter_ask_howold:
+  - text: I'm just a computer program, so I don't have an age or a birthdate. I exist purely in the digital realm to provide information and answer your questions. Is there something specific you'd like to know?
+  utter_ask_botname:
+  - text: I'm RetailBot 🤖. How can I assist you today?
+  utter_ask_whatspossible:
+  - text: I'm here to provide information, answer questions, and assist you with your queries related to the retail domain.
+  utter_default_msg:
+  - text: Sorry, I didn't get that 🤷. Could you please rephrase?
+  - text: I didn't understand, could you rephrase that?
+  - text: I'm sorry, but I didn't understand you. Could you please rephrase what you just said?
+  - text: I'm sorry I didn't get what you just said. Could you rephrase that?
+  - text: I didn't quite get that, could you rephrase your message?
+  - text: Could you rephrase your message? I didn't get it, I'm sorry.
+  utter_deny_nohelp:
+  - text: Not a problem! If you ever change your mind or have more questions in the future, don't hesitate to return. I'm here to assist you whenever you need it.
+  utter_ask_weather:
+  - text: I'm unable to provide real-time weather information or specific forecasts. Please remember to check the forecast to be prepared for the day's weather.I can assist you with your queries related to the retail domain.
+  utter_ask_time:
+  - text: I'm sorry for any misunderstanding, but I do not have the capability to access real-time information.I can assist you with your queries related to the retail domain.
+  utter_anything_else:
+  - text: Is there anything else I can help you with?
+  utter_thumbsup:
+  - text: 👍
+  - text: Thank You 👍
+  utter_thanks:
+  - text: You're welcome! If you have any more questions or if there's anything else I can help you with, feel free to ask.
+  utter_user_number_input:
+  - text: I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+actions:
+- Action_Welcome_Message
+- action_test_fallback
+- check_value_in_intent
+- action_supplier_details
+- action_check_slot
+- utter_item_details
+- utter_loc_for_inventory
+- action_inventory_details_for_store
+- action_inventory_details_for_wh
+- utter_continue
+- utter_locType_for_inventory
+- action_prevData_for_other_usecases
+- action_inventory_store_loc
+- utter_redisplay_buttons_nonretail
+- action_all_item_prices
+- action_getPrice_at_All_Location
+- action_utter_display_prev_item_uc3
+- custom_action_for_loc
+- custom_action
+- action_get_pricedetail
+- action_utter_display_prev_item
+- action_default_fallback
+- action_toBard_with_previous_value
+- action_redisplay_buttons
+- action_order_details
+- action_download_file
+- action_prevData_for_inv
+- action_prevData_for_supplier
+- action_prevData_for_order
+- utter_action_unlikely_intent
+- utter_name
+- utter_supplier_number
+- action_handle_numeric_values
+- utter_how_are_you
+- utter_who_r_u
+- action_supplier_with_number_details
+- action_order_with_number_details
+- utter_ask_numeric_values
+- utter_ask_howold
+- utter_ask_botname
+- utter_ask_whatspossible
+- utter_default_msg
+- utter_ask_time
+- utter_ask_weather
+- ValidatePredefinedSlots
+- utter_deny_nohelp
+- utter_anything_else
+- utter_thumbsup
+- utter_user_number_input
+- Action_new_features
+- Action_new_features2
+- Action_new_features3
+- Action_new_features4
+- Action_new_features5
+- action_synonym_from_bard
+

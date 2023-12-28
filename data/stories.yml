@@ -1,0 +1,537 @@
+version: "3.1"
+stories:
+- story: session_new
+  steps:
+  - intent: hello
+  - action: utter_session_started
+  - action: utter_price_details
+
+- story: affrim story
+  steps:
+  - intent: affirm
+  - action: utter_thumbsup
+  - action: utter_anything_else
+  - action: utter_price_details
+
+- story: always_greet
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: user_query
+  - action: utter_price_details
+
+- story: story_start
+  steps:
+  - intent: user_query
+  - action: utter_price_details
+  - intent: price_details
+  - action: utter_use_cases
+
+- story: item details
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: user_query
+  - action: utter_price_details
+  - intent: price_details
+  - action: utter_use_cases
+  - intent: get_item_prices
+  - action: action_all_item_prices
+  - action: utter_continue
+
+- story: item details uc1 continue
+  steps:
+  - action: action_all_item_prices
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_buttons_repeat
+
+- story: item details uc1 exit
+  steps:
+  - action: action_all_item_prices
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+- story: interactive_story_uc2
+  steps:
+  - action: utter_use_cases
+  - intent: get_specific_price
+  - action: action_utter_display_prev_item
+  - action: utter_item_number
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '100140000'
+  - slot_was_set:
+    - item: '100140000'
+  - action: custom_action
+  - slot_was_set:
+    - item: '100140000'
+  - slot_was_set:
+    - item_value: '100140000'
+  - action: utter_loc
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '246001'
+  - slot_was_set:
+    - item: '246001'
+  - action: custom_action_for_loc
+  - slot_was_set:
+    - loc: '246001'
+  - slot_was_set:
+    - item: '100140000'
+  - action: action_get_pricedetail
+  - slot_was_set:
+    - item: null
+  - slot_was_set:
+    - loc: null
+  - slot_was_set:
+    - item_prev: '100140000'
+  - slot_was_set:
+    - item_value_prev: '246001'
+  - slot_was_set:
+    - uc2_output: null
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_buttons_repeat
+
+#repeat part is written separatey for strong recognition
+- story: item details uc2 continue
+  steps:
+  - action: action_get_pricedetail
+  - slot_was_set:
+    - item: null
+  - slot_was_set:
+    - loc: null
+  - slot_was_set:
+    - item_prev: '100140000'
+  - slot_was_set:
+    - item_value_prev: '246001'
+  - slot_was_set:
+    - uc2_output: null
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_buttons_repeat
+
+- story: interactive_story_uc2_deny
+  steps:
+  - action: action_get_pricedetail
+  - slot_was_set:
+    - item: null
+  - slot_was_set:
+    - loc: null
+  - slot_was_set:
+    - item_prev: '100140000'
+  - slot_was_set:
+    - item_value_prev: '246001'
+  - slot_was_set:
+    - uc2_output: null
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+    #repeat the main menu
+
+- story: interactive_story_uc3
+  steps:
+  - action: utter_use_cases
+  - intent: get_item_all_locs
+  - action: action_utter_display_prev_item_uc3
+  - action: utter_item_loc
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '100140000'
+  - slot_was_set:
+    - item: '100140000'
+  - action: action_getPrice_at_All_Location
+  - slot_was_set:
+    - item_value: '100140000'
+  - slot_was_set:
+    - uc3_output: ""
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_buttons_repeat
+  
+- story: item details uc1 continue
+  steps:
+  - action: action_getPrice_at_All_Location
+  - slot_was_set:
+    - item_value: '100140000'
+  - slot_was_set:
+    - uc3_output: ""
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+- story: interactive_story_uc3_deny
+  steps:
+  - action: action_getPrice_at_All_Location
+  - slot_was_set:
+    - item_value: '100140000'
+  - slot_was_set:
+    - uc3_output: ""
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp 
+  - action: utter_price_details
+  #repeat the main menu steps
+
+#continue or exit part
+- story: continue - yes - inside the item details
+  steps:
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_buttons_repeat
+
+- story: continue - no - exit
+  steps:
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+
+- story: user entering any text to start the session again without reloading
+  steps:
+  - intent: session_start_without_reloading
+  - action: utter_welcome_back
+  - action: utter_price_details
+#-------------------------------------------------STAGE 1 - ITEM DETAILS USECASES BASIC FLOW COMPETED--------------------------------
+# both the stories are needed, for exceptional cases,. additionally, if the user enters a whole statement, the keyword has to get extracted
+# hence the new intetn. - it has much priority
+
+- story: out_of_scope_not_retail_specific_error
+  steps:
+  - intent: nlu_fallback
+  - action: action_test_fallback
+
+- story: out_of_scope_retail_specific
+  steps:
+  - intent: domain_details
+  - action: action_default_fallback
+
+- story: question_intent_flow
+  steps:
+  - intent: question_intent
+  - action: check_value_in_intent
+  - slot_was_set:
+    - user_input_question: " "
+  - action: action_check_slot
+
+# - story: display_buttons_based_on_slotSet_false
+#   steps:
+#   - action: action_check_slot
+#   - slot_was_set:
+#     - user_input_question: false
+#   - action: utter_price_details
+
+# - story: display_buttons_based_on_slotSet_true
+#   steps:
+#   - action: action_check_slot
+#   - slot_was_set:
+#     - user_input_question: false
+#   - action: utter_price_details
+#   - action: utter_redisplay_buttons_nonretail
+#redisplaying the buttons here using action_check_slot, which is called as a followup action.
+  
+#if the user does not want the usecases but want to get redirected to the bard
+- story: question_intent_flow
+  steps:
+  - action: utter_redisplay_buttons_nonretail
+  - intent: get_more_info
+  - action: action_toBard_with_previous_value
+  - action: utter_continue
+
+#displaying the previous value, is added as a self function iside their respective actions, instead of a separate action
+- story: order details
+  steps:
+  - action: utter_price_details
+  - intent: order_details
+  - action: action_prevData_for_order
+  - action: utter_order_number
+  - intent: user_entered_numeric_values
+  - slot_was_set:
+      - numeric_values: "120024"
+  - action: action_order_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_order_number
+
+- story: repeat order details - continue
+  steps:
+  - action: action_order_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_order_number
+  
+
+- story: repeat order details - exit
+  steps:
+  - action: action_order_details
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+  
+- story: get inventory location number
+  steps:
+  - action: utter_price_details
+  - intent: inventory_details
+  - action: action_prevData_for_inv
+  - action: utter_loc_for_inventory
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '53750'
+  - slot_was_set:
+    - numeric_values: '53750'
+  - action: action_inventory_store_loc
+  - slot_was_set:
+    - inv_loc: '53750'
+  - action: utter_locType_for_inventory
+
+- story: inventory story for store
+  steps:
+  - action: utter_locType_for_inventory
+  - intent: inventory_loc_type1
+  - action: action_inventory_details_for_store
+  - slot_was_set:
+    - inv_loc: '53750'
+  - slot_was_set:
+    - inv_locType:
+      - event: slot
+        timestamp: null
+        name: inv_locType
+        value: null
+  - slot_was_set:
+    - inventory_output: null
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_loc_for_inventory
+
+- story: inventory story for warehouse
+  steps:
+  - action: utter_locType_for_inventory
+  - intent: inventory_loc_type2
+  - action: action_inventory_details_for_wh
+  - slot_was_set:
+    - inv_loc: '53750'
+  - slot_was_set:
+    - inv_locType:
+      - event: slot
+        timestamp: null
+        name: inv_locType
+        value: null
+  - slot_was_set:
+    - inventory_output: null
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_loc_for_inventory
+
+- story: repeat inventory details for store - continue
+  steps:
+  - action: action_inventory_details_for_store
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_loc_for_inventory
+  - intent: user_entered_numeric_values
+
+- story: repeat inventory details for store - exit
+  steps:
+  - action: action_inventory_details_for_store
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+- story: repeat inventory details for wh - continue
+  steps:
+  - action: action_inventory_details_for_wh
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_loc_for_inventory
+  - intent: user_entered_numeric_values
+
+- story: repeat inventory details for wh - exit
+  steps:
+  - action: action_inventory_details_for_wh
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+- story: supplier details
+  steps:
+  - action: utter_price_details
+  - intent: supplier_details
+  # - action: action_prevData_for_supplier
+  - action: utter_supplier_number
+  # - action: utter_ask_supplier_form_numeric_values
+  - intent: user_entered_numeric_values
+  - slot_was_set:
+    - numeric_values: "5810725"
+  - action: action_supplier_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_supplier_number
+  # without the action here, it will pick someother utter or item buttons
+
+# - story: supplier details
+#   steps:
+#   - intent: supplier_details
+#   - action: supplier_form
+#   - active_loop: supplier_form
+#   - slot_was_set:
+#     - requested_slot: numeric_values
+#   - slot_was_set:
+#     - numeric_values: '5810725'
+#   - slot_was_set:
+#     - requested_slot: null
+#   - active_loop: null
+#   - action: action_supplier_details
+#   - action: utter_continue
+
+- story: repeat supplier details - continue
+  steps:
+  - action: action_supplier_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_supplier_number
+
+- story: repeat supplier details - exit
+  steps:
+  - action: action_supplier_details
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+#exit message when use renters thanks
+- story: exit message when user enters thanks
+  steps:
+  - intent: goodbye
+  - action: utter_exit_message
+  # - action: action_download_file
+  - action: utter_price_details
+
+# - story: mathematical_function
+#   steps:
+#   - intent: nlu_fallback_math_operations
+#   - action: action_handle_numeric_values
+#   - action: utter_price_details
+
+# - story: feeling_story
+#   steps:
+#   - intent: feeling_intent
+#   - action: utter_how_are_you
+#   - action: utter_price_details
+
+# - story: name_Story
+#   steps:
+#   - intent: ask_whatismyname
+#   - action: utter_name
+#   - action: utter_price_details
+
+- story: supplier detials and numeric value
+  steps:
+  - action: action_supplier_with_number_details
+  - action: utter_price_details
+
+- story: order detials and numeric value
+  steps:
+  - action: action_order_with_number_details
+  - action: utter_price_details
+
+# - story: ask_howbuilt_story
+#   steps:
+#   - intent: ask_howbuilt
+#   - action: utter_who_r_u
+#   - action: utter_price_details
+
+# - story: ask_howold_story
+#   steps:
+#   - intent: ask_howold
+#   - action: utter_ask_howold
+#   - action: utter_price_details
+
+# - story: ask_botname_story
+#   steps:
+#   - intent: ask_botname
+#   - action: utter_ask_botname
+#   - action: utter_price_details
+
+# - story: ask_whatspossible_story
+#   steps:
+#   - intent: ask_whatspossible
+#   - action: utter_ask_whatspossible
+#   - action: utter_price_details
+
+- story: reply_default_story
+  steps:
+  - action: utter_default_msg
+  - action: utter_price_details
+
+- story: ask_weather_story
+  steps:
+  - intent: ask_weather
+  - action: utter_ask_weather
+  - action: utter_price_details
+
+# - story: ask_time_story
+#   steps:
+#   - intent: ask_time
+#   - action: utter_ask_time
+#   - action: utter_price_details
+
+- story: thanks_story
+  steps:
+  - intent: thanks
+  - action: utter_thanks
+  - action: utter_price_details
+
+- story: user_input_with_number
+  steps:
+  - intent: user_entered_numeric_values
+  - action: utter_user_number_input
+  - action: utter_price_details
+
+- story: leave story
+  steps:
+  - intent: leave
+  - action: Action_new_features
+  - action: Action_new_features2
+  - action: Action_new_features3
+  - action: Action_new_features4
+  - action: Action_new_features5
+
+# - story:  number input story
+#   steps:
+#   - intent: user_entered_numeric_values
+#   - action: utter_action_unlikely_intent
+#   - action: utter_price_details
+
+# - story: synonyms story
+#   steps:
+#   - intent: synonyms
+#   - action: utter_enter_synonyms
+#   - intent: user_entered_alpha_values
+#   - slot_was_set:
+#     - alpha_values: "cloudnine"
+#   - action: action_toBard_for_synonyms
+
+
+# - story: leave story2
+#   steps:
+#   - action: utter_pdf
+#   - action: utter_askLeaveTypes
+#   - action: utter_pdf
+
+
+# - story: leave story3
+#   steps:
+#   - action: utter_cuisine
+#   - action: utter_askLeaveBalance
+#   - action: utter_cards_carousel
+#   - action: utter_price_details
+

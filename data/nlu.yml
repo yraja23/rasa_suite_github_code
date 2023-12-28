@@ -1,0 +1,444 @@
+version: "3.1"
+nlu:
+- intent: domain_details
+  examples: |
+    - zoning zone xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale
+    - wholesaler volume voucher tsf division group retail retailing retailer retailers Retail
+    - assortment source selller range collection product mix variety central fullfillment centre procurement concession concession consignment
+    - refill replenish replenishment distribution revenue turnover sales performance figures demand forecast replenishment ecommerce
+    - promotion campaigns register log book control sheet ledger journal 
+    - management movement transaction documentation transfer logbook reconciliation audit
+    - Merchandise redistribution reassignment Product deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
+    - consignment interchange  migration exchange realignment Delivery Dispatch Consignment metaverse  Cybersecurity Streamline QR RFID Augmented reality AR NFTs NFT Mashgin 
+    - Fulfillment Distribution Sending Transfer Logistics Consigning Freight Dispatchment
+    - Consignments Fulfilling Distributional out Haulage Conveyance Freightage run Conveying pick GenZ AI
+    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram shrinkage RFID  experience customer satisfaction click-and-collect
+    - Augmented Artificial Automation Omnichannel Integration promotional RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS 
+    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC
+  
+- intent: question_intent
+  examples: |
+    - who is [ott](user_input_question)
+    - what is [movie adhipurush bahubali](user_input_question)
+    - know about [weather climate atmosphere](user_input_question)
+    - info about [bts kpop members south korea series](user_input_question)
+    - definition of [animals birds books](user_input_question)
+    - can you define [fictional charcters tanjiro jeremy](user_input_question)
+    - can you help me with the topic [food](user_input_question)
+    - can you define [](user_input_question)
+    - can you tell about [movies kpop adipurush](user_input_question)
+    - do you know [nature religious spiritual](user_input_question)
+    - do you know about [kpop bts exo seven food bangtan](user_input_question)
+    - ok,then what is [songs](user_input_question)
+    - then, can you tell about [actors names kamal vijay anushka](user_input_question)
+    - anything about
+    - have you heard about [series movies actors flowers countries](user_input_question)
+    - define [warehouse zone replenish](user_input_question)
+    - explain [songs](user_input_question)
+    - about [climate](user_input_question)
+    - brief the [weather](user_input_question)
+    - [i want ]to know about the topic [songs](user_input_question)
+    - topic [songs](user_input_question)
+    - how is the [songs](user_input_question)
+    - [songs](user_input_question) explanation
+    - description of [songs](user_input_question)
+    - describe [songs](user_input_question)
+    - [songs](user_input_question) description
+    - [climate weather](user_input_question)
+    - [kpop](user_input_question)
+    - can you give me the recipe of
+    - definition of [warehouse](user_input_question)
+    - can you tell me about
+    - i want [](user_input_question)
+    - i want to know about the topic [songs](user_input_question)
+    - can you tell me about source
+    - what is [kpop](user_input_question)
+    - Can you give me the [](user_input_question)
+    - Can you tell me the [](user_input_question)
+    - Can you tell me [](user_input_question)
+    - Can you tell the [](user_input_question)
+    - Could you tell me the [](user_input_question)
+    - Could you tell me the [](user_input_question)
+    - Do you have the [](user_input_question)
+    - Do you know [](user_input_question)
+    - Do you know [](user_input_question)
+    - Could you tell me [](user_input_question)
+    - Give me [](user_input_question)
+    - I need [](user_input_question)
+    - Tell me [](user_input_question)
+    - What might [](user_input_question)
+    - How did they [](user_input_question)
+    - How did [](user_input_question)
+    - How exactly [](user_input_question)
+    - By what means [](user_input_question)
+    - Can you explain [](user_input_question) 
+    - Can you give me an idea [](user_input_question)
+    - Can you say [](user_input_question)
+    - how you [](user_input_question) 
+    - Do you know [](user_input_question)
+    - How were you [](user_input_question) 
+    - How exactly [](user_input_question)
+    - In what manner were you [](user_input_question)
+
+- intent: order_details
+  examples: |
+    - order 
+    - Purchase Order
+    - order 
+    - Order
+    - PO 
+    - po 
+    - Purchase order 
+
+- intent: supplier_details
+  examples: |
+    - suppliers 
+    - suppliers
+    - supplier 
+    - Supplier
+    - Supplier
+
+- intent: inventory_details
+  examples: |
+    - Inventory 
+    - inventory 
+    - Inventory 
+    - inventory 
+    - Inventory 
+
+- intent: price_details
+  examples: |
+    - Cost 
+    - price
+    - price
+    - Price
+    - item 
+    - item 
+
+- intent: greet
+  examples: |
+    - hey
+    - hai hi
+    - hello
+    - helllo
+    - hi
+    - hiii
+    - hii
+    - hiiii
+    - hey hey 
+    - good morning hi
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude hi
+    - goodevening
+    - good afternoon
+    - yo hi
+    - Hi HI hii
+
+# - intent: feeling_intent
+#   examples: |
+#     - feelings decisions purpose 
+#     - emotions
+#     - happiness
+#     - sadness sad crazy
+#     - capable eat eat eat eat eat eat eat 
+#     - angry eat 
+#     - hungry
+#     - best friend
+#     - boy friend
+#     - girl friend 
+#     - Human Human human human human human human
+#     - real person guess
+#     - bot chatbot bot
+#     - boy boy girl Girl
+#     - eat Lunch Dinner Breakfast Food 
+#     - lunch dinner breakfast food 
+#     - how are you 
+#     - How are you
+#     - How are you
+#     - How are you men?
+#     - How are you?
+#     - How are you? 
+#     - How was your day?
+#     - sentiment emotional bored lonely empathize love people empathy sympathy guess 
+#     - are you feel good have a great day what are you up to I'm fine guess
+#     - What's going on What's new What's up What's up man and you are you alright
+#     - are you happy are you having a good day  h r u hello, how are you are you are you u doing are you are things going are things with you are u
+#     - are u are you are you are you doing are you doing this morning are you doing are you doing are you doing are you feeling is it going is your day is your day going is your evening
+#     - r u hw r u is everything all right everything how are you doing are you what about your day what are you up to what's good what's up what's up bot what's up? whatsapp
+
+# - intent: ask_howbuilt
+#   examples: | 
+#     - were you made
+#     - you fashioned?
+#     - created created
+#     - constructed
+#     - how you were built?
+#     - how you were made build create you make you
+#     - you come into being you come to be devised were you made built conceived constructed devised formed made made materialized?
+#     - who are you built constructed were you formed created formed you made devised you were made exactly how you were created made
+
+- intent: goodbye
+  examples: |
+    - good bye
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - thanks
+    - thank you
+    - thanku
+    - no thanks welcome welcome
+    - welcome welcome welcome welcome welcome welcome
+    - welcome welcome welcome welcome welcome welcome welcome
+
+- intent: thanks
+  examples: |
+    - Thanks
+    - thanks
+    - Thank you
+    - Thank you 
+    - Thank you so much
+    - Thank's!
+    - Thanks
+    - Thanks
+    - Thanks
+    - Thanks!
+    - thanks
+    - thank you
+    - thanks
+    - thanks
+    - thanks
+    - thanks
+    - thanks
+    - thanks!
+    - thank you
+    - thank u
+    - thank you
+    - thank you 
+    - thanks
+    - thanks
+    - thanks
+    - thanks
+    - thanks
+    - thanks 
+    - thanks you
+    - thanks!
+    - thankyou
+    - thnks
+    - thx
+    - yes thanks
+    - thanks 
+    - thanks 
+
+- intent: hello
+  examples: |
+    - start menu
+    - first main
+    - main menu
+
+- intent: continue_info
+  examples: |
+    - yes
+    - yeah continue_info
+    - yes, want to... repeat
+    - yeah, wish to repeat continue_info
+    - continue repeat
+    - yup continue_info
+    - repeat continue_info
+    - continue_info
+    - /continue_info
+    - continue_info
+    - continue_info
+    - continue_info
+
+- intent: deny
+  examples: |
+    - no no Exit never don't Exit don't that no way not exit Exit /deny I don't I don't I don't I dont I'm not giving you I'm not going to it to you NO
+    - Nah Neither Never Never No Nopes Not really absolutely not decline definitely not deny i decline i don not this don't i don't
+    - no nah nah nah not for me neither never never no no no I dont no I haven't decided no no no no no way
+    - no no no no non noooooooooo noooooooooooooooooooooooooooooooooooooooo nop nope nope not really not not yet not dont want don't no stop stop
+
+# - intent: nlu_fallback_math_operations
+#   examples: |
+#     - 2+2
+#     - 5*5
+#     - 10/2
+#     - Add 3 and 4
+#     - Subtract 8 from 12
+#     - Multiply 6 by 7
+#     - Divide 15 by 3
+#     - 9 plus 6?
+#     - 20 minus 10
+#     - 4 times 3
+#     - 18 divided by 2
+#     - Calculate 7.5 + 2.5
+#     - square root of 25
+
+- intent: user_entered_numeric_values
+  examples: |
+    - item number: [100150000](numeric_values)
+    - the number [100140000](numeric_values)
+    - item no: [105](numeric_values)
+    - the number [246001](numeric_values)
+    - [100140000](numeric_values)
+    - [246001](numeric_values)
+    - [100035001](numeric_values)
+    - ord_no: [](numeric_values)
+    - orderno: [105027](numeric_values)
+    - orderno: [85027](numeric_values)
+    - number is : [5001](numeric_values)
+    - number is [120024](numeric_values)
+    - no is [5002](numeric_values)
+    - supno: [5810725](numeric_values)
+    - sups [9007](numeric_values)
+    - num is [9007](numeric_values)
+    - supno: [11179](numeric_values)
+    - number is [11179](numeric_values)
+    - sup_no [5810725](numeric_values)
+    - supp [9007](numeric_values)
+    - inv no: [53750](numeric_values)
+    - inv loc [44320](numeric_values)
+    - inv loc [84001](numeric_values)
+    - inv loc [60001](numeric_values)
+    - [9004](numeric_values) [9009](numeric_values)
+    - [9004](numeric_values) [9009](numeric_values)
+
+
+- intent: get_item_prices
+  examples: |
+    - [all item prices]
+    - item prices without location - item number
+    - [all price] details
+
+- intent: get_specific_price
+  examples: |
+    - cost of particular item
+    - price a item
+    - cost
+
+- intent: get_item_all_locs
+  examples: |
+    - price of products all location
+    - price of the mentioned product all location
+
+- intent: get_more_info
+  examples: |
+    - bard redirect
+    - bard
+    - chatgpt
+
+- intent: inventory_loc_type1
+  examples: |
+    - W(loc_type)
+    - w(loc_type)
+    - Warehouse warehouse
+    - warehouse
+
+- intent: inventory_loc_type2
+  examples: |
+    - S(loc_type)
+    - s(loc_type)
+    - Store
+    - stores Store
+
+- intent: user_query
+  examples: |
+    - about item price details
+    - price of an item
+    - item price 
+    - price
+    - product's price details
+    - price details of...
+
+- intent: session_start_without_reloading
+  examples: |
+    - sorry for [closing], the [details again?]
+    - need to get the [details again]
+    - go back
+    - restart
+    - undo
+    - repeat
+
+# - intent: ask_howold
+#   examples: |
+#     - age old
+#     - alive
+#     - birthday
+#     - alive? your age old are u how old are you
+#     - years lived old old old birthday old birthday day month year of birth age birthdate count of years age last birthday age birthday year born your age your age  
+
+# - intent: ask_whatismyname
+#   examples: |
+#     - my name
+#     - I am called
+#     - name name my name my name is name to me name my name my name Say my name my name my name how I am called my first name
+#     - my full name my name who I am who am I who I am who am I myself Okay who am I who am i me who I am me who I am me who am I
+#     - WHo am I Who am I Who could I be what I am? who I am? me my identity who am i who are I who may i 
+
+# - intent: ask_botname
+#   examples: |
+#     - your name
+#     - you called your name?
+#     - your name your name your name your name your name
+#     - I address you? your name
+#     - I call you? your name
+#     - your name?
+#     - your name your name
+#     - your name your name your name your name your name your name your name
+
+# - intent: ask_whatspossible
+#   examples: |
+#     - help
+#     - assist Assistance
+#     - skills
+#     - options
+#     - capabilities
+#     - Can you help me?umid out there today breezy outside raining raining Weather temperature today
+#     - weather how's weather  the waether hows the weather is it hot is it hot outside 
+#     - the sun out it is cold temperature the weather today weatger weather weather weather temperature
+#     - weather weather like  whether today wheather weather weather weather like
+#     - weather like weather like climate climate climate climate
+#     - weather today  weather today  temperature
+#     - weather like tomorrow wheather wheather climate climate climate
+
+# - intent: ask_time
+#   examples: |
+#     - time?
+#     - time?
+#     - time it is? time?
+#     - time, please?
+#     - time is it? time time time time.
+#     - Time Time?
+#     - current time?
+#     - exact time?
+#     - hour minute
+#     - time?
+#     - the time be?
+#     - What time do we have?
+#     - What time have we got?
+
+- intent: affirm
+  examples: |
+    - Accept
+    - Awesome!
+    - Good
+    - Great
+    - accept accept agree absolutely Nice OK Ofcourse Oh yes ok Ok Ok Okay Okay! SURE Sure YES Yeah Yeah sure
+    - Yep Yep Yep Yes Yes 
+    - accept accepted agreed alright alright cool amayzing amazing! awesome awesome confirm cool definitely done fair enough
+    - fcourse
+    - fine
+
+- intent: leave
+  examples: |
+    - leave
+    - LEave
+    - LEAVE
+    - LEAVE BALANCE
+    - leave leave leave
+

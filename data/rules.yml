@@ -1,0 +1,293 @@
+version: "3.1"
+rules:
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_exit_message
+  - action: utter_price_details
+
+
+- rule: affrim rule
+  steps:
+  - intent: affirm
+  - action: utter_thumbsup
+  - action: utter_anything_else
+  - action: utter_price_details
+
+# rule for all item's prices
+- rule: display item details button
+  steps:
+  - intent: price_details
+  - action: utter_use_cases
+
+- rule: pick the item intent and action
+  steps:
+  - intent: get_item_prices
+  - action: action_all_item_prices
+  - action: utter_continue
+
+- rule: pic right action for uc2_new
+  steps:
+  - action: action_utter_display_prev_item
+  - action: utter_item_number
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '100140000'
+  - slot_was_set:
+    - item: '100140000'
+  - action: custom_action
+  - slot_was_set:
+    - item: '100140000'
+  - slot_was_set:
+    - item_value: '100140000'
+  - action: utter_loc
+
+- rule: pic right action for uc3
+  steps:
+  - action: action_utter_display_prev_item_uc3
+  - action: utter_item_loc
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '100140000'
+  - slot_was_set:
+    - item: '100140000'
+  - action: action_getPrice_at_All_Location
+  - slot_was_set:
+    - item_value: '100140000'
+  - slot_was_set:
+    - uc3_output: ""
+  - action: utter_continue
+
+- rule: pic right action for uc2
+  steps:
+  - action: utter_locs
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '246001'
+  - slot_was_set:
+    - item: '246001'
+  - action: custom_action_for_loc
+  - slot_was_set:
+    - loc: '246001'
+  - slot_was_set:
+    - item: '100140000'
+  - action: action_get_pricedetail
+  - slot_was_set:
+    - item: null
+  - slot_was_set:
+    - loc: null
+  - slot_was_set:
+    - item_prev: '100140000'
+  - slot_was_set:
+    - item_value_prev: '246001'
+  - slot_was_set:
+    - uc2_output: null
+  - action: utter_continue
+#-------------------------------------------------STAGE 1 - ITEM DETAILS USECASES BASIC FLOW COMPETED--------------------------------
+#-------------------------------------------------STAGE 2 - ACCURACY-----------------------------------------------------------------
+- rule: If user selects get more information, go to bard
+  steps:
+  - intent: get_more_info
+  - action: action_toBard_with_previous_value
+  - action: utter_continue
+#-----------------------------------------------STAGE 3 - ADDING SUPPLIER, ORDER,INVENTORY DETAILS-----------------------------------
+- rule: If user selects order details, display the correct utter
+  steps:
+  - intent: order_details
+  - action: action_prevData_for_order
+  - action: utter_order_number
+
+- rule: If user selects inventory details, display the correct utter
+  steps:
+  - intent: inventory_details
+  - action: action_prevData_for_inv
+  #using the item utter here, as it just diaplays the text, and both are same
+  - action: utter_loc_for_inventory
+
+- rule: If user selects supplier details, display the correct utter
+  steps:
+  - intent: supplier_details
+  # - action: action_prevData_for_supplier
+  - action: utter_supplier_number
+
+- rule: repeat action for supplier
+  steps:
+  - action: utter_supplier_number
+  - intent: user_entered_numeric_values
+  - slot_was_set:
+    - numeric_values: "5810725"
+  - action: action_supplier_details
+  - action: utter_continue
+
+- rule: repeat action for order
+  steps:
+  - intent: order_details
+  - action: action_prevData_for_order
+  - action: utter_order_number
+
+- rule: If user selects order details, pick the right action
+  steps:
+    - action: utter_order_number
+    - intent: user_entered_numeric_values
+    - slot_was_set:
+        - numeric_values: "120024"
+    - action: action_order_details
+    - action: utter_continue
+  
+- rule: for specific item, to not get confused with the inventory utter action
+  steps:
+  - action: utter_item_loc
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '246001'
+  - slot_was_set:
+    - item: '246001'
+  - action: custom_action_for_loc
+  - slot_was_set:
+    - loc: '246001'
+  - slot_was_set:
+    - item: '100140000'
+
+- rule: repeat action for order
+  steps:
+  - intent: inventory_details
+  - action: action_prevData_for_inv
+  - action: utter_loc_for_inventory
+
+- rule: inventory for wh 
+  steps:
+  - action: utter_loc_for_inventory
+  - intent: user_entered_numeric_values
+    entities:
+    - numeric_values: '53750'
+  - slot_was_set:
+    - numeric_values: '53750'
+  - action: action_inventory_store_loc
+  - slot_was_set:
+    - inv_loc: '53750'
+  - action: utter_locType_for_inventory
+
+#pick the right repeat action for the three usecases
+
+
+- rule: out_of_scope_not_retail_specific_error_rule
+  steps:
+  - intent: nlu_fallback
+  - action: action_test_fallback
+
+- rule: out_of_scope_retail_specific_rule
+  steps:
+  - intent: domain_details
+  - action: action_default_fallback
+
+# - rule: mathematical_function_rule
+#   steps:
+#   - intent: nlu_fallback_math_operations
+#   - action: action_handle_numeric_values
+#   - action: utter_price_details
+
+# - rule: feeling_rule
+#   steps:
+#   - intent: feeling_intent
+#   - action: utter_how_are_you
+#   - action: utter_price_details
+
+# - rule: name_rules
+#   steps:
+#   - intent: ask_whatismyname
+#   - action: utter_name
+#   - action: utter_price_details
+
+- rule: supplier detials and numeric value
+  steps:
+  - action: action_supplier_with_number_details
+  - action: utter_price_details
+
+- rule: order detials and numeric value
+  steps:
+  - action: action_order_with_number_details
+  - action: utter_price_details
+
+- rule: repeat supplier details - continue
+  steps:
+  - action: action_supplier_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_supplier_number
+
+- rule: repeat supplier details - exit
+  steps:
+  - action: action_supplier_details
+  - action: utter_continue
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+- rule: story deny
+  steps:
+  - intent: deny
+  - action: utter_deny_nohelp
+  - action: utter_price_details
+
+# - rule: ask_howbuilt_rule
+#   steps:
+#   - intent: ask_howbuilt
+#   - action: utter_who_r_u
+#   - action: utter_price_details
+
+# - rule: ask_howold_rule
+#   steps:
+#   - intent: ask_howold
+#   - action: utter_ask_howold
+#   - action: utter_price_details
+
+# - rule: ask_botname_rule
+#   steps:
+#   - intent: ask_botname
+#   - action: utter_ask_botname
+#   - action: utter_price_details
+
+- rule: reply_default_rule
+  steps:
+  - action: utter_default_msg
+  - action: utter_price_details
+
+# - rule: ask_weather_rule
+#   steps:
+#   - intent: ask_weather
+#   - action: utter_ask_weather
+#   - action: utter_price_details
+
+- rule: thanks_rule
+  steps:
+  - intent: thanks
+  - action: utter_thanks
+  - action: utter_price_details
+
+- rule: leave story
+  steps:
+  - intent: leave
+  - action: Action_new_features
+  - action: Action_new_features2
+  - action: Action_new_features3
+  - action: Action_new_features4
+  - action: Action_new_features5
+  
+# - rule:  number input rule
+#   steps:
+#   - intent: user_entered_numeric_values
+#   - action: utter_action_unlikely_intent
+#   - action: utter_price_details
+
+# - rule: synonyms rule
+#   steps:
+#   - intent: synonyms
+#   - action: utter_enter_synonyms
+
+# - rule: synonyms rule2
+#   steps:
+#   - action: utter_enter_synonyms
+#   - intent: user_entered_alpha_values
+#   - slot_was_set:
+#     - alpha_values: "cloudnine"
+#   - action: action_toBard_for_synonyms
