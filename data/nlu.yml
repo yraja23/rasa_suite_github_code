@@ -1,3 +1,4 @@
+#nlu
 version: "3.1"
 nlu:
 - intent: domain_details
