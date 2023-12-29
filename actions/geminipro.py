@@ -116,6 +116,7 @@ import yaml
 import google.generativeai as genai
 import time
 import datetime
+from textblob import TextBlob
 
 class Geminipro:
   genai.configure(api_key="AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ")
@@ -224,9 +225,10 @@ class Geminipro:
 
   def send_message_and_get_response(self, user_input):
     try:
-      parsed_input = f"'{user_input}' extract one main keyword from the text given"
+      parsed_input = f"'{user_input}' - extract one main keyword from the text given"
       self.convo.send_message(parsed_input)
       model_response = self.convo.last.text
+      print(f"model_response - {model_response}")
       return model_response
     
     except Exception  as e:
@@ -241,6 +243,7 @@ class Geminipro:
 
       if start_index != -1 and end_index != -1:
           extracted_keyword = response[start_index + len(start_marker):end_index].strip()
+          print(f"extracted_keyword - {extracted_keyword}")
           return extracted_keyword
       else:
           return None
@@ -254,6 +257,7 @@ class Geminipro:
       if start_index != -1 and end_index != -1:
           synonyms_section = response[start_index + len(start_marker):end_index].strip()
           synonyms_list = synonyms_section.split("\n* ")
+          print(f"synonyms_list - {synonyms_list}")
           return synonyms_list
       else:
           return None
@@ -263,10 +267,17 @@ class Geminipro:
       gemini_instance.convo.send_message(user_input_synonyms)
       model_response_synonyms = gemini_instance.convo.last.text
       extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
+      print(f"extracted_synonyms - {extracted_synonyms}")
       return extracted_synonyms
   
 
-  
+  def extract_nouns(self,sentence):
+      # Create a TextBlob object
+      blob = TextBlob(sentence)
+      # Extract nouns using the pos_tags property
+      nouns = [word for word, pos in blob.tags if pos.startswith('N')]
+      return nouns
+
 
 gemini_instance = Geminipro()
 

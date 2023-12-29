@@ -871,7 +871,7 @@ class allFunc:
 
     def checking_other_intents(self, keyword):
         # Specify the path to the NLU training data YAML file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\sradhakrishnan\proj-venvs\trial_env1\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
 
         # Load the NLU training data from the YAML file
@@ -1024,7 +1024,7 @@ class allFunc:
     def check_for_synonym_keywords(self, word_list):
 
         supplier_keywords = ['Supplier']
-        order_keyword = ['order','Purchase order','PO' ,'purchase order','Order']
+        order_keyword = ['order','PO','Order']
         inventory_keywords = ['Inventory','inventory']
         pricing_keywords = [ 'Price', 'Prices']
 
@@ -1058,10 +1058,30 @@ class allFunc:
             for word in found_keywords:
                 print(word)
                 return word
-        else:
-            print("No relevant words found.")
-            return [None]
 
+        else:
+            cleaned_words = self.remove_punctuation(word_list)
+            print(f"cleaned_words-{cleaned_words}") #invoice tracking
+            #if the words has more than two syllable, split and check for the intent
+            for words in cleaned_words:
+                words_array = words.split()
+
+                for word in words_array:
+                    if word  in supplier_keywords_lower:
+                        found_keywords.append(word)
+                    elif word  in order_keyword_lower:
+                        found_keywords.append(word)
+                    elif word  in inventory_keywords_lower:
+                        found_keywords.append(word)
+                    elif word  in pricing_keywords_lower:
+                        found_keywords.append(word)
+
+                if found_keywords:
+                    print("Words found:")
+                    for word in found_keywords:
+                        print(word)
+                        return word
+            return [None]
 
 #-------------------------------------------------------
     def correct_spelling(self,sentence):

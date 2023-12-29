@@ -596,6 +596,8 @@ class CheckKeywordAction(Action):
                     print(f"false false {intent_name}")
                     print(f"printing res_domain {res_domain}")
                     print(f"printing result_after_matching {result_after_matching}")
+
+    # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
                     gemini_instance = Geminipro()
                     print("after gemini call")
                     response = gemini_instance.send_message_and_get_response(user_entered_value1) 
@@ -606,6 +608,18 @@ class CheckKeywordAction(Action):
                     print("found synonym:", find_synonyms)
                     object=allFunc()
                     result= object.check_for_synonym_keywords(find_synonyms)
+   
+                    response1= gemini_instance.extract_nouns(user_entered_value1)
+                    print("Model's response - 2:", response1) 
+                    extract_keyword1 = gemini_instance.extract_keyword(response1)
+                    print("Extracted Keyword -2 :", extract_keyword1)
+                    find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
+                    print("found synonym - 2:", find_synonyms1)
+                    object=allFunc()
+                    result1= object.check_for_synonym_keywords(find_synonyms1)
+                    print(f"second result-{result1}")
+
+# --------------------------------------FINAL RESULT---------------------------------------------------
                     print(f"result {result}")
                     if result in ['Supplier','supplier'] :
                         print(f"inside supplier {result}")
@@ -636,7 +650,7 @@ class CheckKeywordAction(Action):
           
     def load_nlu_data(self):
         # Load the NLU training data from the nlu.yml file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\sradhakrishnan\proj-venvs\trial_env1\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
@@ -736,7 +750,7 @@ class ActionGoToBardMoreInfo(Action):
         
     def load_nlu_data(self):
         # Load the NLU training data from the nlu.yml file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\sradhakrishnan\proj-venvs\trial_env1\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
