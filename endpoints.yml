@@ -42,12 +42,12 @@ action_endpoint:
 #    db: 0
 #    password: RHFgwK2pQ2ibFUqw8zrQBHRzK29lQtDw
 
-tracker_store:
-   type: redis
-   url: redis-12893.c44.us-east-1-2.ec2.cloud.redislabs.com
-   port: 12893
-   db: 0
-   password: YdFUFg5DcDzghuTqDV1cwRZPDMRTMGWZ
+# tracker_store:
+#    type: redis
+#    url: redis-12893.c44.us-east-1-2.ec2.cloud.redislabs.com
+#    port: 12893
+#    db: 0
+#    password: YdFUFg5DcDzghuTqDV1cwRZPDMRTMGWZ
 
 #tracker_store:
 #    type: mongod

@@ -27,6 +27,13 @@ stories:
   - intent: price_details
   - action: utter_use_cases
 
+- story: user enters a number without mentioning the usecase
+  steps:
+  - action: utter_price_details
+  - intent: user_entered_numeric_values
+  - action: utter_default_msg
+  - action: utter_price_details
+
 - story: item details
   steps:
   - intent: greet
@@ -421,17 +428,17 @@ stories:
 #   - action: action_handle_numeric_values
 #   - action: utter_price_details
 
-# - story: feeling_story
-#   steps:
-#   - intent: feeling_intent
-#   - action: utter_how_are_you
-#   - action: utter_price_details
+- story: feeling_story
+  steps:
+  - intent: feeling_intent
+  - action: utter_how_are_you
+  - action: utter_price_details
 
-# - story: name_Story
-#   steps:
-#   - intent: ask_whatismyname
-#   - action: utter_name
-#   - action: utter_price_details
+- story: name_Story
+  steps:
+  - intent: ask_whatismyname
+  - action: utter_name
+  - action: utter_price_details
 
 - story: supplier detials and numeric value
   steps:
@@ -443,29 +450,29 @@ stories:
   - action: action_order_with_number_details
   - action: utter_price_details
 
-# - story: ask_howbuilt_story
-#   steps:
-#   - intent: ask_howbuilt
-#   - action: utter_who_r_u
-#   - action: utter_price_details
+- story: ask_howbuilt_story
+  steps:
+  - intent: ask_howbuilt
+  - action: utter_who_r_u
+  - action: utter_price_details
 
-# - story: ask_howold_story
-#   steps:
-#   - intent: ask_howold
-#   - action: utter_ask_howold
-#   - action: utter_price_details
+- story: ask_howold_story
+  steps:
+  - intent: ask_howold
+  - action: utter_ask_howold
+  - action: utter_price_details
 
-# - story: ask_botname_story
-#   steps:
-#   - intent: ask_botname
-#   - action: utter_ask_botname
-#   - action: utter_price_details
+- story: ask_botname_story
+  steps:
+  - intent: ask_botname
+  - action: utter_ask_botname
+  - action: utter_price_details
 
-# - story: ask_whatspossible_story
-#   steps:
-#   - intent: ask_whatspossible
-#   - action: utter_ask_whatspossible
-#   - action: utter_price_details
+- story: ask_whatspossible_story
+  steps:
+  - intent: ask_whatspossible
+  - action: utter_ask_whatspossible
+  - action: utter_price_details
 
 - story: reply_default_story
   steps:
@@ -478,11 +485,11 @@ stories:
   - action: utter_ask_weather
   - action: utter_price_details
 
-# - story: ask_time_story
-#   steps:
-#   - intent: ask_time
-#   - action: utter_ask_time
-#   - action: utter_price_details
+- story: ask_time_story
+  steps:
+  - intent: ask_time
+  - action: utter_ask_time
+  - action: utter_price_details
 
 - story: thanks_story
   steps:
@@ -504,12 +511,6 @@ stories:
   - action: Action_new_features3
   - action: Action_new_features4
   - action: Action_new_features5
-
-# - story:  number input story
-#   steps:
-#   - intent: user_entered_numeric_values
-#   - action: utter_action_unlikely_intent
-#   - action: utter_price_details
 
 # - story: synonyms story
 #   steps:

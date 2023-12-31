@@ -1,0 +1,22 @@
+[
+('track', ['Monitor', 'Trace', 'Follow', 'Monitor', 'Trail', 'Pursue', 'Check', 'Examine', 'Inspect', 'Observe', 'Survey', 'Scrutinize', 'Keep tabs on', 'Keep an eye on', 'Keep abreast of', 'Stay informed about', 'Be aware of', 'Take note of', 'Chart', 'Plot', 'Graph', 
+'Map', 'Diagram', 'Outline', 'Sketch', 'Delineate', 'Track inventory: To monitor the quantity and location of inventory items.', 'Track sales: To monitor the number of items sold and the amount of revenue generated.', 'Track customer behavior: To monitor customer shopping habits, such as the products they view, the pages they visit, and the items they purchase.', 'Track marketing campaigns: To monitor the performance of marketing campaigns, such as the number of impressions, clicks, and conversions.', 'Track competitors: To monitor the activities of competitors, such as their pricing, promotions, and product offerings.', 'Track trends: To monitor changes in consumer behavior, fashion trends, and economic conditions.']), 
+('item', ['Product', 'Merchandise', 'Good', 'Commodity', 'Article', 'Unit', 'Piece', 'Thing', 'Object', 'Widget', 'Gizmo', 'Doohickey', 'Whatchamacallit', 'Thingamajig', 'Stock keeping unit (SKU): A unique identifier for a specific product.', 'Universal product code (UPC): A barcode that is used to identify a specific product.', 'Product listing: A description of a product that is displayed on a website or in a catalog.', 'Product page: A webpage that provides detailed information about a specific product.', 'Shopping cart: A temporary place to store items that a customer intends to purchase.', 'Checkout: The process of paying for items that a customer has selected.', 'Receipt: A document that provides proof of purchase.']), 
+('status', ['Condition', 'State', 'Position', 'Situation', 'Circumstances', 'Standing', 'Rank', 'Grade', 'Level', 'Class', 'Category', 'Order', 'Degree', 'Extent', 'Measure', 'Amount', 'Quantity', 'Value', 'Worth', 'Importance', 'Significance', 'Repute', 'Prestige', 'Renown', 'Fame', 'Notoriety', 'Stock status: The availability of a product in inventory.', 'Order status: The current stage of an order, such as "processing," "shipped," or "delivered."', "Customer status: The level of a customer's loyalty or engagement with a retailer.", 'VIP status: A special status that is given to high-value customers.', 'Employee status: The employment status of an individual, such as "full-time," "part-time," or "temporary."', 'Store status: The current state of a store, such as "open," "closed," or "under renovation."'])]
+
+
+# - if there are two ntents with same synonym, ispky buttons.
+#      handle the aboe usecase for the synonym fnction also .
+#      for ex: item keyword - belong to usecasestatus keyword - belong to usecase. - diaplay buttons.__builtins__
+
+
+# new usecase:
+# - if the user gives statement with the number itself, pick the number also and give details
+
+# for pricing - add costing in the actions if need
+  
+
+
+to test - added item in domain and price intent
+removed help from whatspossible intent
+check if we get true in two intent and display buttons

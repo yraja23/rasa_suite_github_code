@@ -4,7 +4,7 @@ intents:
 - deny
 - affirm
 - domain_details
-# - feeling_intent
+- feeling_intent
 - get_item_all_locs
 - get_item_prices
 - get_more_info
@@ -15,6 +15,7 @@ intents:
 - inventory_details
 - inventory_loc_type1
 - inventory_loc_type2
+- ask_whatismyname
 - nlu_fallback
 - order_details
 - price_details
@@ -23,15 +24,16 @@ intents:
 - supplier_details
 - user_entered_numeric_values
 - user_query
-# - ask_howbuilt
-# - ask_howold
-# - ask_botname
-# - ask_whatspossible
-# - ask_time
-# - ask_weather
+- ask_howbuilt
+- ask_howold
+- ask_botname
+- ask_whatspossible
+- ask_time
+- ask_weather
 - thanks
 - leave
-# - ask_whatismyname
+- synonyms
+- user_entered_alpha_values
 
 entities:
 - numeric_values
@@ -334,6 +336,8 @@ responses:
   - text: You're welcome! If you have any more questions or if there's anything else I can help you with, feel free to ask.
   utter_user_number_input:
   - text: I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.
+  utter_enter_synonyms:
+  - text: please enter a word to fetch synonyms
 
 session_config:
   session_expiration_time: 60
@@ -394,4 +398,5 @@ actions:
 - Action_new_features4
 - Action_new_features5
 - action_synonym_from_bard
+- utter_enter_synonyms
 

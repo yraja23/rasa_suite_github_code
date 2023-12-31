@@ -883,7 +883,9 @@ class allFunc:
         other_intents = ["domain_details","get_item_all_locs","get_item_prices","ask_botname","ask_howold","ask_howbuilt","ask_time","ask_weather",
                             "get_specific_price","goodbye","question_intent","nlu_fallback_math_operations","affirm",
                             "session_start_without_reloading","user_query","get_more_info",
-                            "user_entered_numeric_values","inventory_loc", "get_inv_loc"]
+                            "user_entered_numeric_values","inventory_loc", "get_inv_loc",
+                            "ask_whatismyname","synonyms","greet","feeling_intent","thanks","hello","continue_info","deny","user_entered_alpha_values",
+                            "inventory_loc_type1","inventory_loc_type2","ask_whatismyname","ask_whatspossible","leave"]
         res=[]
         # intent1=[]
         # stemmer = PorterStemmer()  # Initialize the stemmer
@@ -1065,7 +1067,6 @@ class allFunc:
             #if the words has more than two syllable, split and check for the intent
             for words in cleaned_words:
                 words_array = words.split()
-
                 for word in words_array:
                     if word  in supplier_keywords_lower:
                         found_keywords.append(word)
@@ -1075,13 +1076,85 @@ class allFunc:
                         found_keywords.append(word)
                     elif word  in pricing_keywords_lower:
                         found_keywords.append(word)
-
                 if found_keywords:
                     print("Words found:")
                     for word in found_keywords:
                         print(word)
                         return word
             return [None]
+    
+    def check_for_textBlob_synonyms(self, word_list):
+        print("check_for_textBlob_synonyms call")
+        supplier_keywords = ['Supplier']
+        order_keyword = ['order','PO','Order']
+        inventory_keywords = ['Inventory','inventory']
+        pricing_keywords = [ 'Price', 'Prices','pricing']
+
+        supplier_keywords_lower = [word.lower() for word in supplier_keywords]
+        order_keyword_lower = [word.lower() for word in order_keyword]
+        inventory_keywords_lower = [word.lower() for word in inventory_keywords]
+        pricing_keywords_lower = [word.lower() for word in pricing_keywords]
+
+        found_keywords = []
+        print(f"word list  {word_list}")
+        
+        #we will receive a number of tuples inside a list, make it as one list for easy access in the actions.
+        # word_list has the list of tuples for each of the word extracted as key and their synonyms in a list as the value.
+        # example - [('track',[]),('item',[]),('status',[])]
+        # check the synonyms from each one of the list inside, in all the below 4 usecases -
+        # if any of the synonym matches - for ex : if item matches - then return that key and value alone to the StopAsyncIteration
+        # in the action - process the steps with the key value and matching the intents
+        found_keywords_data=[]
+        for key, synonym_list in word_list:
+            found_keywords = []
+            # we need to pass only the list - not the whole tple with key and value - so loop through
+            cleaned_words = self.remove_punctuation(synonym_list)
+            print(f"cleaned_words --txt {cleaned_words}")
+            for word in cleaned_words:
+                if word in supplier_keywords_lower:
+                    found_keywords.append(word)
+                    print("inside supplier check")
+                elif word in order_keyword_lower:
+                    found_keywords.append(word)
+                    print("inside order check")
+                elif word in inventory_keywords_lower:
+                    found_keywords.append(word)
+                    print("inside inv check")
+                elif word in pricing_keywords_lower:
+                    found_keywords.append(word)
+                    print("inside pricing check")
+
+            if found_keywords:
+                found_keywords_data.append((key, found_keywords))
+                print("text blob - if")
+            # Print or use found_keywords_data as needed
+                return found_keywords_data
+            else:
+                cleaned_words = self.remove_punctuation(synonym_list)
+                print("cleaned words - inside textxblob funcion - else")
+                #if the words has more than two syllable, split and check for the intent
+                for words in cleaned_words:
+                    words_array = words.split()
+                    if word in supplier_keywords_lower:
+                        found_keywords.append(word)
+                        print("inside supplier check1")
+                    elif word in order_keyword_lower:
+                        found_keywords.append(word)
+                        print("inside order check1")
+                    elif word in inventory_keywords_lower:
+                        found_keywords.append(word)
+                        print("inside inv check1")
+                    elif word in pricing_keywords_lower:
+                        found_keywords.append(word)
+                        print("inside pricing check1")
+                if found_keywords:
+                    found_keywords_data.append((key, found_keywords))
+                    print("text blob - else")
+                # Print or use found_keywords_data as needed
+                    return found_keywords_data
+                return [None]
+
+
 
 #-------------------------------------------------------
     def correct_spelling(self,sentence):

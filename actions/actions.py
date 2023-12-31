@@ -20,7 +20,7 @@ from .trydb import jsonConversion, allFunc
 import json
 from typing import Text, Any, Dict
 from nltk.corpus import wordnet
-from .geminipro import Geminipro
+from .geminipro import Geminipro, textBlobSynonyms
 # from rasa.shared.nlu.training_data.readers.markdown_reader import MarkdownReader
 # # from bardapi import bard
 # # import bardapi.core
@@ -526,7 +526,7 @@ class CheckKeywordAction(Action):
                         # IF EEN ONE TRUE EXISTS IN THE ARRAY, SETTING THE VALUE TO TRUE
                         # IF NO TRUE EXISTS IN THE ARRAY, SETTING THE VAL TO FALSE
                         print(f"result_after_matching list {result_after_matching_list}")  # True/False
-                        # HIS FOR LOOP CHECKS AND STORES THE OUTPUT IF THE VALUES PRESENT IN OTHER INTENTS
+                        #  THIS FOR LOOP CHECKS AND STORES THE OUTPUT IF THE VALUES PRESENT IN OTHER INTENTS
 
                         if not result_after_matching_list and not res_domain_list:
                             print("all the words are removed from the user message")
@@ -606,42 +606,55 @@ class CheckKeywordAction(Action):
                     print("Extracted Keyword:", extract_keyword)
                     find_synonyms = gemini_instance.find_synonyms(extract_keyword)
                     print("found synonym:", find_synonyms)
+                    
                     object=allFunc()
                     result= object.check_for_synonym_keywords(find_synonyms)
-   
-                    response1= gemini_instance.extract_nouns(user_entered_value1)
+                    print(f"res1 {result}")
+
+                    textBlob=textBlobSynonyms()
+                    response1= textBlob.extract_nouns(user_entered_value1)
                     print("Model's response - 2:", response1) 
-                    extract_keyword1 = gemini_instance.extract_keyword(response1)
-                    print("Extracted Keyword -2 :", extract_keyword1)
-                    find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
+                    find_synonyms1 = textBlob.find_synonyms1(response1)
                     print("found synonym - 2:", find_synonyms1)
                     object=allFunc()
-                    result1= object.check_for_synonym_keywords(find_synonyms1)
-                    print(f"second result-{result1}")
-
-# --------------------------------------FINAL RESULT---------------------------------------------------
-                    print(f"result {result}")
-                    if result in ['Supplier','supplier'] :
-                        print(f"inside supplier {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  #, FollowupAction("action_check_slot")
-                    elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
-                        print(f"inside order {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  #, FollowupAction("action_check_slot")
-                    elif result in [ 'Inventory','inventory']:
-                        print(f"inside Inventory {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  #, FollowupAction("action_check_slot")
-                    elif result in ['Price','Prices']:
-                        print(f"inside Price {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]  #, FollowupAction("action_check_slot")
-                  
-                    else:
-                    # user_input_check= extract_keyword(user_entered_value1)
-                    # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
-                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                            You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                    result1= object.check_for_textBlob_synonyms(find_synonyms1)
+                    print(f"textB result - {result1}")
+                    for key, synonym_list in result1:
+                        for i in synonym_list:
+                            res = i
+                    l=len(result1)
+                    print(l)
+                    # if the array has more than two intents, diplay button - ('stock', ['inventory'])
+                    #if the array has only one intent picked, pick the intent
+                    #check result 1 and result - if both belong to the same intent pick the intent, else dsplay button
+                    if (l>1) or (result != res):
+                        error_text = "It seems your query falls under two different categories. To provide you with the most accurate assistance, could you please rephrase your statement? Alternatively, you can use the buttons below to choose the specific category you're interested in. Your clarity ensures we can offer the best support. "      
                         dispatcher.utter_message(text=error_text)
                             #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
                         return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                    elif (result == res):       
+# --------------------------------------FINAL RESULT---------------------------------------------------
+                        print(f"result {result}")
+                        if result in ['Supplier','supplier'] :
+                            print(f"inside supplier {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  #, FollowupAction("action_check_slot")
+                        elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
+                            print(f"inside order {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  #, FollowupAction("action_check_slot")
+                        elif result in [ 'Inventory','inventory']:
+                            print(f"inside Inventory {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  #, FollowupAction("action_check_slot")
+                        elif result in ['Price','Prices','item','SKU','UPC']:
+                            print(f"inside Price {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]  #, FollowupAction("action_check_slot")
+                else:
+                # user_input_check= extract_keyword(user_entered_value1)
+                # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
+                    error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                        You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                    dispatcher.utter_message(text=error_text)
+                        #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                    return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
             # else:
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      

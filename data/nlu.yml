@@ -14,7 +14,7 @@ nlu:
     - Consignments Fulfilling Distributional out Haulage Conveyance Freightage run Conveying pick GenZ AI
     - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram shrinkage RFID  experience customer satisfaction click-and-collect
     - Augmented Artificial Automation Omnichannel Integration promotional RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS 
-    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC
+    - augmented reality AR virtual reality item Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC
   
 - intent: question_intent
   examples: |
@@ -130,7 +130,7 @@ nlu:
     - Cost 
     - price
     - price
-    - Price upc sku
+    - Price upc sku item
 
 - intent: greet
   examples: |
@@ -425,12 +425,10 @@ nlu:
 
 - intent: ask_whatspossible
   examples: |
-    - help
     - assist Assistance
     - skills
     - options
     - capabilities
-    - Can you help me?
  
 - intent: ask_weather
   examples: |
