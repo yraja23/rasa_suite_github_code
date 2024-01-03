@@ -112,6 +112,7 @@ $ pip install google-generativeai
 """
 
 import google_auth_oauthlib
+from textblob import TextBlob
 import yaml
 import google.generativeai as genai
 import time
@@ -224,9 +225,10 @@ class Geminipro:
 
   def send_message_and_get_response(self, user_input):
     try:
-      parsed_input = f"'{user_input}' extract one main keyword from the text given"
+      parsed_input = f"'{user_input}' - extract one main keyword from the text given"
       self.convo.send_message(parsed_input)
       model_response = self.convo.last.text
+      print(f"model_response - {model_response}")
       return model_response
     
     except Exception  as e:
@@ -241,10 +243,19 @@ class Geminipro:
 
       if start_index != -1 and end_index != -1:
           extracted_keyword = response[start_index + len(start_marker):end_index].strip()
+          # print(f"extracted_keyword - {extracted_keyword}")
           return extracted_keyword
       else:
           return None
 
+  def find_synonyms(self,keyword):
+      user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
+      gemini_instance.convo.send_message(user_input_synonyms)
+      model_response_synonyms = gemini_instance.convo.last.text
+      extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
+      # print(f"extracted_synonyms - {extracted_synonyms}")
+      return extracted_synonyms
+  
   def extract_synonyms(self,response):
       start_marker = "\n* "
       end_marker = "\n\n"
@@ -254,19 +265,26 @@ class Geminipro:
       if start_index != -1 and end_index != -1:
           synonyms_section = response[start_index + len(start_marker):end_index].strip()
           synonyms_list = synonyms_section.split("\n* ")
+          # print(f"synonyms_list - {synonyms_list}")
           return synonyms_list
       else:
           return None
 
-  def find_synonyms(self,keyword):
-      user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
-      gemini_instance.convo.send_message(user_input_synonyms)
-      model_response_synonyms = gemini_instance.convo.last.text
-      extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
-      return extracted_synonyms
-  
 
-  
+  def extract_nouns(self,sentence):
+      # Create a TextBlob object
+      blob = TextBlob(sentence)
+      # Extract nouns using the pos_tags property
+      for word, pos in blob.tags:
+        print(f"{word}: {pos}")
+        # Extract nouns and relevant adjectives using POS tags for retail-related keywords
+      retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
+
+        # Filter out 'i' and words with less than 3 characters
+      retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2]
+
+      # nouns = [word for word, pos in blob.tags if pos.startswith('NN') and word.lower() != 'i'   and len(word) > 2 ]
+      return retail_keywords
 
 gemini_instance = Geminipro()
 

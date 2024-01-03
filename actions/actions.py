@@ -17,6 +17,8 @@ import yaml
 from .trydb import jsonConversion, allFunc
 # from .geminipro import jsonConversion, allFunc
 
+import nltk
+# nltk.download('punkt')
 import json
 from typing import Text, Any, Dict
 from nltk.corpus import wordnet
@@ -509,8 +511,8 @@ class CheckKeywordAction(Action):
                         # print(f"exstr: {examples}")
                         # Remove hyphens from the examples
                         examples = [example.replace("- ", "") for example in examples]
-                        print(f"1 {keyword}")
-                        print(f"2 {examples}") 
+                        # print(f"1 {keyword}")
+                        # print(f"2 {examples}") 
                         object=allFunc()
                         #calling the check_words function here                  
                         result = object.check_words_in_intent(keyword, examples)
@@ -596,30 +598,106 @@ class CheckKeywordAction(Action):
                     print(f"false false {intent_name}")
                     print(f"printing res_domain {res_domain}")
                     print(f"printing result_after_matching {result_after_matching}")
+
+    # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
                     gemini_instance = Geminipro()
                     print("after gemini call")
-                    response = gemini_instance.send_message_and_get_response(user_entered_value1) 
-                    print("Model's response:", response)
-                    extract_keyword = gemini_instance.extract_keyword(response)
-                    print("Extracted Keyword:", extract_keyword)
-                    find_synonyms = gemini_instance.find_synonyms(extract_keyword)
-                    print("found synonym:", find_synonyms)
+                    # response = gemini_instance.send_message_and_get_response(user_entered_value1) 
+                    # print("Model's response:", response)
+                    # extract_keyword = gemini_instance.extract_keyword(response)
+                    # print("Extracted Keyword:", extract_keyword)
+                    # find_synonyms = gemini_instance.find_synonyms(extract_keyword)
+                    # print("found synonym:", find_synonyms)
+                    # object=allFunc()
+                    # result= object.check_for_synonym_keywords(find_synonyms)
+                    # print("before noun call")
+                    response1= gemini_instance.extract_nouns(user_entered_value1)
+                    print("after noun call")
+                    print(f"response after extract_nouns {response1}")
+
+
+                    # ------------------------------------------------------------
+                    # user_input= "list all the synonym for today in retail"
+                    # object=allFunc()
+                    # response = object.palmApi(user_input)
+                    # print("inside PALM3.....")
+                    # if response == None:
+                    #     print("inside palm response")
+                    # else:
+                    #     print(f"inside palm response -- {response}")
+                    # ------------------------------------------------------------
+                    user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array "
                     object=allFunc()
-                    result= object.check_for_synonym_keywords(find_synonyms)
+                    response = object.palmApi(user_input)
+                    if response is None:
+                        print("try again later!!!")
+                    else:
+                        print("inside noun call from palm" , response1)
+
+                    words_array = response1  # Assuming response1 is your list of words
+                    unique_words = list(set(words_array))  # Removing duplicates
+                    print(f"unique_words {unique_words}")
+                    # # Printing unique words
+                    # for word in unique_words:
+                    #     print(word)
+
+                    # words_array = response.split(', ')
+                    synonyms_combined = []
+
+                    # Printing each word individually
+                    for word in unique_words:
+                        find_synonyms = gemini_instance.find_synonyms(word)
+                        print(f"found synonym for '{word}'---> {find_synonyms}")
+                        synonyms_combined.extend(find_synonyms)
+                    print("Combined synonyms array:", synonyms_combined)
+
+
+                    object=allFunc()
+                    print("before check_for_synonym_keywords call")
+                    result= object.check_for_synonym_keywords(synonyms_combined)
+                    print("After check_for_synonym_keywords call")
                     print(f"result {result}")
-                    if result in ['Supplier','supplier'] :
+
+                    # print("Model's response - 2:", response1) 
+                    # extract_keyword1 = gemini_instance.extract_keyword(response1)
+                    # print("Extracted Keyword -2 :", extract_keyword1)
+                    # find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
+                    # print("found synonym - 2:", find_synonyms1)
+                    # # object=allFunc()
+                    # result1= object.check_for_synonym_keywords(find_synonyms1)
+                    # print(f"second result-{result1}")
+
+# --------------------------------------FINAL RESULT---------------------------------------------------
+                    # print(f"result {result}")
+                    if result is None:
+                        error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
+                        dispatcher.utter_message(text=error_text)
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+
+                    elif isinstance(result, list) and len(result) == 1 and isinstance(result[0], (int, float)):
+                        # Unpack the single-element list to get the numeric value
+                        numeric_result = result[0]
+                        print(f"Numeric value received: {numeric_result}")
+                        error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
+                        dispatcher.utter_message(text=error_text)
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain), FollowupAction("utter_price_details")]
+
+                    # elif result in ['Supplier','supplier'] :
+                    elif re.search(r'supp', result, re.IGNORECASE):
                         print(f"inside supplier {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  #, FollowupAction("action_check_slot")
-                    elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
+                    # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
+                    elif re.search(r'order', result, re.IGNORECASE):
                         print(f"inside order {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  #, FollowupAction("action_check_slot")
-                    elif result in [ 'Inventory','inventory']:
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
+                    # elif result in [ 'Inventory','inventory']:
+                    elif re.search(r'invent', result, re.IGNORECASE):
                         print(f"inside Inventory {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  #, FollowupAction("action_check_slot")
-                    elif result in ['Price','Prices']:
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
+                    # elif result in ['Price','Prices']:
+                    elif re.search(r'price', result, re.IGNORECASE):
                         print(f"inside Price {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]  #, FollowupAction("action_check_slot")
-                  
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]  
                     else:
                     # user_input_check= extract_keyword(user_entered_value1)
                     # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
@@ -636,7 +714,7 @@ class CheckKeywordAction(Action):
           
     def load_nlu_data(self):
         # Load the NLU training data from the nlu.yml file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
@@ -736,7 +814,7 @@ class ActionGoToBardMoreInfo(Action):
         
     def load_nlu_data(self):
         # Load the NLU training data from the nlu.yml file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)

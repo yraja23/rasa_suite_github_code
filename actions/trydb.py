@@ -7,6 +7,7 @@ from cryptography.fernet import Fernet
 import requests
 import google.generativeai as genai
 import string
+import re
 
 #spellchecker modules
 # from nltk.stem import WordNetLemmatizer
@@ -403,7 +404,6 @@ class jsonConversion:
     
     def order_details(self, orderno, access_token):
         self. orderno = orderno
-        print("inside order details function")
         API_ENDPOINT = f'https://rex.retail.eu-frankfurt-1.ocs.oraclecloud.com/rgbu-rex-appa-stg1-mfcs/RmsReSTServices/services/private/Po/poDetail?orderNumber={orderno}'
         headers = {
             'Authorization': 'Bearer ' + access_token
@@ -854,7 +854,6 @@ class allFunc:
                 "text": user_input
             }
         }
-        
         # Convert the request_data to a JSON string
         request_json = json.dumps(request_data)
         
@@ -864,14 +863,15 @@ class allFunc:
         if response.status_code == 200:
             palmapi_response = response.json()
             output_text = palmapi_response['candidates'][0]['output']
-            print(output_text)
+
+            # print(output_text)
             return output_text
         else:
             return None
 
     def checking_other_intents(self, keyword):
         # Specify the path to the NLU training data YAML file
-        nlu_file_path="C:/Users/yraja/LogicBot/local_test/data/nlu.yml"
+        nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
 
         # Load the NLU training data from the YAML file
@@ -1024,7 +1024,7 @@ class allFunc:
     def check_for_synonym_keywords(self, word_list):
 
         supplier_keywords = ['Supplier']
-        order_keyword = ['order','Purchase order','PO' ,'purchase order','Order']
+        order_keyword = ['order','PO','Order'] # ,'purchase order'
         inventory_keywords = ['Inventory','inventory']
         pricing_keywords = [ 'Price', 'Prices']
 
@@ -1033,18 +1033,36 @@ class allFunc:
         inventory_keywords_lower = [word.lower() for word in inventory_keywords]
         pricing_keywords_lower = [word.lower() for word in pricing_keywords]
 
+        all_keywords_pattern = '|'.join(supplier_keywords_lower + order_keyword_lower + inventory_keywords_lower + pricing_keywords_lower)
+        keywords_regex = re.compile(all_keywords_pattern, re.IGNORECASE)
 
         # inventory_keywords = ['Inventory', 'Stock', 'Stocks', 'Stocktaking', 'Stocktake', 'Stock control', 'Stock check', 'Stock count', 'Stock level', 'Stock management', 'Stockroom']
         # pricing_keywords = ['Pricing', 'Price', 'Prices', 'Pricelist', 'Price list', 'Pricing strategy', 'Price management', 'Pricing policy', 'Pricing model', 'Price range']
-
+        # matched_categories = []
         found_keywords = []
 
-        print(f"word list {word_list}")
+
+        # print(f"word list {word_list}")
         cleaned_words = self.remove_punctuation(word_list)
         print(f"cleaned_words {cleaned_words}")
 
+        matched_keywords = [word for word in cleaned_words if keywords_regex.search(word)]
+        print(f"matched_keywords {matched_keywords}")
+# ----------------
+        matched_words = []
+
         for word in cleaned_words:
-            if word  in supplier_keywords_lower:
+            if any(keyword.lower() in word.lower() for keyword in supplier_keywords_lower + order_keyword_lower + inventory_keywords + pricing_keywords):
+                matched_words.append(word)
+
+        if matched_words:
+            print("Matched words in the cleaned array:")
+            print(matched_words)
+        else:
+            print("No matching words found.")
+# -----------------
+        for word in cleaned_words:
+            if word  in supplier_keywords_lower:  
                 found_keywords.append(word)
             elif word  in order_keyword_lower:
                 found_keywords.append(word)
@@ -1054,14 +1072,48 @@ class allFunc:
                 found_keywords.append(word)
 
         if found_keywords:
-            print("Words found:")
-            for word in found_keywords:
-                print(word)
-                return word
-        else:
-            print("No relevant words found.")
-            return [None]
+            if len(set(found_keywords)) > 1:
+                print("It seems your query falls under multiple categories. Please rephrase your statement.")
+                print(f"Words found in category1: {set(found_keywords)}")
+                return [len(set(found_keywords))]
 
+            else:
+                print(f"Words found in category2: {found_keywords[0]}")
+                return found_keywords[0]
+
+        # if found_keywords:
+        #     print("Words found:")
+        #     for word in found_keywords:
+        #         print(f"found1 {word}")
+        #         return word
+
+        else:
+            cleaned_words = self.remove_punctuation(word_list)
+            #if the words has more than two syllable, split and check for the intent
+            for words in cleaned_words:
+                words_array = words.split()
+                for word in words_array:
+                    if word  in supplier_keywords_lower:
+                        found_keywords.append("supplier")
+                    elif word  in order_keyword_lower:
+                        found_keywords.append("Order")
+                    elif word  in inventory_keywords_lower:
+                        found_keywords.append("inventory")
+                    elif word  in pricing_keywords_lower:
+                        found_keywords.append("pricing")
+
+                if found_keywords:
+                    print("Words found:")
+                    for word in found_keywords:
+                        print(word)
+                        return word
+        if found_keywords:
+            if len(set(found_keywords)) > 1:
+                print("It seems your query falls under multiple categories. Please rephrase your statement.")
+                return [len(set(found_keywords))]
+            else:
+                print(f"Words found in category3: {found_keywords[0]}")
+                return found_keywords[0]
 
 #-------------------------------------------------------
     def correct_spelling(self,sentence):
