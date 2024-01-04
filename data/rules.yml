@@ -180,6 +180,11 @@ rules:
   - intent: domain_details
   - action: action_default_fallback
 
+- rule: specific_use_case_and_general_domain rule
+  steps:
+  - action: utter_specific_use_case_and_general_domain
+  - action: utter_redisplay_buttons_nonretail
+
 # - rule: mathematical_function_rule
 #   steps:
 #   - intent: nlu_fallback_math_operations

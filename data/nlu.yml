@@ -6,7 +6,7 @@ nlu:
     - wholesaler volume voucher tsf division group retail retailing retailer retailers Retail
     - assortment source selller range collection product mix variety central fullfillment centre procurement concession concession consignment
     - refill replenish replenishment distribution revenue turnover sales performance figures demand forecast replenishment ecommerce
-    - promotion campaigns register log book control sheet ledger journal 
+    - promotion campaigns register log book control sheet ledger journal transfer
     - management movement transaction documentation logbook reconciliation audit
     - Merchandise redistribution reassignment Product deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
     - consignment interchange  migration exchange realignment Delivery Dispatch Consignment metaverse  Cybersecurity Streamline QR RFID Augmented reality AR NFTs NFT Mashgin 
@@ -84,8 +84,9 @@ nlu:
   examples: |
     - order 
     - Purchase Order
-    - order 
+    - orders
     - Order
+    - Orders
     - PO 
     - po 
     - Purchase order 
@@ -258,10 +259,10 @@ nlu:
 
 - intent: deny
   examples: |
-    - no no Exit never don't Exit don't that no way not exit Exit /deny I don't I don't I don't I dont I'm not giving you I'm not going to it to you NO
-    - Nah Neither Never Never No Nopes Not really absolutely not decline definitely not deny i decline i don not this don't i don't
-    - no nah nah nah not for me neither never never no no no I dont no I haven't decided no no no no no way
-    - no no no no non noooooooooo noooooooooooooooooooooooooooooooooooooooo nop nope nope not really not not yet not dont want don't no stop stop
+    - no no  
+    - NO
+    - Exit
+    - Exit
 
 # - intent: nlu_fallback_math_operations
 #   examples: |

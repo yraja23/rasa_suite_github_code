@@ -843,7 +843,9 @@ class allFunc:
 #   #old - YwiGpT53EGvjiLA9g2QGpH0TUnQwqLCo110s3WYpPsXJVqKcGKvujc1VX5QJZayTIXAHqA.
     def palmApi(self, user_input: Text) -> Text:
         API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText?key=AIzaSyDSWNlyibcYAk-ivUIrlDrzz3S4BJr236E"
-
+        print(" important check2 ******************* ")
+        print(f"{user_input}")
+        print("******************* ")
         headers = {
         'Content-Type': 'application/json'
         }
@@ -864,7 +866,7 @@ class allFunc:
             palmapi_response = response.json()
             output_text = palmapi_response['candidates'][0]['output']
 
-            # print(output_text)
+            print(output_text)
             return output_text
         else:
             return None
@@ -959,7 +961,7 @@ class allFunc:
                 
                 if word in words:
                 # if word in words or corrected_word in words or any(fuzz.ratio(word, w) >= fuzzy_threshold for w in words):
-                    if len(word) > 2:
+                    if len(word) > 2 and word != 'po' and word != 'PO':
                         print(f"IF - Match found! Word: {word}, Position: {position}")
                         matched_words.append((word, position))
                         found = True
@@ -1024,7 +1026,7 @@ class allFunc:
     def check_for_synonym_keywords(self, word_list):
 
         supplier_keywords = ['Supplier']
-        order_keyword = ['order','PO','Order'] # ,'purchase order'
+        order_keyword = ['order','Order'] # ,'purchase order'
         inventory_keywords = ['Inventory','inventory']
         pricing_keywords = [ 'Price', 'Prices']
 
@@ -1033,45 +1035,66 @@ class allFunc:
         inventory_keywords_lower = [word.lower() for word in inventory_keywords]
         pricing_keywords_lower = [word.lower() for word in pricing_keywords]
 
-        all_keywords_pattern = '|'.join(supplier_keywords_lower + order_keyword_lower + inventory_keywords_lower + pricing_keywords_lower)
-        keywords_regex = re.compile(all_keywords_pattern, re.IGNORECASE)
+        
+      # Compile regular expressions
+        supplier_regex = re.compile('|'.join(supplier_keywords_lower), re.IGNORECASE)
+        order_regex = re.compile('|'.join(order_keyword_lower), re.IGNORECASE)
+        inventory_regex = re.compile('|'.join(inventory_keywords_lower), re.IGNORECASE)
+        pricing_regex = re.compile('|'.join(pricing_keywords_lower), re.IGNORECASE)
+
+
+        # all_keywords_pattern = '|'.join(supplier_keywords_lower + order_keyword_lower + inventory_keywords_lower + pricing_keywords_lower)
+        # print(f"all_keywords_pattern-{all_keywords_pattern}")
+        # keywords_regex = re.compile(all_keywords_pattern, re.IGNORECASE)
+
+        # print(f"keywords_regex-{keywords_regex}")
 
         # inventory_keywords = ['Inventory', 'Stock', 'Stocks', 'Stocktaking', 'Stocktake', 'Stock control', 'Stock check', 'Stock count', 'Stock level', 'Stock management', 'Stockroom']
         # pricing_keywords = ['Pricing', 'Price', 'Prices', 'Pricelist', 'Price list', 'Pricing strategy', 'Price management', 'Pricing policy', 'Pricing model', 'Price range']
         # matched_categories = []
         found_keywords = []
 
-
         # print(f"word list {word_list}")
         cleaned_words = self.remove_punctuation(word_list)
         print(f"cleaned_words {cleaned_words}")
 
-        matched_keywords = [word for word in cleaned_words if keywords_regex.search(word)]
-        print(f"matched_keywords {matched_keywords}")
+        # matched_keywords = [word for word in cleaned_words if keywords_regex.search(word)]
+        # print(f"matched_keywords {matched_keywords}")
 # ----------------
-        matched_words = []
+        # matched_words = []
 
-        for word in cleaned_words:
-            if any(keyword.lower() in word.lower() for keyword in supplier_keywords_lower + order_keyword_lower + inventory_keywords + pricing_keywords):
-                matched_words.append(word)
+        # for word in cleaned_words:
+        #     if any(keyword.lower() in word.lower() for keyword in supplier_keywords_lower + order_keyword_lower + inventory_keywords + pricing_keywords):
+        #         matched_words.append(word)
 
-        if matched_words:
-            print("Matched words in the cleaned array:")
-            print(matched_words)
-        else:
-            print("No matching words found.")
+        # if matched_words:
+        #     print("Matched words in the cleaned array:")
+        #     print(matched_words)
+        # else:
+        #     print("No matching words found.")
 # -----------------
         for word in cleaned_words:
-            if word  in supplier_keywords_lower:  
+            # print(word)
+            if supplier_regex.search(word):
                 found_keywords.append(word)
-            elif word  in order_keyword_lower:
+            elif order_regex.search(word):
                 found_keywords.append(word)
-            elif word  in inventory_keywords_lower:
+            elif inventory_regex.search(word):
                 found_keywords.append(word)
-            elif word  in pricing_keywords_lower:
+            elif pricing_regex.search(word):
                 found_keywords.append(word)
 
+            # if word  in supplier_keywords_lower:
+            #     found_keywords.append(word)
+            # elif word  in order_keyword_lower:
+            #     found_keywords.append(word)
+            # elif word  in inventory_keywords_lower:
+            #     found_keywords.append(word)
+            # elif word  in pricing_keywords_lower:
+            #    found_keywords.append(word)
+
         if found_keywords:
+            print(found_keywords)
             if len(set(found_keywords)) > 1:
                 print("It seems your query falls under multiple categories. Please rephrase your statement.")
                 print(f"Words found in category1: {set(found_keywords)}")

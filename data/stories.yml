@@ -443,6 +443,12 @@ stories:
   - action: action_order_with_number_details
   - action: utter_price_details
 
+- story: specific_use_case_and_general_domain story
+  steps:
+  - action: utter_specific_use_case_and_general_domain
+  - action: utter_redisplay_buttons_nonretail
+
+
 # - story: ask_howbuilt_story
 #   steps:
 #   - intent: ask_howbuilt
