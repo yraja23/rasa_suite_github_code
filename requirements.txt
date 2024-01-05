@@ -15,4 +15,5 @@ configparser_crypt==0.6.2
 cryptography==40.0.2
 bardapi==0.1.27
 autocorrect==2.6.1
+google-generativeai
 

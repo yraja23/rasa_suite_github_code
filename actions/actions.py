@@ -17,11 +17,11 @@ import yaml
 from .trydb import jsonConversion, allFunc
 # from .geminipro import jsonConversion, allFunc
 import ast
-import nltk
+# import nltk
 # nltk.download('punkt')
 import json
 from typing import Text, Any, Dict
-from nltk.corpus import wordnet
+# from nltk.corpus import wordnet
 from .geminipro import Geminipro
 # from rasa.shared.nlu.training_data.readers.markdown_reader import MarkdownReader
 # # from bardapi import bard
@@ -645,20 +645,30 @@ class CheckKeywordAction(Action):
                     object=allFunc()
                     response = object.palmApi(user_input)
                     print(f" palm taking retail keyword from user {response}")
+                    #-------------- 
+                    # Extracting the array from the response string
+                    array_start_index = response.find("[")
+                    array_end_index = response.rfind("]") + 1  # Include the closing bracket
+
+                    if array_start_index != -1 and array_end_index != -1:
+                        array_string = response[array_start_index:array_end_index]
+                        array = ast.literal_eval(array_string)
+                        print(f"printing the array - {array}")
+                    else:
+                        print("Array not found in the response")
+                    # -------------
                     if response is None:
                         print("try again later!!!")
                     else:
-                        print("inside noun call from palm" , response)
+                        print("inside noun call from palm" , array)
                         
-                        words_array1 = response  # Assuming response1 is your list of words
-                        print(f"words_array1 {words_array1}")
-                        print(f"word array1 type {type(words_array1)}")
-                        words_array2 = ast.literal_eval(words_array1)
+                        # words_array1 = array  # Assuming response1 is your list of words
+                        # print(f"words_array1 {words_array1}")
+                        # print(f"word array1 type {type(words_array1)}")
+                        # words_array2 = ast.literal_eval(words_array1)
 
-                        for word in words_array2:
+                        for word in array:
                             print(word)
-
-
 
                         # for word in words_array1:
                         #     print(f"Word: {word}")
@@ -673,9 +683,10 @@ class CheckKeywordAction(Action):
                         #     print(''.join(word))
 # ----------------------
                     synonyms_combined = []
-
+                    # array = []
+# ---------------------------------
                     # Printing each word individually
-                    for word in words_array2:
+                    for word in array:
                         if word is None:
                             synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
                             # print("Combined synonyms array:", synonyms_combined)
@@ -689,7 +700,9 @@ class CheckKeywordAction(Action):
                                 print(f"found synonym for '{word}'---> {find_synonyms}")
                                 synonyms_combined.extend(find_synonyms)
                                 # print("Combined synonyms array:", synonyms_combined)
+# ---------------------------------------------
 
+                    # --------------------
                     object=allFunc()
                     print("before check_for_synonym_keywords call")
                     result= object.check_for_synonym_keywords(synonyms_combined)
@@ -714,15 +727,20 @@ class CheckKeywordAction(Action):
                         dispatcher.utter_message(text=error_text)
                                 #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
                         return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                    elif result == "none":
+                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                        dispatcher.utter_message(text=error_text)
+                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
   
                         # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
                         # dispatcher.utter_message(text=error_text)
                         # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
 
-                    elif isinstance(result, list) and len(result) == 1 and isinstance(result[0], (int, float)):
+                    # elif isinstance(result, list) and len(result) == 1 and isinstance(result[0], (int, float)):
+                    elif result == "multiple" :
                         # Unpack the single-element list to get the numeric value
-                        numeric_result = result[0]
-                        print(f"Numeric value received: {numeric_result}")
                         error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
                         dispatcher.utter_message(text=error_text)
                         return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain), FollowupAction("utter_price_details")]

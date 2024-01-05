@@ -334,6 +334,8 @@ responses:
   - text: You're welcome! If you have any more questions or if there's anything else I can help you with, feel free to ask.
   utter_user_number_input:
   - text: I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.
+  utter_specific_use_case_and_general_domain:
+  - text: Looks like your query could go two ways—specific details or general information. Could you clarify if you need something specific or a broader overview? I'm here to help with both!
 
 session_config:
   session_expiration_time: 60
@@ -388,6 +390,7 @@ actions:
 - utter_anything_else
 - utter_thumbsup
 - utter_user_number_input
+- utter_specific_use_case_and_general_domain
 - Action_new_features
 - Action_new_features2
 - Action_new_features3

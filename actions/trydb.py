@@ -1052,57 +1052,124 @@ class allFunc:
         # inventory_keywords = ['Inventory', 'Stock', 'Stocks', 'Stocktaking', 'Stocktake', 'Stock control', 'Stock check', 'Stock count', 'Stock level', 'Stock management', 'Stockroom']
         # pricing_keywords = ['Pricing', 'Price', 'Prices', 'Pricelist', 'Price list', 'Pricing strategy', 'Price management', 'Pricing policy', 'Pricing model', 'Price range']
         # matched_categories = []
+
         found_keywords = []
 
         # print(f"word list {word_list}")
         cleaned_words = self.remove_punctuation(word_list)
         print(f"cleaned_words {cleaned_words}")
+# -------------------
+        found_keywords = {
+            "supplier": [],
+            "order": [],
+            "inventory": [],
+            "pricing": [],
+        }
 
-        # matched_keywords = [word for word in cleaned_words if keywords_regex.search(word)]
-        # print(f"matched_keywords {matched_keywords}")
-# ----------------
-        # matched_words = []
-
-        # for word in cleaned_words:
-        #     if any(keyword.lower() in word.lower() for keyword in supplier_keywords_lower + order_keyword_lower + inventory_keywords + pricing_keywords):
-        #         matched_words.append(word)
-
-        # if matched_words:
-        #     print("Matched words in the cleaned array:")
-        #     print(matched_words)
-        # else:
-        #     print("No matching words found.")
-# -----------------
         for word in cleaned_words:
-            # print(word)
             if supplier_regex.search(word):
-                found_keywords.append(word)
+                found_keywords["supplier"].append(word)
             elif order_regex.search(word):
-                found_keywords.append(word)
+                found_keywords["order"].append(word)
             elif inventory_regex.search(word):
-                found_keywords.append(word)
+                found_keywords["inventory"].append(word)
             elif pricing_regex.search(word):
-                found_keywords.append(word)
-
-            # if word  in supplier_keywords_lower:
-            #     found_keywords.append(word)
-            # elif word  in order_keyword_lower:
-            #     found_keywords.append(word)
-            # elif word  in inventory_keywords_lower:
-            #     found_keywords.append(word)
-            # elif word  in pricing_keywords_lower:
-            #    found_keywords.append(word)
+                found_keywords["pricing"].append(word)
 
         if found_keywords:
-            print(found_keywords)
-            if len(set(found_keywords)) > 1:
-                print("It seems your query falls under multiple categories. Please rephrase your statement.")
-                print(f"Words found in category1: {set(found_keywords)}")
-                return [len(set(found_keywords))]
+            # Print counts for each category
+            for category, words in found_keywords.items():
+                print(f"Words found in {category} category: {words}")
+                
 
+        # # Check for multiple categories with non-zero counts
+        # non_zero_categories = [category for category, words in found_keywords.items() if len(words) > 0]
+        # if len(non_zero_categories) > 1:
+        #     print("It seems your query falls under multiple categories. Please rephrase your statement.")
+        #     # Print the categories with non-zero counts
+        #     for category in non_zero_categories:
+        #         print(f"Category '{category}' has non-zero count.")
+        #     # Return a list containing the counts for each category
+        #     return [len(words) for words in found_keywords.values()]
+        
+        # elif len(non_zero_categories) == 1:
+        #     # Return the words for the single category
+        #     single_category = non_zero_categories[0]
+        #     print(f"Words found in {single_category} category: {found_keywords[single_category]}")
+        #     return found_keywords[single_category]
+        # else:
+        #     print("No matching categories found.")
+        #     return []
+            # Check for multiple categories
+            
+
+            result = [len(words) for words in found_keywords.values()]
+
+            # Check if all values in result are zero
+            if all(count == 0 for count in result):
+                print("No category identified.")
+                print(f"result - {result}")
+                no_category = "none"
+                return no_category
+
+            # Count non-zero elements in the result
+            non_zero_count = sum(count > 0 for count in result)  # Count directly using a generator expression
+
+            if non_zero_count == 1:
+                # Print the single category message
+                category_with_match = next(category for category, count in zip(found_keywords.keys(), result) if count > 0)
+                print("Single category identified:", category_with_match)
+                print(f"result - {result}")
+                return category_with_match
+
+            # if non_zero_count > 1:  # Cover both multiple categories and no matches
             else:
-                print(f"Words found in category2: {found_keywords[0]}")
-                return found_keywords[0]
+                print("It seems your query falls under multiple categories. Please rephrase your statement.")
+                print(f"result - {result}")
+                multi_category = "multiple"
+                return multi_category
+            
+            # else:
+            #     print("It seems out of scope")
+            #     print(f"result - {result}")
+            #     oos_category = "out of scope"
+            #     return oos_category
+
+            # if len(found_keywords) > 1:
+            #     print("It seems your query falls under multiple categories. Please rephrase your statement.")
+            #     print(f"inside multiple cateory - {[len(words) for words in found_keywords.values()]}")
+            #     # Return a list containing the counts for each category
+            #     return [len(words) for words in found_keywords.values()]
+
+            # else:
+            #     # Return the words for the single category
+            #     print(f"inside single cateory - {found_keywords[next(iter(found_keywords))]}")
+            #     return found_keywords[next(iter(found_keywords))]
+
+#  -----------------
+
+        # for word in cleaned_words:
+        #     # print(word)
+        #     if supplier_regex.search(word):
+        #         found_keywords.append(word)
+        #     elif order_regex.search(word):
+        #         found_keywords.append(word)
+        #     elif inventory_regex.search(word):
+        #         found_keywords.append(word)
+        #     elif pricing_regex.search(word):
+        #         found_keywords.append(word)
+ 
+
+        # if found_keywords:
+        #     print(found_keywords)
+        #     if len(set(found_keywords)) > 1:
+        #         print("It seems your query falls under multiple categories. Please rephrase your statement.")
+        #         print(f"Words found in category1: {set(found_keywords)}")
+        #         return [len(set(found_keywords))]
+
+        #     else:
+        #         print(f"Words found in category2: {found_keywords[0]}")
+        #         return found_keywords[0]
 
         # if found_keywords:
         #     print("Words found:")
@@ -1110,33 +1177,33 @@ class allFunc:
         #         print(f"found1 {word}")
         #         return word
 
-        else:
-            cleaned_words = self.remove_punctuation(word_list)
-            #if the words has more than two syllable, split and check for the intent
-            for words in cleaned_words:
-                words_array = words.split()
-                for word in words_array:
-                    if word  in supplier_keywords_lower:
-                        found_keywords.append("supplier")
-                    elif word  in order_keyword_lower:
-                        found_keywords.append("Order")
-                    elif word  in inventory_keywords_lower:
-                        found_keywords.append("inventory")
-                    elif word  in pricing_keywords_lower:
-                        found_keywords.append("pricing")
+        # else:
+        #     cleaned_words = self.remove_punctuation(word_list)
+        #     #if the words has more than two syllable, split and check for the intent
+        #     for words in cleaned_words:
+        #         words_array = words.split()
+        #         for word in words_array:
+        #             if word  in supplier_keywords_lower:
+        #                 found_keywords.append("supplier")
+        #             elif word  in order_keyword_lower:
+        #                 found_keywords.append("Order")
+        #             elif word  in inventory_keywords_lower:
+        #                 found_keywords.append("inventory")
+        #             elif word  in pricing_keywords_lower:
+        #                 found_keywords.append("pricing")
 
-                if found_keywords:
-                    print("Words found:")
-                    for word in found_keywords:
-                        print(word)
-                        return word
-        if found_keywords:
-            if len(set(found_keywords)) > 1:
-                print("It seems your query falls under multiple categories. Please rephrase your statement.")
-                return [len(set(found_keywords))]
-            else:
-                print(f"Words found in category3: {found_keywords[0]}")
-                return found_keywords[0]
+        #         if found_keywords:
+        #             print("Words found:")
+        #             for word in found_keywords:
+        #                 print(word)
+        #                 return word
+        # if found_keywords:
+        #     if len(set(found_keywords)) > 1:
+        #         print("It seems your query falls under multiple categories. Please rephrase your statement.")
+        #         return [len(set(found_keywords))]
+        #     else:
+        #         print(f"Words found in category3: {found_keywords[0]}")
+        #         return found_keywords[0]
 
 #-------------------------------------------------------
     def correct_spelling(self,sentence):
