@@ -104,6 +104,7 @@ rules:
   #using the item utter here, as it just diaplays the text, and both are same
   - action: utter_loc_for_inventory
 
+# *************************************************************
 - rule: If user selects supplier details, display the correct utter
   steps:
   - intent: supplier_details
@@ -118,7 +119,29 @@ rules:
     - numeric_values: "5810725"
   - action: action_supplier_details
   - action: utter_continue
+  # ***************************************************
+- rule: If user selects item details, display the correct utter
+  steps:
+  - intent: item_details
+  - action: utter_item_number
 
+- rule: repeat action for item
+  steps:
+  - action: utter_item_number
+  - intent: user_entered_numeric_values
+  - slot_was_set:
+    - numeric_values: "5810725"
+  - action: action_item_details
+  - action: utter_continue
+
+- rule: repeat item details - continue
+  steps:
+  - action: action_item_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_number
+
+# *******************************************************
 - rule: repeat action for order
   steps:
   - intent: order_details
@@ -234,34 +257,10 @@ rules:
   - action: utter_deny_nohelp
   - action: utter_price_details
 
-# - rule: ask_howbuilt_rule
-#   steps:
-#   - intent: ask_howbuilt
-#   - action: utter_who_r_u
-#   - action: utter_price_details
-
-# - rule: ask_howold_rule
-#   steps:
-#   - intent: ask_howold
-#   - action: utter_ask_howold
-#   - action: utter_price_details
-
-# - rule: ask_botname_rule
-#   steps:
-#   - intent: ask_botname
-#   - action: utter_ask_botname
-#   - action: utter_price_details
-
 - rule: reply_default_rule
   steps:
   - action: utter_default_msg
   - action: utter_price_details
-
-# - rule: ask_weather_rule
-#   steps:
-#   - intent: ask_weather
-#   - action: utter_ask_weather
-#   - action: utter_price_details
 
 - rule: thanks_rule
   steps:
@@ -277,22 +276,3 @@ rules:
   - action: Action_new_features3
   - action: Action_new_features4
   - action: Action_new_features5
-  
-# - rule:  number input rule
-#   steps:
-#   - intent: user_entered_numeric_values
-#   - action: utter_action_unlikely_intent
-#   - action: utter_price_details
-
-# - rule: synonyms rule
-#   steps:
-#   - intent: synonyms
-#   - action: utter_enter_synonyms
-
-# - rule: synonyms rule2
-#   steps:
-#   - action: utter_enter_synonyms
-#   - intent: user_entered_alpha_values
-#   - slot_was_set:
-#     - alpha_values: "cloudnine"
-#   - action: action_toBard_for_synonyms

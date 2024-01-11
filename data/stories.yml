@@ -361,6 +361,7 @@ stories:
   - action: utter_deny_nohelp
   - action: utter_price_details
 
+# *****************************************************************************
 - story: supplier details
   steps:
   - action: utter_price_details
@@ -375,6 +376,31 @@ stories:
   - action: utter_continue
   - intent: continue_info
   - action: utter_supplier_number
+# *****************************************************************************
+- story: item details
+  steps:
+  - action: utter_price_details
+  - intent: item_details
+  # - action: action_prevData_for_supplier
+  - action: utter_item_number
+  # - action: utter_ask_supplier_form_numeric_values
+  - intent: user_entered_numeric_values
+  - slot_was_set:
+    - numeric_values: "100150000"
+  - action: action_item_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_number
+
+
+- story: repeat item details - continue
+  steps:
+  - action: action_item_details
+  - action: utter_continue
+  - intent: continue_info
+  - action: utter_item_number
+
+# *****************************************************************************
   # without the action here, it will pick someother utter or item buttons
 
 # - story: supplier details
@@ -484,12 +510,6 @@ stories:
   - action: utter_ask_weather
   - action: utter_price_details
 
-# - story: ask_time_story
-#   steps:
-#   - intent: ask_time
-#   - action: utter_ask_time
-#   - action: utter_price_details
-
 - story: thanks_story
   steps:
   - intent: thanks
@@ -541,3 +561,20 @@ stories:
 #   - action: utter_cards_carousel
 #   - action: utter_price_details
 
+# - story: supplier details
+#   steps:
+#   - action: utter_price_details
+#   - intent: supplier_details
+#   # - action: action_prevData_for_supplier
+#   - action: utter_supplier_number
+#   # - action: utter_ask_supplier_form_numeric_values
+#   - intent: user_entered_numeric_values
+#   - slot_was_set:
+#     - numeric_values: "5810725"
+#   - action: action_supplier_details
+#   - action: utter_continue
+#   - intent: continue_info
+#   - action: utter_supplier_number
+
+
+    

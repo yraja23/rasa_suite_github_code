@@ -201,9 +201,13 @@ class SupplierAction(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         # supplier_no = tracker.latest_message['text']
+
         supplier_no = tracker.get_slot('numeric_values')
         # dispatcher.utter_message("Accessing...")
-
+        
+        if not supplier_no or not supplier_no.isnumeric():
+            dispatcher.utter_message("Please enter a valid numeric value for the supplier.")
+            return []
         filename = "encrypted_client_details.ini"
         out = jsonConversion()
         access_token = out.generate_token(filename)
@@ -213,7 +217,7 @@ class SupplierAction(Action):
             # print(supplier_details)
             # print(file_url)
             if isinstance(supplier_details, list):
-                print("inside if")
+                # print("inside if")
                 for item_data in supplier_details:
                     message = ""
                     for key, value in item_data.items():
@@ -351,7 +355,6 @@ class InventoryLocationCapture(Action):
         user_value = tracker.latest_message['text']
         return[SlotSet('inv_loc',user_value)]
   
-  
 class OrderAction(Action):
     def name(self) -> Text:
         return "action_order_details"
@@ -387,6 +390,45 @@ class OrderAction(Action):
 
         return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
     
+# -------------------------------------------------------------------------------------
+ 
+class ItemAction(Action):
+    def name(self) -> Text:
+        return "action_item_details"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        # order_no = tracker.latest_message['text']
+        item_no = tracker.get_slot('numeric_values')
+        # dispatcher.utter_message("Accessing...")
+        filename = "encrypted_client_details.ini"
+        out = jsonConversion()
+        access_token = out.generate_token(filename)
+        if access_token:
+            itemDetails, file_url = out.item_details(item_no,access_token)  
+            print(itemDetails)
+            print(file_url)
+            dispatcher.utter_message(text=itemDetails)
+
+            # if isinstance(itemDetails, list):
+            #     for item_data in itemDetails:
+            #         message = ""
+            #         for key, value in item_data.items():
+            #             message += f"{key}: {value}\n"
+            #     dispatcher.utter_message(text=message)
+
+
+            if file_url:
+                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+                return [SlotSet('item_value',item_no)]  
+
+            if itemDetails is None:
+                dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+            else:
+                dispatcher.utter_message(text=itemDetails)
+
+        return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+    
+    # -------------------------------------------------------------------------------------
 class displayPrevForOrderUsecase(Action):
     def name(self) -> Text:
         return "action_prevData_for_order"
@@ -623,9 +665,6 @@ class CheckKeywordAction(Action):
                     print("after noun call")
                     print(f"response after extract_nouns {response1}")
 
-                    words_array1 = response1  # Assuming response1 is your list of words
-                    unique_words = list(set(words_array1))  # Removing duplicates
-                    print(f"unique_words {unique_words}")
 
                     # ------------------------------------------------------------
 
@@ -639,76 +678,82 @@ class CheckKeywordAction(Action):
                     #     print(f"inside palm response -- {response}")
 
                     # ------------------------------------------------------------
+                    if response1 is not None and len(response1) > 0:
+                        words_array1 = response1  # Assuming response1 is your list of words
+                        unique_words = list(set(words_array1))  # Removing duplicates
+                        print(f"unique_words {unique_words}")
 
-                    # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
-                    user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
-                    object=allFunc()
-                    response = object.palmApi(user_input)
-                    print(f" palm taking retail keyword from user {response}")
-                    #-------------- 
-                    # Extracting the array from the response string
-                    array_start_index = response.find("[")
-                    array_end_index = response.rfind("]") + 1  # Include the closing bracket
+                        # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
+                        user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
+                        object=allFunc()
+                        response = object.palmApi(user_input)
+                        print(f" palm taking retail keyword from user {response}")
+                        #-------------- 
+                        # Extracting the array from the response string
+                        array_start_index = response.find("[")
+                        array_end_index = response.rfind("]") + 1  # Include the closing bracket
 
-                    if array_start_index != -1 and array_end_index != -1:
-                        array_string = response[array_start_index:array_end_index]
-                        array = ast.literal_eval(array_string)
-                        print(f"printing the array - {array}")
-                    else:
-                        print("Array not found in the response")
-                    # -------------
-                    if response is None:
-                        print("try again later!!!")
-                    else:
-                        print("inside noun call from palm" , array)
-                        
-                        # words_array1 = array  # Assuming response1 is your list of words
-                        # print(f"words_array1 {words_array1}")
-                        # print(f"word array1 type {type(words_array1)}")
-                        # words_array2 = ast.literal_eval(words_array1)
-
-                        for word in array:
-                            print(word)
-
-                        # for word in words_array1:
-                        #     print(f"Word: {word}")
-                            # Call the function to find synonyms for each word
-                            # find_synonyms = gemini_instance.find_synonyms(word)
-                            # # Further processing with synonyms if needed
-                            # if find_synonyms is not None:
-                            #     print(f"Synonyms for '{word}': {find_synonyms}")
-                            # else:
-                            #     print(f"No synonyms found for '{word}'")
-                        # for word in words_array1:
-                        #     print(''.join(word))
-# ----------------------
-                    synonyms_combined = []
-                    # array = []
-# ---------------------------------
-                    # Printing each word individually
-                    for word in array:
-                        if word is None:
-                            synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
-                            # print("Combined synonyms array:", synonyms_combined)
+                        if array_start_index != -1 and array_end_index != -1:
+                            array_string = response[array_start_index:array_end_index]
+                            array = ast.literal_eval(array_string)
+                            print(f"printing the array - {array}")
                         else:
+                            print("Array not found in the response")
+                        # -------------
+                        if response is None:
+                            print("try again later!!!")
+                        else:
+                            print("inside noun call from palm" , array)
                             
-                            find_synonyms = gemini_instance.find_synonyms(word)
-                            if find_synonyms is None:
+                            # words_array1 = array  # Assuming response1 is your list of words
+                            # print(f"words_array1 {words_array1}")
+                            # print(f"word array1 type {type(words_array1)}")
+                            # words_array2 = ast.literal_eval(words_array1)
+
+                            for word in array:
+                                print(word)
+
+                            # for word in words_array1:
+                            #     print(f"Word: {word}")
+                                # Call the function to find synonyms for each word
+                                # find_synonyms = gemini_instance.find_synonyms(word)
+                                # # Further processing with synonyms if needed
+                                # if find_synonyms is not None:
+                                #     print(f"Synonyms for '{word}': {find_synonyms}")
+                                # else:
+                                #     print(f"No synonyms found for '{word}'")
+                            # for word in words_array1:
+                            #     print(''.join(word))
+    # ----------------------
+                        synonyms_combined = []
+                        # array = []
+    # ---------------------------------
+                        # Printing each word individually
+                        for word in array:
+                            if word is None:
                                 synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
                                 # print("Combined synonyms array:", synonyms_combined)
-                            else:
-                                print(f"found synonym for '{word}'---> {find_synonyms}")
-                                synonyms_combined.extend(find_synonyms)
-                                # print("Combined synonyms array:", synonyms_combined)
-# ---------------------------------------------
+                            else:                            
+                                find_synonyms = gemini_instance.find_synonyms(word)
+                                if find_synonyms is None:
+                                    synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
+                                    # print("Combined synonyms array:", synonyms_combined)
+                                else:
+                                    print(f"found synonym for '{word}'---> {find_synonyms}")
+                                    synonyms_combined.extend(find_synonyms)
+                                    # print("Combined synonyms array:", synonyms_combined)
+                    
+                    else:  
+                        print("No unique words found or response is empty.")
+                        error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
+                        dispatcher.utter_message(text=error_text)
+                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
 
-                    # --------------------
                     object=allFunc()
                     print("before check_for_synonym_keywords call")
                     result= object.check_for_synonym_keywords(synonyms_combined)
                     print("After check_for_synonym_keywords call")
                     print(f"result {result}")
-                    # ----------------------------
 
                     # print("Model's response - 2:", response1) 
                     # extract_keyword1 = gemini_instance.extract_keyword(response1)

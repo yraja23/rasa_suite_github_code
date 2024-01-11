@@ -117,17 +117,19 @@ import yaml
 import google.generativeai as genai
 import time
 import datetime
-
+# AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ --YR
+# AIzaSyBbc7JgiMLNOvTFLparUqH62TqPtkHpyvE - Meenatchi
+# AIzaSyBCNdp_YJZAljw80e8qL87fVqbux2eJWP8
 class Geminipro:
-  genai.configure(api_key="AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ")
+  genai.configure(api_key="AIzaSyDunsMXggY0kt-UvXYf2XQywBMx-4purvg")
 
   # Set up the model
   generation_config = {
     "temperature": 0.9, 
     "top_p": 1,
     "top_k": 1,
-    "max_output_tokens": 300,
-    # "max_output_tokens": 2048,
+    # "max_output_tokens": 300,
+    "max_output_tokens": 2048,
 
   }
 
@@ -271,21 +273,20 @@ class Geminipro:
           return None
 
   def extract_nouns(self,sentence):
-      # Create a TextBlob object
       blob = TextBlob(sentence)
-      # Extract nouns using the pos_tags property
       for word, pos in blob.tags:
         print(f"{word}: {pos}")
-        # Extract nouns and relevant adjectives using POS tags for retail-related keywords
       retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
 
         # Filter out 'i' and words with less than 3 characters
       retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
 
-      # nouns = [word for word, pos in blob.tags if pos.startswith('NN') and word.lower() != 'i'   and len(word) > 2 ]
       return retail_keywords
 
 gemini_instance = Geminipro()
+
+
+
 
   # start_marker = "**"
   # end_marker = "**"

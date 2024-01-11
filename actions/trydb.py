@@ -13,7 +13,6 @@ import re
 # from nltk.stem import WordNetLemmatizer
 # from textblob import Word
 # from fuzzywuzzy import fuzz, process
-# from nltk.corpus import stopwords
 # from fuzzywuzzy import fuzz
 # from spellchecker import Speller
 from spellchecker import SpellChecker
@@ -832,7 +831,69 @@ class jsonConversion:
         else:
             print("Failed to get API response. Status Code:", response.status_code)
             return None, None
+# -------------------------------------------ITEM USECASE------------------------------------------------
+    def item_details(self, item_no, access_token):
+        self.item_no = item_no
+        print(f"item number",item_no)
+        API_ENDPOINT = f'https://rex.retail.eu-frankfurt-1.ocs.oraclecloud.com/rgbu-rex-appa-stg1-mfcs/RmsReSTServices/services/private/Item/itemDetail?item={self.item_no}'
 
+        # Make the API request with the access token
+        headers = {
+            'Authorization': 'Bearer ' + access_token
+        }
+        item_details = ''
+        response = requests.get(API_ENDPOINT, headers=headers)
+
+        # Check the response status code
+        if response.status_code == 200:
+            api_response = response.json()
+
+            # Extracting required fields from the API response
+            itemGrandparent = api_response[0]['itemGrandparent']
+            itemParent = api_response[0]['itemParent']
+            item = api_response[0]['item']
+            itemDesc = api_response[0]['itemDesc']
+            status = api_response[0]['status']
+            itemLevel = api_response[0]['itemLevel']
+            tranLevel = api_response[0]['tranLevel']
+            
+            item_details += f"itemGrandparent: {itemGrandparent} \nitemParent: {itemParent}\n item: {item}\n itemDesc: {itemDesc}\n status: {status}\n itemLevel: {itemLevel}\n tranLevel: {tranLevel}"
+            # self.results_array.append(supplier_details)
+            # print(f"inside supplier array : {self.results_array}")
+            item_data = {
+                'itemGrandparent': itemGrandparent,
+                'itemParent': itemParent,
+                'item': item,
+                'itemDesc': itemDesc,
+                'status': status,
+                'itemLevel': itemLevel,
+                'tranLevel': tranLevel
+
+            }
+            if item_data:
+                # Create a DataFrame from the list of dictionaries
+                df = pd.DataFrame([item_data])
+                # Save the DataFrame to an Excel file
+                filename = "item_info.xlsx"
+                df.to_excel(filename, index=False)
+
+                # Move the file to the Downloads directory (similar to previous code)
+                file_path = os.path.join(os.getcwd(), filename)
+                # print(f"file path in local {file_path}")
+                downloads_path = os.path.expanduser("~\\Downloads")
+                # downloads_path = "/app/excel_files"
+                new_file_path = os.path.join(downloads_path, filename)
+                shutil.move(file_path, new_file_path)
+
+                # Get the file URL for sending to the user
+                file_url = f"file://{new_file_path}"
+
+                return item_details, file_url
+        else:
+            print("Failed to get API response. Status Code:", response.status_code)
+            return None, None
+
+# -------------------------------------------------------------------------------------------------------
     
 class allFunc:
 #     def call_chatgpt_api(self, user_input: Text) -> Text:

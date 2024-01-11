@@ -18,6 +18,7 @@ intents:
 - nlu_fallback
 - order_details
 - price_details
+- item_details
 - question_intent
 - session_start_without_reloading
 - supplier_details
@@ -43,18 +44,7 @@ entities:
 - supplier_nlu
 - alpha_values
 
-forms:
-  supplier_form:
-    required_slots:
-    - numeric_values
-
 slots:
-  item:
-    type: text
-    influence_conversation: false
-    mappings:
-    - type: from_entity
-      entity: numeric_values
   numeric_values:
     type: text
     influence_conversation: true
@@ -93,6 +83,11 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
+  item:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
   order_value:
     type: text
     influence_conversation: false
@@ -104,6 +99,11 @@ slots:
     mappings:
     - type: custom
   supplier_output:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  item_output:
     type: text
     influence_conversation: false
     mappings:
@@ -179,6 +179,9 @@ responses:
     - title: price details
       payload: /price_details
       type: postBack
+    - title: item details
+      payload: /price_details
+      type: postBack
     - title: supplier details
       payload: /supplier_details
       type: postBack
@@ -193,6 +196,9 @@ responses:
     buttons:
     - title: price details
       payload: /price_details
+      type: postBack
+    - title: item details
+      payload: /item_details
       type: postBack
     - title: supplier details
       payload: /supplier_details
@@ -249,6 +255,9 @@ responses:
     buttons:
     - title: price details
       payload: /price_details
+      type: postBack
+    - title: item details
+      payload: /item_details
       type: postBack
     - title: supplier details
       payload: /supplier_details
@@ -336,7 +345,8 @@ responses:
   - text: I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.
   utter_specific_use_case_and_general_domain:
   - text: Looks like your query could go two ways—specific details or general information. Could you clarify if you need something specific or a broader overview? I'm here to help with both!
-
+  utter_ask_supplier_form_numeric_values:
+  - text: Please enter a valid supplier number
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
@@ -366,6 +376,7 @@ actions:
 - action_toBard_with_previous_value
 - action_redisplay_buttons
 - action_order_details
+- action_item_details
 - action_download_file
 - action_prevData_for_inv
 - action_prevData_for_supplier
@@ -397,4 +408,5 @@ actions:
 - Action_new_features4
 - Action_new_features5
 - action_synonym_from_bard
+- utter_ask_supplier_form_numeric_values
 

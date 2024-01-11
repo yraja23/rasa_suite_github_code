@@ -2,19 +2,19 @@ version: "3.1"
 nlu:
 - intent: domain_details
   examples: |
-    - zoning zone xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale
+    - zoning xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale manage
     - wholesaler volume voucher tsf division group retail retailing retailer retailers Retail
     - assortment source selller range collection product mix variety central fullfillment centre procurement concession concession consignment
     - refill replenish replenishment distribution revenue turnover sales performance figures demand forecast replenishment ecommerce
     - promotion campaigns register log book control sheet ledger journal transfer
-    - management movement transaction documentation logbook reconciliation audit
+    - movement transaction documentation logbook reconciliation audit
     - Merchandise redistribution reassignment Product deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
     - consignment interchange  migration exchange realignment Delivery Dispatch Consignment metaverse  Cybersecurity Streamline QR RFID Augmented reality AR NFTs NFT Mashgin 
     - Fulfillment Distribution Sending Transfer Logistics Consigning Freight Dispatchment
-    - Consignments Fulfilling Distributional out Haulage Conveyance Freightage run Conveying pick GenZ AI
-    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram shrinkage RFID  experience customer satisfaction click-and-collect
+    - Consignments Fulfilling Distributional out Conveyance run Conveying pick GenZ AI
+    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram RFID  experience customer satisfaction click-and-collect
     - Augmented Artificial Automation Omnichannel Integration promotional RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS 
-    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC
+    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC 
   
 - intent: question_intent
   examples: |
@@ -113,8 +113,15 @@ nlu:
     - price
     - price
     - Price
+
+- intent: item_details
+  examples: |
+    - ITEM
+    - Item
     - item 
     - item 
+    - items
+    - Items
 
 - intent: greet
   examples: |
