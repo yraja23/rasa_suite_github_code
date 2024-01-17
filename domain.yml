@@ -4,7 +4,6 @@ intents:
 - deny
 - affirm
 - domain_details
-# - feeling_intent
 - get_item_all_locs
 - get_item_prices
 - get_more_info
@@ -347,6 +346,17 @@ responses:
   - text: Looks like your query could go two ways—specific details or general information. Could you clarify if you need something specific or a broader overview? I'm here to help with both!
   utter_ask_supplier_form_numeric_values:
   - text: Please enter a valid supplier number
+  utter_price_Notification:
+  - text: It seems like you are looking for information related to pricing.
+  utter_item_Notification:
+  - text: It seems like you are looking for information related to item.
+  utter_supplier_Notification:
+  - text: It seems like you are looking for information related to suppliers.
+  utter_inventory_Notification:
+  - text: It seems like you are looking for information related to inventory.
+  utter_order_Notification:
+  - text: It seems like you are looking for information related to order.
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
@@ -409,4 +419,9 @@ actions:
 - Action_new_features5
 - action_synonym_from_bard
 - utter_ask_supplier_form_numeric_values
+- utter_price_Notification
+- utter_item_Notification
+- utter_supplier_Notification
+- utter_inventory_Notification
+- utter_order_Notification
 

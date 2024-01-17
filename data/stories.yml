@@ -25,6 +25,7 @@ stories:
   - intent: user_query
   - action: utter_price_details
   - intent: price_details
+  - action: utter_price_Notification
   - action: utter_use_cases
 
 - story: item details
@@ -34,6 +35,7 @@ stories:
   - intent: user_query
   - action: utter_price_details
   - intent: price_details
+  - action: utter_price_Notification
   - action: utter_use_cases
   - intent: get_item_prices
   - action: action_all_item_prices
@@ -250,6 +252,7 @@ stories:
   - action: utter_price_details
   - intent: order_details
   - action: action_prevData_for_order
+  - action: utter_order_Notification
   - action: utter_order_number
   - intent: user_entered_numeric_values
   - slot_was_set:
@@ -279,7 +282,7 @@ stories:
   steps:
   - action: utter_price_details
   - intent: inventory_details
-  - action: action_prevData_for_inv
+  - action: utter_inventory_Notification
   - action: utter_loc_for_inventory
   - intent: user_entered_numeric_values
     entities:
@@ -367,6 +370,7 @@ stories:
   - action: utter_price_details
   - intent: supplier_details
   # - action: action_prevData_for_supplier
+  - action: utter_supplier_Notification
   - action: utter_supplier_number
   # - action: utter_ask_supplier_form_numeric_values
   - intent: user_entered_numeric_values
@@ -382,6 +386,7 @@ stories:
   - action: utter_price_details
   - intent: item_details
   # - action: action_prevData_for_supplier
+  - action: utter_item_Notification
   - action: utter_item_number
   # - action: utter_ask_supplier_form_numeric_values
   - intent: user_entered_numeric_values

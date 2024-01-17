@@ -18,6 +18,7 @@ rules:
 - rule: display item details button
   steps:
   - intent: price_details
+  - action: utter_price_Notification
   - action: utter_use_cases
 
 - rule: pick the item intent and action
@@ -95,12 +96,13 @@ rules:
   steps:
   - intent: order_details
   - action: action_prevData_for_order
+  - action: utter_order_Notification
   - action: utter_order_number
 
 - rule: If user selects inventory details, display the correct utter
   steps:
   - intent: inventory_details
-  - action: action_prevData_for_inv
+  - action: utter_inventory_Notification
   #using the item utter here, as it just diaplays the text, and both are same
   - action: utter_loc_for_inventory
 
@@ -109,6 +111,7 @@ rules:
   steps:
   - intent: supplier_details
   # - action: action_prevData_for_supplier
+  - action: utter_supplier_Notification
   - action: utter_supplier_number
 
 - rule: repeat action for supplier
@@ -123,6 +126,7 @@ rules:
 - rule: If user selects item details, display the correct utter
   steps:
   - intent: item_details
+  - action: utter_item_Notification
   - action: utter_item_number
 
 - rule: repeat action for item
@@ -146,6 +150,7 @@ rules:
   steps:
   - intent: order_details
   - action: action_prevData_for_order
+  - action: utter_order_Notification
   - action: utter_order_number
 
 - rule: If user selects order details, pick the right action
@@ -174,7 +179,7 @@ rules:
 - rule: repeat action for order
   steps:
   - intent: inventory_details
-  - action: action_prevData_for_inv
+  - action: utter_inventory_Notification
   - action: utter_loc_for_inventory
 
 - rule: inventory for wh 

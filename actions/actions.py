@@ -535,6 +535,11 @@ class CheckKeywordAction(Action):
         keyword=tracker.latest_message.get("text")
         print("------------------------------------------")
         print(f"before: {keyword}")
+        object=allFunc()
+        full_source_language_name, translation = object.translate_and_print_language(keyword)
+        print (f"full_source_language_name {full_source_language_name}")
+        print (f"translation {translation}")
+        updated_keyword = translation
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
         res=[]
@@ -557,7 +562,7 @@ class CheckKeywordAction(Action):
                         # print(f"2 {examples}") 
                         object=allFunc()
                         #calling the check_words function here                  
-                        result = object.check_words_in_intent(keyword, examples)
+                        result = object.check_words_in_intent(updated_keyword, examples)
                         print(f"domain list: {result}")  # True/False
 
                         res_domain_list.extend(result)
@@ -565,7 +570,7 @@ class CheckKeywordAction(Action):
                         # If the word comes from test fallback, it has to check if the word is there in the other intents
                         # so repeating the above steps for other intents in this function
                         #this is a list - that has true or false output for other intents
-                        result_after_matching_list, intent_name = object.checking_other_intents(keyword)
+                        result_after_matching_list, intent_name = object.checking_other_intents(updated_keyword)
                         #an array of true or false is returned. 
                         # IF EEN ONE TRUE EXISTS IN THE ARRAY, SETTING THE VALUE TO TRUE
                         # IF NO TRUE EXISTS IN THE ARRAY, SETTING THE VAL TO FALSE
@@ -601,224 +606,256 @@ class CheckKeywordAction(Action):
         # if res_domain == True and result_after_matching == True :
         #     res_domain == False 
         # if is_result_after_matching_list_empty == True:
-        #     return [FollowupAction("utter_default_msg")]  
-         
-        if res_domain == True:   
-            if result_after_matching == True:
-                if intent_name is None:
-                    print(f"true true {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
-                    res_domain = True           
-                    # return [SlotSet("user_input_question_true", result_after_matching),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] 
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
-                else:
-                    print(f"true true {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
-                    res_domain = True           
-                    # return [SlotSet("user_input_question_true", result_after_matching),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] 
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
-            elif result_after_matching == False:
-                print(f"true false {intent_name}")
-                print(f"printing res_domain {res_domain}")
-                print(f"printing result_after_matching {result_after_matching}")
-                res_domain = True
-                go_to_bard = "go to bard"
-                print(f"inside redirecting if {go_to_bard}")
-                return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),FollowupAction("action_default_fallback")] 
-         
-        else:
-            print(f"inside redirecting else - main {result_after_matching}")
-            # IF ONE TRUE EXIST IN ARRAY, THEN IT IS DOMAIN SPECIFIC(Filtered)            
-            if res_domain == False:
+        #     return [FollowupAction("utter_default_msg")] 
+            if res_domain == True:   
                 if result_after_matching == True:
-                    user_entered_value = tracker.latest_message.get("text")
-                    print(f"false true {intent_name}")
-                    res_domain = False
+                    if intent_name is None:
+                        print(f"true true {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        res_domain = True           
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
+                    else:
+                        print(f"true true {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        res_domain = True           
+                        # return [SlotSet("user_input_question_true", result_after_matching),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] 
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
+                elif result_after_matching == False:
+                    print(f"true false {intent_name}")
                     print(f"printing res_domain {res_domain}")
                     print(f"printing result_after_matching {result_after_matching}")
-                    print(f"user clicked button {user_entered_value}")
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
-                elif result_after_matching==False:
-                    res_domain = False
-                    user_entered_value1 = tracker.latest_message.get("text")
-                    # gemini_instance  = gemini_instance.Geminipro()
-                    print(f"user input for synonym {user_entered_value1}")
-                    print(f"false false {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
-
-    # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
-                    gemini_instance = Geminipro()
-                    print("after gemini call")
-                    # response = gemini_instance.send_message_and_get_response(user_entered_value1) 
-                    # print("Model's response:", response)
-                    # extract_keyword = gemini_instance.extract_keyword(response)
-                    # print("Extracted Keyword:", extract_keyword)
-                    # find_synonyms = gemini_instance.find_synonyms(extract_keyword)
-                    # print("found synonym:", find_synonyms)
-                    # object=allFunc()
-                    # result= object.check_for_synonym_keywords(find_synonyms)
-                    # print("before noun call")
-                    response1= gemini_instance.extract_nouns(user_entered_value1)
-                    print("after noun call")
-                    print(f"response after extract_nouns {response1}")
-
-
-                    # ------------------------------------------------------------
-
-                    # user_input= "list all the synonym for today in retail"
-                    # object=allFunc()
-                    # response = object.palmApi(user_input)
-                    # print("inside PALM3.....")
-                    # if response == None:
-                    #     print("inside palm response")
-                    # else:
-                    #     print(f"inside palm response -- {response}")
-
-                    # ------------------------------------------------------------
-                    if response1 is not None and len(response1) > 0:
-                        words_array1 = response1  # Assuming response1 is your list of words
-                        unique_words = list(set(words_array1))  # Removing duplicates
-                        print(f"unique_words {unique_words}")
-
-                        # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
-                        user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
+                    res_domain = True
+                    go_to_bard = "go to bard"
+                    print(f"inside redirecting if {go_to_bard}")
+                    return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),FollowupAction("action_default_fallback")] 
+            
+            else:
+                print(f"inside redirecting else - main {result_after_matching}")
+                # IF ONE TRUE EXIST IN ARRAY, THEN IT IS DOMAIN SPECIFIC(Filtered)            
+                if res_domain == False:
+                    if result_after_matching == True:
+                        user_entered_value = tracker.latest_message.get("text")
+                        print(f"false true {intent_name}")
+                        res_domain = False
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        print(f"user clicked button {user_entered_value}")
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
+                    elif result_after_matching==False:
+                        res_domain = False
+                        user_entered_value1 = tracker.latest_message.get("text")
+                        # gemini_instance  = gemini_instance.Geminipro()
                         object=allFunc()
-                        response = object.palmApi(user_input)
-                        print(f" palm taking retail keyword from user {response}")
-                        #-------------- 
-                        # Extracting the array from the response string
-                        array_start_index = response.find("[")
-                        array_end_index = response.rfind("]") + 1  # Include the closing bracket
+                        full_source_language_name, translation = object.translate_and_print_language(user_entered_value1)
+                        print(f"user input for synonym {translation}")
+                        print(f"false false {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
 
-                        if array_start_index != -1 and array_end_index != -1:
-                            array_string = response[array_start_index:array_end_index]
-                            array = ast.literal_eval(array_string)
-                            print(f"printing the array - {array}")
-                        else:
-                            print("Array not found in the response")
-                        # -------------
-                        if response is None:
-                            print("try again later!!!")
-                        else:
-                            print("inside noun call from palm" , array)
-                            
-                            # words_array1 = array  # Assuming response1 is your list of words
-                            # print(f"words_array1 {words_array1}")
-                            # print(f"word array1 type {type(words_array1)}")
-                            # words_array2 = ast.literal_eval(words_array1)
+        # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
+                        gemini_instance = Geminipro()
+                        print("after gemini call")
+                        # response = gemini_instance.send_message_and_get_response(user_entered_value1) 
+                        # print("Model's response:", response)
+                        # extract_keyword = gemini_instance.extract_keyword(response)
+                        # print("Extracted Keyword:", extract_keyword)
+                        # find_synonyms = gemini_instance.find_synonyms(extract_keyword)
+                        # print("found synonym:", find_synonyms)
+                        # object=allFunc()
+                        # result= object.check_for_synonym_keywords(find_synonyms)
+                        # print("before noun call")
+                        response1= gemini_instance.extract_nouns(translation)
+                        print("after noun call")
+                        print(f"response after extract_nouns {response1}")
 
+
+                        # ------------------------------------------------------------
+
+                        # user_input= "list all the synonym for today in retail"
+                        # object=allFunc()
+                        # response = object.palmApi(user_input)
+                        # print("inside PALM3.....")
+                        # if response == None:
+                        #     print("inside palm response")
+                        # else:
+                        #     print(f"inside palm response -- {response}")
+
+                        # ------------------------------------------------------------
+                        if response1 is not None and len(response1) > 0:
+                            words_array1 = response1  # Assuming response1 is your list of words
+                            unique_words = list(set(words_array1))  # Removing duplicates
+                            print(f"unique_words {unique_words}")
+
+                            # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
+                            user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
+                            object=allFunc()
+                            response = object.palmApi(user_input)
+                            print(f"palm taking retail keyword from user {response}")
+                            #-------------- 
+                            # Extracting the array from the response string
+                            array_start_index = response.find("[")
+                            array_end_index = response.rfind("]") + 1  # Include the closing bracket
+
+                            if array_start_index != -1 and array_end_index != -1:
+                                array_string = response[array_start_index:array_end_index]
+                                array = ast.literal_eval(array_string)
+                                print(f"printing the array - {array}")
+                            else:
+                                print("Array not found in the response")
+                            # -------------
+                            if response is None:
+                                print("try again later!!!")
+                            else:
+                                print("inside noun call from palm" , array)
+                                
+                                # words_array1 = array  # Assuming response1 is your list of words
+                                # print(f"words_array1 {words_array1}")
+                                # print(f"word array1 type {type(words_array1)}")
+                                # words_array2 = ast.literal_eval(words_array1)
+
+                                for word in array:
+                                    print(word)
+
+                                # for word in words_array1:
+                                #     print(f"Word: {word}")
+                                    # Call the function to find synonyms for each word
+                                    # find_synonyms = gemini_instance.find_synonyms(word)
+                                    # # Further processing with synonyms if needed
+                                    # if find_synonyms is not None:
+                                    #     print(f"Synonyms for '{word}': {find_synonyms}")
+                                    # else:
+                                    #     print(f"No synonyms found for '{word}'")
+                                # for word in words_array1:
+                                #     print(''.join(word))
+        # ----------------------
+                            synonyms_combined = []
+                            # array = []
+        # ---------------------------------
+                            # Printing each word individually
                             for word in array:
-                                print(word)
-
-                            # for word in words_array1:
-                            #     print(f"Word: {word}")
-                                # Call the function to find synonyms for each word
-                                # find_synonyms = gemini_instance.find_synonyms(word)
-                                # # Further processing with synonyms if needed
-                                # if find_synonyms is not None:
-                                #     print(f"Synonyms for '{word}': {find_synonyms}")
-                                # else:
-                                #     print(f"No synonyms found for '{word}'")
-                            # for word in words_array1:
-                            #     print(''.join(word))
-    # ----------------------
-                        synonyms_combined = []
-                        # array = []
-    # ---------------------------------
-                        # Printing each word individually
-                        for word in array:
-                            if word is None:
-                                synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
-                                # print("Combined synonyms array:", synonyms_combined)
-                            else:                            
-                                find_synonyms = gemini_instance.find_synonyms(word)
-                                if find_synonyms is None:
+                                if word is None:
                                     synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
                                     # print("Combined synonyms array:", synonyms_combined)
-                                else:
-                                    print(f"found synonym for '{word}'---> {find_synonyms}")
-                                    synonyms_combined.extend(find_synonyms)
-                                    # print("Combined synonyms array:", synonyms_combined)
-                    
-                    else:  
-                        print("No unique words found or response is empty.")
-                        error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
-                        dispatcher.utter_message(text=error_text)
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-
-                    object=allFunc()
-                    print("before check_for_synonym_keywords call")
-                    result= object.check_for_synonym_keywords(synonyms_combined)
-                    print("After check_for_synonym_keywords call")
-                    print(f"result {result}")
-
-                    # print("Model's response - 2:", response1) 
-                    # extract_keyword1 = gemini_instance.extract_keyword(response1)
-                    # print("Extracted Keyword -2 :", extract_keyword1)
-                    # find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
-                    # print("found synonym - 2:", find_synonyms1)
-                    # # object=allFunc()
-                    # result1= object.check_for_synonym_keywords(find_synonyms1)
-                    # print(f"second result-{result1}")
-
-# --------------------------------------FINAL RESULT---------------------------------------------------
-                    # print(f"result {result}")
-                    if result is None:
-                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
-                        dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-                    elif result == "none":
-                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
-                        dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-  
-                        # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
-                        # dispatcher.utter_message(text=error_text)
-                        # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-
-                    # elif isinstance(result, list) and len(result) == 1 and isinstance(result[0], (int, float)):
-                    elif result == "multiple" :
-                        # Unpack the single-element list to get the numeric value
-                        error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
-                        dispatcher.utter_message(text=error_text)
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain), FollowupAction("utter_price_details")]
-
-                    # elif result in ['Supplier','supplier'] :
-                    elif re.search(r'supp', result, re.IGNORECASE):
-                        print(f"inside supplier {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
-                    # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
-                    elif re.search(r'order', result, re.IGNORECASE):
-                        print(f"inside order {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
-                    # elif result in [ 'Inventory','inventory']:
-                    elif re.search(r'invent', result, re.IGNORECASE):
-                        print(f"inside Inventory {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
-                    # elif result in ['Price','Prices']:
-                    elif re.search(r'price', result, re.IGNORECASE):
-                        print(f"inside Price {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]
-                    # elif result is None:
-                    #     error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
-                    #     dispatcher.utter_message(text=error_text)
-                    #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-                    else:
-             
-                    # user_input_check= extract_keyword(user_entered_value1)
-                    # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
-                            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                else:                            
+                                    find_synonyms = gemini_instance.find_synonyms(word)
+                                    if find_synonyms is None:
+                                        synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
+                                        # print("Combined synonyms array:", synonyms_combined)
+                                    else:
+                                        print(f"found synonym for '{word}'---> {find_synonyms}")
+                                        synonyms_combined.extend(find_synonyms)
+                                        # print("Combined synonyms array:", synonyms_combined)
+                        
+                        else:  
+                            print("No unique words found or response is empty.")
+                            error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
                             dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
                             return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+
+                        object=allFunc()
+                        print("before check_for_synonym_keywords call")
+                        result= object.check_for_synonym_keywords(synonyms_combined)
+                        print("After check_for_synonym_keywords call")
+                        print(f"result {result}")
+
+                        # print("Model's response - 2:", response1) 
+                        # extract_keyword1 = gemini_instance.extract_keyword(response1)
+                        # print("Extracted Keyword -2 :", extract_keyword1)
+                        # find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
+                        # print("found synonym - 2:", find_synonyms1)
+                        # # object=allFunc()
+                        # result1= object.check_for_synonym_keywords(find_synonyms1)
+                        # print(f"second result-{result1}")
+
+    # --------------------------------------FINAL RESULT---------------------------------------------------
+                        # print(f"result {result}")
+                        if result is None:
+                            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                    You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                            dispatcher.utter_message(text=error_text)
+                                    #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                        elif result == "none":
+                                raw_user_input_to_check_isRetail = tracker.latest_message.get("text")
+                                full_source_language_name, translation = object.translate_and_print_language(raw_user_input_to_check_isRetail)
+                                print (f"full_source_language_name {full_source_language_name}")
+                                print (f"translation {translation}")
+                                updated_keyword = translation
+
+                                check_user_input_isRetail = f"Is the phrase '{updated_keyword}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
+                                object=allFunc()
+                                response = object.palmApi(check_user_input_isRetail)
+                                print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
+                                if response == 'Yes' or response == 'yes':
+                                    user_input= "Definition of " +updated_keyword+" in retail"
+                                    object=allFunc()
+                                    response = object.palmApi(user_input)
+                                    if response == None:
+                                        dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
+                                    else:
+                                        print(response)
+                                        dispatcher.utter_message(response)
+                                    return[FollowupAction("action_check_slot")]
+                                else:
+                                    error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                    dispatcher.utter_message(text=error_text)
+                                    return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                            # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
+                            # dispatcher.utter_message(text=error_text)
+                            # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+
+                        elif result == "multiple" :
+                            # Unpack the single-element list to get the numeric value
+                            error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
+                            dispatcher.utter_message(text=error_text)
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain), FollowupAction("utter_redisplay_buttons_nonretail")]
+
+                        # elif result in ['Supplier','supplier'] :
+                        elif re.search(r'supp', result, re.IGNORECASE):
+                            print(f"inside supplier {result}")
+                            message = "It seems like you are looking for information related to suppliers."
+                            dispatcher.utter_message(text=message)
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
+                        # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
+                        elif re.search(r'order', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to orders."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside order {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
+                        # elif result in [ 'Inventory','inventory']:
+                        elif re.search(r'invent', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to inventory."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside Inventory {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
+                        # elif result in ['Price','Prices']:
+                        elif re.search(r'pric', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to pricing."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside Price {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_use_cases")]
+                        elif re.search(r'item', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to item."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside item {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_item_number")]
+
+                        # elif result is None:
+                        #     error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
+                        #     dispatcher.utter_message(text=error_text)
+                        #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                        else:
+                
+                        # user_input_check= extract_keyword(user_entered_value1)
+                        # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
+                                error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                    You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                dispatcher.utter_message(text=error_text)
+                                    #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                                return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
             # else:
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      
@@ -912,12 +949,17 @@ class ActionGoToBardMoreInfo(Action):
 
         # dispatcher.utter_message("I apologize, but I am currently in development stage, so, I am not yet ready \n\
         # #                             with the data that you expect. Please check back later.")
+
         if user_input:
-            # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
-            user_input= "Definition of " +user_input+ " in retail"
-            print(" important check ******************* ")
+            object=allFunc()
+            full_source_language_name, translation = object.translate_and_print_language(user_input)
+            print (f"full_source_language_name {full_source_language_name}")
+            print (f"translation {translation}")
+            updated_keyword = translation
+                # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
+            user_input= "Definition of " +updated_keyword+ " in retail"
+            print("*******BARD() check************ ")
             print(f"{user_input}")
-            print("******************* ")
             object=allFunc()
             response = object.palmApi(user_input)
             if response == None:
@@ -992,7 +1034,7 @@ class ActionCheckSlot(Action):
                     # print('6.inside supplier if',sup1)
                     if not numeric_values:
                         print('empty list')
-                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_order_number")]
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_order_Notification")]
                     else:
                         print('Non empty list')
                         order_num = tracker.get_slot("supplier_with_number")
@@ -1015,7 +1057,7 @@ class ActionCheckSlot(Action):
                     print('6.inside supplier if',sup1)
                     if not numeric_values:
                         print('empty list')     
-                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_number")]
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_Notification")]
                         # return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_number")]
                     else:
                         print('Non empty list')
@@ -1024,7 +1066,7 @@ class ActionCheckSlot(Action):
                         return [SlotSet("user_input_question_true", slotVal),SlotSet("supplier_with_number", i),FollowupAction("action_supplier_with_number_details")]
 
             elif slot_value1 == "inventory_details":
-                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_loc_for_inventory")]
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_inventory_Notification")]
             elif slot_value1 == "asking_help":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_details")]
             # elif slot_value1 == "price_details":
@@ -1036,7 +1078,7 @@ class ActionCheckSlot(Action):
             elif slot_value1 == "price_details" and user_entered_value == "Get Specific Price":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_utter_display_prev_item")]
             elif slot_value1 == "price_details" or user_entered_value == "price details":
-                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_use_cases")]
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
             elif slot_value1 == "inventory_loc_type1":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_inventory_details_for_wh")]
             elif slot_value1 == "inventory_loc_type2":
@@ -1067,6 +1109,8 @@ class ActionCheckSlot(Action):
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("Action_new_features")]
             elif slot_value1 == "hello":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("utter_session_started")]
+            elif slot_value1 == "item_details":
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_Notification")]
             # elif slot_value1 == "nlu_fallback_math_operations":
             #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_handle_numeric_values")]
             # elif slot_value1 == "supplier_details+user_entered_numeric_values":
@@ -1293,10 +1337,9 @@ class ActionNewFeatures(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        # texts
+        
         dispatcher.utter_message(text="Hello 😀")  
 
-        # images
         dispatcher.utter_message(text="Here is something to cheer you up 😉", image="https://b.zmtcdn.com/data/pictures/1/17428541/da50010b1a953dfbb109306fba5a6c06.jpg") 
 
         return [FollowupAction("Action_new_features2")]
@@ -1424,35 +1467,29 @@ class ActionNewFeatures5(Action):
         dispatcher.utter_message(text="Check this PDF", attachment=data3)
 
         return [FollowupAction("utter_price_details")]
-
-# class ActionGoToBardForSynonyms(Action):
-#     def name(self) -> Text:
-#         return "action_synonym_from_bard"
-#     def run(
-#         self,
-#         dispatcher: CollectingDispatcher,
-#         tracker: Tracker,
-#         domain: Dict[Text, Any],
-#     ) -> List[Dict[Text, Any]]:
-#         # if res_domain == True:   
-#             # if result_after_matching == True:
-#         get_res_domain_slot=tracker.get_slot("res_domain")
-#         print("get_res_domain_slot to print from bard",get_res_domain_slot)
-#         user_input=tracker.latest_message.get("text")
-#         if get_res_domain_slot == True:
-#             user_input=tracker.latest_message.get("text")
-#             if user_input:
-#                 print("user_input ",user_input)
-#                 print("get_res_domain_slot ",get_res_domain_slot)
-#                 # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
-#                 user_input= "Definition of " +user_input+" in retail"
-#                 object=allFunc()
-#                 response = object.palmApi(user_input)
-#                 if response == None:
-#                     dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
-#                 else:
-#                     dispatcher.utter_message(response)
-#             return[FollowupAction("action_check_slot")]
+    
+  
+class ActionCheckForRetailDomain(Action):
+    def name(self) -> Text:
+        return "action_check_for_retial_domain"
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+ 
+            user_input=tracker.latest_message.get("text")
+            if user_input:
+                print("user_input ",user_input)
+                user_input= "Definition of " +user_input+" in retail"
+                object=allFunc()
+                response = object.palmApi(user_input)
+                if response == None:
+                    dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
+                else:
+                    dispatcher.utter_message(response)
+            return[FollowupAction("action_check_slot")]
 
 
 # # download  chat as file

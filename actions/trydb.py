@@ -8,6 +8,8 @@ import requests
 import google.generativeai as genai
 import string
 import re
+from googletrans import Translator, LANGUAGES
+import langid
 
 #spellchecker modules
 # from nltk.stem import WordNetLemmatizer
@@ -904,9 +906,8 @@ class allFunc:
 #   #old - YwiGpT53EGvjiLA9g2QGpH0TUnQwqLCo110s3WYpPsXJVqKcGKvujc1VX5QJZayTIXAHqA.
     def palmApi(self, user_input: Text) -> Text:
         API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText?key=AIzaSyDSWNlyibcYAk-ivUIrlDrzz3S4BJr236E"
-        print(" important check2 ******************* ")
+        print(" ******************* ")
         print(f"{user_input}")
-        print("******************* ")
         headers = {
         'Content-Type': 'application/json'
         }
@@ -1089,12 +1090,16 @@ class allFunc:
         supplier_keywords = ['Supplier']
         order_keyword = ['order','Order'] # ,'purchase order'
         inventory_keywords = ['Inventory','inventory']
-        pricing_keywords = [ 'Price', 'Prices']
+        pricing_keywords = [ 'Price', 'Prices','cost']
+        item_keywords = [ 'item', 'Items']
+
 
         supplier_keywords_lower = [word.lower() for word in supplier_keywords]
         order_keyword_lower = [word.lower() for word in order_keyword]
         inventory_keywords_lower = [word.lower() for word in inventory_keywords]
         pricing_keywords_lower = [word.lower() for word in pricing_keywords]
+        item_keywords_lower = [word.lower() for word in item_keywords]
+
 
         
       # Compile regular expressions
@@ -1102,6 +1107,8 @@ class allFunc:
         order_regex = re.compile('|'.join(order_keyword_lower), re.IGNORECASE)
         inventory_regex = re.compile('|'.join(inventory_keywords_lower), re.IGNORECASE)
         pricing_regex = re.compile('|'.join(pricing_keywords_lower), re.IGNORECASE)
+        item_regex = re.compile('|'.join(item_keywords_lower), re.IGNORECASE)
+
 
 
         # all_keywords_pattern = '|'.join(supplier_keywords_lower + order_keyword_lower + inventory_keywords_lower + pricing_keywords_lower)
@@ -1125,6 +1132,7 @@ class allFunc:
             "order": [],
             "inventory": [],
             "pricing": [],
+            "item": [],
         }
 
         for word in cleaned_words:
@@ -1136,6 +1144,8 @@ class allFunc:
                 found_keywords["inventory"].append(word)
             elif pricing_regex.search(word):
                 found_keywords["pricing"].append(word)
+            elif item_regex.search(word):
+                found_keywords["item"].append(word)
 
         if found_keywords:
             # Print counts for each category
@@ -1273,6 +1283,39 @@ class allFunc:
         corrected_words = [spell.correction(word) for word in words]
         corrected_sentence = ' '.join(corrected_words)
         return corrected_sentence
+    
+
+    def translate_and_print_language(self, user_input):
+        # --------
+
+        translator = Translator()
+
+        translation = translator.translate(user_input, dest='en')
+
+        full_source_language_name = LANGUAGES.get(translation.src)
+
+        print(f"Source Language: {full_source_language_name}")
+        print(f"Translated Text: {translation.text}")
+
+        print(translation)
+        return full_source_language_name,translation.text
+    
+        # --------
+        # translator = Translator()
+
+        # # Detect the language using langid
+        # lang, _ = langid.classify(user_input)
+
+        # # Translate the text to English
+        # translation = translator.translate(user_input, dest='en')
+
+        # # Get the full language name
+        # full_source_language_name = LANGUAGES.get(lang)
+
+        # print(f"Source Language: {full_source_language_name}")
+        # print(f"Translated Text: {translation.text}")
+
+        # return translation
 
     def check_plural(self,word):
         p = inflect.engine()

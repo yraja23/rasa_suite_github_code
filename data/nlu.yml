@@ -2,19 +2,9 @@ version: "3.1"
 nlu:
 - intent: domain_details
   examples: |
-    - zoning xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale manage
-    - wholesaler volume voucher tsf division group retail retailing retailer retailers Retail
-    - assortment source selller range collection product mix variety central fullfillment centre procurement concession concession consignment
-    - refill replenish replenishment distribution revenue turnover sales performance figures demand forecast replenishment ecommerce
-    - promotion campaigns register log book control sheet ledger journal transfer
-    - movement transaction documentation logbook reconciliation audit
-    - Merchandise redistribution reassignment Product deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
-    - consignment interchange  migration exchange realignment Delivery Dispatch Consignment metaverse  Cybersecurity Streamline QR RFID Augmented reality AR NFTs NFT Mashgin 
-    - Fulfillment Distribution Sending Transfer Logistics Consigning Freight Dispatchment
-    - Consignments Fulfilling Distributional out Conveyance run Conveying pick GenZ AI
-    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram RFID  experience customer satisfaction click-and-collect
-    - Augmented Artificial Automation Omnichannel Integration promotional RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS 
-    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC 
+    - ASN GRN RMS Resa RIM RIB WMS 
+    - RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS transfer
+    - Brick Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC 
   
 - intent: question_intent
   examples: |
@@ -101,11 +91,11 @@ nlu:
 
 - intent: inventory_details
   examples: |
-    - Inventory 
-    - inventory 
-    - Inventory 
-    - inventory 
-    - Inventory 
+    - Inventory inventory inventory inventory
+    - inventory inventory inventory inventory
+    - Inventory inventory inventory inventory
+    - inventory inventory
+    - Inventory inventory
 
 - intent: price_details
   examples: |
@@ -113,6 +103,8 @@ nlu:
     - price
     - price
     - Price
+    - rate
+    - rate price cost
 
 - intent: item_details
   examples: |
@@ -133,9 +125,9 @@ nlu:
     - hiii
     - hii
     - hiiii
-    - hey hey 
+    - hey hey morning morning
     - good morning hi
-    - good evening
+    - good evening evening evening
     - moin
     - hey there
     - let's go
@@ -253,16 +245,16 @@ nlu:
 - intent: continue_info
   examples: |
     - yes
-    - yeah continue_info
+    - yeah continue
     - yes, want to... repeat
-    - yeah, wish to repeat continue_info
+    - yeah, wish to repeat continue
     - continue repeat
-    - yup continue_info
-    - repeat continue_info
-    - continue_info
-    - /continue_info
-    - continue_info
-    - continue_info
+    - yup continue
+    - repeat continue
+    - continue
+    - /continue
+    - continue
+    - continue
     - continue_info
 
 - intent: deny
@@ -345,15 +337,15 @@ nlu:
   examples: |
     - W(loc_type)
     - w(loc_type)
-    - Warehouse warehouse
-    - warehouse
+    - Whouse wh
+    - wh
 
 - intent: inventory_loc_type2
   examples: |
     - S(loc_type)
     - s(loc_type)
-    - Store
-    - stores Store
+    - st
+    - sto St
 
 - intent: user_query
   examples: |
