@@ -14,48 +14,6 @@ rules:
   - action: utter_anything_else
   - action: utter_price_details
 
-#------------if previous usecases is metioned, fetch the story.. no usecase , display buttons---------------------------
-- rule: user_enters_number_without_use_case
-  steps:
-  - action: utter_price_details
-  - intent: user_entered_numeric_values
-  - action: utter_default_msg
-  - action: utter_price_details
-
-# - rule: item's previous intents before user_entered_numeric_values - item flow
-#   steps:
-#   - action: action_utter_display_prev_item
-#   - action: utter_item_number
-#   - intent: user_entered_numeric_values
-#     entities:
-#     - numeric_values: '100140000'
-#   - slot_was_set:
-#     - item: '100140000'
-
-# - rule: supplier's previous intents before user_entered_numeric_values - supplier flow
-#   steps:
-#   - action: utter_supplier_number
-#   - intent: user_entered_numeric_values
-#   - slot_was_set:
-#     - numeric_values: "5810725"
-
-# - rule: order's previous intents before user_entered_numeric_values - order flow
-#   steps:
-#   - action: utter_order_number
-#   - intent: user_entered_numeric_values
-#   - slot_was_set:
-#       - numeric_values: "120024"
-
-# - rule: inventory's previous intents before user_entered_numeric_values - inventory flow
-#   steps:
-#   - action: action_prevData_for_inv
-#   - action: utter_loc_for_inventory
-#   - intent: user_entered_numeric_values
-#     entities:
-#     - numeric_values: '53750'
-#   - slot_was_set:
-#     - numeric_values: '53750'
-#--------------------------------------------------------------------------------------------
 # rule for all item's prices
 - rule: display item details button
   steps:
@@ -146,6 +104,7 @@ rules:
   #using the item utter here, as it just diaplays the text, and both are same
   - action: utter_loc_for_inventory
 
+# *************************************************************
 - rule: If user selects supplier details, display the correct utter
   steps:
   - intent: supplier_details
@@ -160,6 +119,7 @@ rules:
     - numeric_values: "5810725"
   - action: action_supplier_details
   - action: utter_continue
+  # ***************************************************
 
 - rule: repeat action for order
   steps:
@@ -222,23 +182,28 @@ rules:
   - intent: domain_details
   - action: action_default_fallback
 
+- rule: specific_use_case_and_general_domain rule
+  steps:
+  - action: utter_specific_use_case_and_general_domain
+  - action: utter_redisplay_buttons_nonretail
+
 # - rule: mathematical_function_rule
 #   steps:
 #   - intent: nlu_fallback_math_operations
 #   - action: action_handle_numeric_values
 #   - action: utter_price_details
 
-- rule: feeling_rule
-  steps:
-  - intent: feeling_intent
-  - action: utter_how_are_you
-  - action: utter_price_details
+# - rule: feeling_rule
+#   steps:
+#   - intent: feeling_intent
+#   - action: utter_how_are_you
+#   - action: utter_price_details
 
-- rule: name_rules
-  steps:
-  - intent: ask_whatismyname
-  - action: utter_name
-  - action: utter_price_details
+# - rule: name_rules
+#   steps:
+#   - intent: ask_whatismyname
+#   - action: utter_name
+#   - action: utter_price_details
 
 - rule: supplier detials and numeric value
   steps:
@@ -271,34 +236,34 @@ rules:
   - action: utter_deny_nohelp
   - action: utter_price_details
 
-- rule: ask_howbuilt_rule
-  steps:
-  - intent: ask_howbuilt
-  - action: utter_who_r_u
-  - action: utter_price_details
+# - rule: ask_howbuilt_rule
+#   steps:
+#   - intent: ask_howbuilt
+#   - action: utter_who_r_u
+#   - action: utter_price_details
 
-- rule: ask_howold_rule
-  steps:
-  - intent: ask_howold
-  - action: utter_ask_howold
-  - action: utter_price_details
+# - rule: ask_howold_rule
+#   steps:
+#   - intent: ask_howold
+#   - action: utter_ask_howold
+#   - action: utter_price_details
 
-- rule: ask_botname_rule
-  steps:
-  - intent: ask_botname
-  - action: utter_ask_botname
-  - action: utter_price_details
+# - rule: ask_botname_rule
+#   steps:
+#   - intent: ask_botname
+#   - action: utter_ask_botname
+#   - action: utter_price_details
 
 - rule: reply_default_rule
   steps:
   - action: utter_default_msg
   - action: utter_price_details
 
-- rule: ask_weather_rule
-  steps:
-  - intent: ask_weather
-  - action: utter_ask_weather
-  - action: utter_price_details
+# - rule: ask_weather_rule
+#   steps:
+#   - intent: ask_weather
+#   - action: utter_ask_weather
+#   - action: utter_price_details
 
 - rule: thanks_rule
   steps:
@@ -315,15 +280,19 @@ rules:
   - action: Action_new_features4
   - action: Action_new_features5
 
-# - rule: synonyms rule
+# - rule: Activate form
 #   steps:
-#   - intent: synonyms
-#   - action: utter_enter_synonyms
+#   - action: utter_supplier_number
+#   - action: supplier_form
+#   - active_loop: supplier_form
 
-# - rule: synonyms rule2
+# - rule: Submit form
+#   condition:
+#   - active_loop: supplier_form
 #   steps:
-#   - action: utter_enter_synonyms
-#   - intent: user_entered_alpha_values
+#   - action: supplier_form
+#   - active_loop: null
 #   - slot_was_set:
-#     - alpha_values: "cloudnine"
-#   - action: action_toBard_for_synonyms
+#     - requested_slot: "numeric_values"
+#   - action: action_supplier_details
+#   - action: utter_continue

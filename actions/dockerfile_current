@@ -1,0 +1,54 @@
+FROM rasa/rasa:3.5.5
+
+USER root
+
+# Install NLTK and download data
+RUN pip install nltk && \
+    python -m nltk.downloader all && \
+    rm -rf /root/nltk_data
+
+USER 1001
+
+WORKDIR /app
+
+COPY . /app
+
+COPY ./data /app/data
+COPY ./config.yml /app/config.yml
+COPY ./credentials.yml /app/credentials.yml
+COPY ./endpoints.yml /app/endpoints.yml
+COPY ./nltk_data /app/nltk_data
+
+VOLUME /app
+VOLUME /app/data
+VOLUME /app/models
+VOLUME /app/nltk_data
+
+EXPOSE 5005
+
+CMD ["run", "-m", "/app/models", "--enable-api", "--cors", "*", "--debug"]
+
+# FROM rasa/rasa:3.5.5
+
+# WORKDIR /app
+
+# COPY . /app
+
+# USER root
+
+# COPY ./data /app/data
+
+# COPY ./config.yml /app/config.yml
+# COPY ./credentials.yml /app/credentials.yml
+# COPY ./endpoints.yml /app/endpoints.yml
+# COPY ./nltk_data /app/nltk_data
+
+# VOLUME /app
+# VOLUME /app/data
+# VOLUME /app/models
+# VOLUME /app/nltk_data
+
+# EXPOSE 5005
+
+# CMD ["run", "-m", "/app/models", "--enable-api", "--cors", "*", "--debug"]
+

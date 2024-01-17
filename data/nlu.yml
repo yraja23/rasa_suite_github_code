@@ -2,19 +2,19 @@ version: "3.1"
 nlu:
 - intent: domain_details
   examples: |
-    - zoning zone xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale
+    - zoning xform year chain yearlong worksheet workspace workstation submitted widow whole wholesale manage
     - wholesaler volume voucher tsf division group retail retailing retailer retailers Retail
-    - assortment source selller range collection mix variety central fullfillment centre procurement concession concession consignment
+    - assortment source selller range collection product mix variety central fullfillment centre procurement concession concession consignment
     - refill replenish replenishment distribution revenue turnover sales performance figures demand forecast replenishment ecommerce
-    - promotion campaigns discounts register log book control sheet ledger journal 
-    - management movement transaction documentation transfer logbook database reconciliation audit
-    - Merchandise redistribution reassignment deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
+    - promotion campaigns register log book control sheet ledger journal transfer
+    - movement transaction documentation logbook reconciliation audit
+    - Merchandise redistribution reassignment Product deployment dispatch Partner finisher Cashierless Touch-free Artificial  Hyperautomation  On-Demand Manufacturing
     - consignment interchange  migration exchange realignment Delivery Dispatch Consignment metaverse  Cybersecurity Streamline QR RFID Augmented reality AR NFTs NFT Mashgin 
     - Fulfillment Distribution Sending Transfer Logistics Consigning Freight Dispatchment
-    - Consignments Fulfilling Distributional out Haulage Conveyance Freightage run Conveying pick GenZ AI
-    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram shrinkage RFID  experience customer satisfaction click-and-collect
+    - Consignments Fulfilling Distributional out Conveyance run Conveying pick GenZ AI
+    - Zoning wholesaler assortment promotion register movement fulfillment consignment accuracy e-commerce loss prevention planogram RFID  experience customer satisfaction click-and-collect
     - Augmented Artificial Automation Omnichannel Integration promotional RMS rms RPM rpm ReIM reim ReSA resa RTM rtm  ARI Allocation trade RIM  rim WMS RIB POS 
-    - augmented reality AR virtual reality item Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC
+    - augmented reality AR virtual reality Cryptocurrency  VR Brick and Mortar eCommerce BOPIC BOPAC BORIS Direct to Consumer D2C DTC B2B BTB BTC item
   
 - intent: question_intent
   examples: |
@@ -84,11 +84,12 @@ nlu:
   examples: |
     - order 
     - Purchase Order
-    - order 
+    - orders
     - Order
+    - Orders
     - PO 
     - po 
-    - Purchase order asn advanced-shipment-notice shipment notice
+    - Purchase order 
 
 - intent: supplier_details
   examples: |
@@ -97,25 +98,6 @@ nlu:
     - supplier 
     - Supplier
     - Supplier
-
-- intent: synonyms
-  examples: |
-    - Synonyms 
-    - synonyms
-    - synonyms 
-    - synonyms
-    - synonyms
-
-
-# - synonym: supplier
-#   examples: | 
-#     - supplier
-#     - vendor
-#     - vender
-#     - supp
-#     - sups
-#     - sup
-#     - manufacuter 
 
 - intent: inventory_details
   examples: |
@@ -130,7 +112,9 @@ nlu:
     - Cost 
     - price
     - price
-    - Price upc sku item
+    - Price
+    - item 
+    - item 
 
 - intent: greet
   examples: |
@@ -153,49 +137,50 @@ nlu:
     - good afternoon
     - yo hi
     - Hi HI hii
+# - hi helo how are you
 
-- intent: feeling_intent
-  examples: |
-    - feelings decisions purpose 
-    - emotions
-    - happiness
-    - sadness sad crazy
-    - capable eat eat eat eat eat eat eat 
-    - angry eat 
-    - hungry
-    - best friend
-    - boy friend
-    - girl friend 
-    - Human Human human human human human human
-    - real person guess
-    - bot chatbot bot
-    - boy boy girl Girl
-    - eat Lunch Dinner Breakfast Food 
-    - lunch dinner breakfast food 
-    - how are you 
-    - How are you
-    - How are you
-    - How are you men?
-    - How are you?
-    - How are you? 
-    - How was your day?
-    - sentiment emotional bored lonely empathize love people empathy sympathy guess 
-    - are you feel good have a great day what are you up to I'm fine guess
-    - What's going on What's new What's up What's up man and you are you alright
-    - are you happy are you having a good day  h r u hello, how are you are you are you u doing are you are things going are things with you are u
-    - are u are you are you are you doing are you doing this morning are you doing are you doing are you doing are you feeling is it going is your day is your day going is your evening
-    - r u hw r u is everything all right everything how are you doing are you what about your day what are you up to what's good what's up what's up bot what's up? whatsapp
+# - intent: feeling_intent
+#   examples: |
+#     - feelings decisions purpose 
+#     - emotions
+#     - happiness
+#     - sadness sad crazy
+#     - capable eat eat eat eat eat eat eat 
+#     - angry eat 
+#     - hungry
+#     - best friend
+#     - boy friend
+#     - girl friend 
+#     - Human Human human human human human human
+#     - real person guess
+#     - bot chatbot bot
+#     - boy boy girl Girl
+#     - eat Lunch Dinner Breakfast Food 
+#     - lunch dinner breakfast food 
+#     - how are you 
+#     - How are you
+#     - How are you
+#     - How are you men?
+#     - How are you?
+#     - How are you? 
+#     - How was your day?
+#     - sentiment emotional bored lonely empathize love people empathy sympathy guess 
+#     - are you feel good have a great day what are you up to I'm fine guess
+#     - What's going on What's new What's up What's up man and you are you alright
+#     - are you happy are you having a good day  h r u hello, how are you are you are you u doing are you are things going are things with you are u
+#     - are u are you are you are you doing are you doing this morning are you doing are you doing are you doing are you feeling is it going is your day is your day going is your evening
+#     - r u hw r u is everything all right everything how are you doing are you what about your day what are you up to what's good what's up what's up bot what's up? whatsapp
 
-- intent: ask_howbuilt
-  examples: | 
-    - were you made
-    - you fashioned?
-    - created created
-    - constructed
-    - built
-    - you were made build create you make you
-    - you come into being you come to be devised were you made built conceived constructed devised formed made made materialized?
-    - who are you built constructed were you formed created formed you made devised you were made exactly how you were created made
+# - intent: ask_howbuilt
+#   examples: | 
+#     - were you made
+#     - you fashioned?
+#     - created created
+#     - constructed
+#     - how you were built?
+#     - how you were made build create you make you
+#     - you come into being you come to be devised were you made built conceived constructed devised formed made made materialized?
+#     - who are you built constructed were you formed created formed you made devised you were made exactly how you were created made
 
 - intent: goodbye
   examples: |
@@ -262,11 +247,11 @@ nlu:
   examples: |
     - yes
     - yeah continue_info
-    - yes, want to... [repeat]
+    - yes, want to... repeat
     - yeah, wish to repeat continue_info
-    - continue [repeat]
+    - continue repeat
     - yup continue_info
-    - continue_info
+    - repeat continue_info
     - continue_info
     - /continue_info
     - continue_info
@@ -275,10 +260,10 @@ nlu:
 
 - intent: deny
   examples: |
-    - no no Exit never don't Exit don't that no way not exit Exit /deny I don't I don't I don't I dont I'm not giving you I'm not going to it to you NO
-    - Nah Neither Never Never No Nopes Not really absolutely not decline definitely not deny i decline i don not this don't i don't
-    - no nah nah nah not for me neither never never no no no I dont no I haven't decided no no no no no way
-    - no no no no non noooooooooo noooooooooooooooooooooooooooooooooooooooo nop nope nope not really not not yet not dont want don't no stop stop
+    - no no  
+    - NO
+    - Exit
+    - Exit
 
 # - intent: nlu_fallback_math_operations
 #   examples: |
@@ -326,21 +311,6 @@ nlu:
     - [9004](numeric_values) [9009](numeric_values)
 
 
-- intent: user_entered_alpha_values
-  examples: |
-    - the word is [mountain](alpha_values)
-    - word is [cloudnine](alpha_values)
-    - word [general](alpha_values)
-    - words are [cloudnine](alpha_values)
-    - [cloudnine](alpha_values)
-    - [cloudnine](alpha_values)
-    - [cloudnine9](alpha_values)
-    - word: [cloudnine](alpha_values)
-    - WORDS: [cloudnine](alpha_values)
-    - WORDS ARE: [cloudnine](alpha_values)
-
-
-
 - intent: get_item_prices
   examples: |
     - [all item prices]
@@ -355,8 +325,8 @@ nlu:
 
 - intent: get_item_all_locs
   examples: |
-    - price of product all location
-    - price of the mentioned items all location
+    - price of products all location
+    - price of the mentioned product all location
 
 - intent: get_more_info
   examples: |
@@ -396,67 +366,63 @@ nlu:
     - undo
     - repeat
 
-- intent: ask_howold
-  examples: |
-    - age old
-    - alive
-    - birthday
-    - alive? your age old are u how old are you
-    - years lived old old old birthday old birthday day month year of birth age birthdate count of years age last birthday age birthday year born your age your age  
+# - intent: ask_howold
+#   examples: |
+#     - age old
+#     - alive
+#     - birthday
+#     - alive? your age old are u how old are you
+#     - years lived old old old birthday old birthday day month year of birth age birthdate count of years age last birthday age birthday year born your age your age  
 
-- intent: ask_whatismyname
-  examples: |
-    - my name
-    - I am called
-    - name name my name my [name] is name to me name [my name] my name Say my name my name my name how I am called my first name
-    - my full name my name who I am who am I who I am who am I myself Okay who am I who am i me who I am me who I am me who am I
-    - WHo am I Who am I Who could I be what I am? who I am? me my identity who am i who are I who may i 
+# - intent: ask_whatismyname
+#   examples: |
+#     - my name
+#     - I am called
+#     - name name my name my name is name to me name my name my name Say my name my name my name how I am called my first name
+#     - my full name my name who I am who am I who I am who am I myself Okay who am I who am i me who I am me who I am me who am I
+#     - WHo am I Who am I Who could I be what I am? who I am? me my identity who am i who are I who may i 
 
-- intent: ask_botname
-  examples: |
-    - your name
-    - you called your name?
-    - your name your name your name your name your name
-    - I address you? your name
-    - I call you? your name
-    - your name?
-    - your name your name
-    - your name your name your name your name your name your name your name
+# - intent: ask_botname
+#   examples: |
+#     - your name
+#     - you called your name?
+#     - your name your name your name your name your name
+#     - I address you? your name
+#     - I call you? your name
+#     - your name?
+#     - your name your name
+#     - your name your name your name your name your name your name your name
 
-- intent: ask_whatspossible
-  examples: |
-    - assist Assistance
-    - skills
-    - options
-    - capabilities
- 
-- intent: ask_weather
-  examples: |
-    - Can I ask something about weather climate
-    - thunderstorms weather How is the weather today How is the weather? climate
-    - How is weather hot or cold humid out there today breezy outside raining raining Weather temperature today
-    - weather how's weather  the waether hows the weather is it hot is it hot outside 
-    - the sun out it is cold temperature the weather today weatger weather weather weather temperature
-    - weather weather like  whether today wheather weather weather weather like
-    - weather like weather like climate climate climate climate
-    - weather today  weather today  temperature
-    - weather like tomorrow wheather wheather climate climate climate
+# - intent: ask_whatspossible
+#   examples: |
+#     - help
+#     - assist Assistance
+#     - skills
+#     - options
+#     - capabilities
+#     - Can you help me?umid out there today breezy outside raining raining Weather temperature today
+#     - weather how's weather  the waether hows the weather is it hot is it hot outside 
+#     - the sun out it is cold temperature the weather today weatger weather weather weather temperature
+#     - weather weather like  whether today wheather weather weather weather like
+#     - weather like weather like climate climate climate climate
+#     - weather today  weather today  temperature
+#     - weather like tomorrow wheather wheather climate climate climate
 
-- intent: ask_time
-  examples: |
-    - time?
-    - time?
-    - time it is? time?
-    - time, please?
-    - time is it? time time time time.
-    - Time Time?
-    - current time?
-    - exact time?
-    - hour minute
-    - time?
-    - the time be?
-    - What time do we have?
-    - What time have we got?
+# - intent: ask_time
+#   examples: |
+#     - time?
+#     - time?
+#     - time it is? time?
+#     - time, please?
+#     - time is it? time time time time.
+#     - Time Time?
+#     - current time?
+#     - exact time?
+#     - hour minute
+#     - time?
+#     - the time be?
+#     - What time do we have?
+#     - What time have we got?
 
 - intent: affirm
   examples: |

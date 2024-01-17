@@ -112,22 +112,24 @@ $ pip install google-generativeai
 """
 
 import google_auth_oauthlib
+from textblob import TextBlob
 import yaml
 import google.generativeai as genai
 import time
 import datetime
-from textblob import TextBlob
-
+# AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ --YR
+# AIzaSyBbc7JgiMLNOvTFLparUqH62TqPtkHpyvE - Meenatchi
+# AIzaSyBCNdp_YJZAljw80e8qL87fVqbux2eJWP8
 class Geminipro:
-  genai.configure(api_key="AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ")
+  genai.configure(api_key="AIzaSyDunsMXggY0kt-UvXYf2XQywBMx-4purvg")
 
   # Set up the model
   generation_config = {
     "temperature": 0.9, 
     "top_p": 1,
     "top_k": 1,
-    "max_output_tokens": 300,
-    # "max_output_tokens": 2048,
+    # "max_output_tokens": 300,
+    "max_output_tokens": 2048,
 
   }
 
@@ -243,24 +245,19 @@ class Geminipro:
 
       if start_index != -1 and end_index != -1:
           extracted_keyword = response[start_index + len(start_marker):end_index].strip()
-          print(f"extracted_keyword - {extracted_keyword}")
-          return extracted_keyword
-      else:
-          return None
-      
-  def extract_keyword(self,response):
-      start_marker = "**"
-      end_marker = "**"
-      start_index = response.find(start_marker)
-      end_index = response.find(end_marker, start_index + len(start_marker))
-
-      if start_index != -1 and end_index != -1:
-          extracted_keyword = response[start_index + len(start_marker):end_index].strip()
-          print(f"extracted_keyword - {extracted_keyword}")
+          # print(f"extracted_keyword - {extracted_keyword}")
           return extracted_keyword
       else:
           return None
 
+  def find_synonyms(self,keyword):
+      user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
+      gemini_instance.convo.send_message(user_input_synonyms)
+      model_response_synonyms = gemini_instance.convo.last.text
+      extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
+      # print(f"extracted_synonyms - {extracted_synonyms}")
+      return extracted_synonyms
+  
   def extract_synonyms(self,response):
       start_marker = "\n* "
       end_marker = "\n\n"
@@ -270,89 +267,26 @@ class Geminipro:
       if start_index != -1 and end_index != -1:
           synonyms_section = response[start_index + len(start_marker):end_index].strip()
           synonyms_list = synonyms_section.split("\n* ")
-          print(f"synonyms_list - {synonyms_list}")
+          # print(f"synonyms_list - {synonyms_list}")
           return synonyms_list
       else:
           return None
 
-  def find_synonyms(self,keyword):
-      user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
-      gemini_instance.convo.send_message(user_input_synonyms)
-      model_response_synonyms = gemini_instance.convo.last.text
-      extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
-      print(f"extracted_synonyms - {extracted_synonyms}")
-      return extracted_synonyms
-  
-class textBlobSynonyms:
   def extract_nouns(self,sentence):
-      # Create a TextBlob object
       blob = TextBlob(sentence)
-      # Extract nouns using the pos_tags property
-      nouns = [word for word, pos in blob.tags if pos.startswith('N')]
-      print(f"nouns - {nouns}")
-      return nouns
-  
-  # def extract_keyword1(self,response):
-  #     start_marker = "**"
-  #     end_marker = "**"
-  #     start_index = response.find(start_marker)
-  #     end_index = response.find(end_marker, start_index + len(start_marker))
+      for word, pos in blob.tags:
+        print(f"{word}: {pos}")
+      retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
 
-  #     if start_index != -1 and end_index != -1:
-  #         extracted_keyword = response[start_index + len(start_marker):end_index].strip()
-  #         print(f"extracted_keyword - {extracted_keyword}")
-  #         return extracted_keyword
-  #     else:
-  #         return None
-  
-  def extract_synonyms1(self, response):
-    start_marker = "\n* "
-    end_marker = "\n\n"
+        # Filter out 'i' and words with less than 3 characters
+      retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
 
-    start_index = response.find(start_marker)
-    all_synonyms = []
-
-    while start_index != -1:
-        end_index = response.find(end_marker, start_index + len(start_marker))
-
-        if end_index != -1:
-            synonyms_section = response[start_index + len(start_marker):end_index].strip()
-             # Remove leading '**' and '\n' from each synonym
-            synonyms_list = [synonym.replace('**', '').strip() for synonym in synonyms_section.split("\n* ")]
-            all_synonyms.extend(synonyms_list)
-        else:
-            # If there's no end marker, consider the rest of the response as synonyms
-            all_synonyms.append(response[start_index + len(start_marker):].strip())
-
-        # Look for the next occurrence
-        start_index = response.find(start_marker, end_index)
-
-    print(f"all_synonyms - {all_synonyms}")
-    return all_synonyms
-
-
-  def find_synonyms1(self, keywords):
-    all_extracted_synonyms = []
-
-    for keyword in keywords:
-        user_input_synonyms = f"give me all maximum possible synonyms for the word {keyword}, in retail."
-        gemini_instance.convo.send_message(user_input_synonyms)
-        model_response_synonyms = gemini_instance.convo.last.text
-        
-        extracted_synonyms = textBlob.extract_synonyms1(model_response_synonyms)
-        print(f"extracted_synonyms for {keyword} - {extracted_synonyms}")
-
-        if extracted_synonyms:
-            all_extracted_synonyms.append((keyword, extracted_synonyms))
-
-    print(f"all_extracted_synonyms - {all_extracted_synonyms}")
-    return all_extracted_synonyms
-  
- 
-     
+      return retail_keywords
 
 gemini_instance = Geminipro()
-textBlob=textBlobSynonyms()
+
+
+
 
   # start_marker = "**"
   # end_marker = "**"
