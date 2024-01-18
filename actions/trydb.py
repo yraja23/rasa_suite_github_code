@@ -10,6 +10,7 @@ import string
 import re
 from googletrans import Translator, LANGUAGES
 import langid
+import googletrans
 
 #spellchecker modules
 # from nltk.stem import WordNetLemmatizer
@@ -898,6 +899,18 @@ class jsonConversion:
 # -------------------------------------------------------------------------------------------------------
     
 class allFunc:
+    def __init__(self):
+        self.key_of_lang = None  # Initialize key_of_lang attribute
+        print(f"inside init key_of_lang {self.key_of_lang}")
+
+
+    def set_key_of_lang(self, language):
+        self.key_of_lang = language
+        print(f"After setting lang {self.key_of_lang}")
+        return self.key_of_lang
+
+
+
 #     def call_chatgpt_api(self, user_input: Text) -> Text:
 #         os.environ['_BARD_API_KEY']="ZAhJrc70j0DiIfw7J_wQnuD3QLzpIkMWyFicPcnQGkXMMF6aFnAz2CAUmA22ACMw_sTu2A."
 #         answer = Bard().get_answer(user_input)['content']
@@ -1087,10 +1100,10 @@ class allFunc:
 
     def check_for_synonym_keywords(self, word_list):
 
-        supplier_keywords = ['Supplier']
+        supplier_keywords = ['Supplier','vendor']
         order_keyword = ['order','Order'] # ,'purchase order'
         inventory_keywords = ['Inventory','inventory']
-        pricing_keywords = [ 'Price', 'Prices','cost']
+        pricing_keywords = [ 'Price', 'Prices'] # 'cost'
         item_keywords = [ 'item', 'Items']
 
 
@@ -1286,7 +1299,6 @@ class allFunc:
     
 
     def translate_and_print_language(self, user_input):
-        # --------
 
         translator = Translator()
 
@@ -1294,13 +1306,69 @@ class allFunc:
 
         full_source_language_name = LANGUAGES.get(translation.src)
 
-        print(f"Source Language: {full_source_language_name}")
+        print(f"source language key: {translation.src}")
+        print(f"Source Language full name: {full_source_language_name}")
         print(f"Translated Text: {translation.text}")
-
-        print(translation)
+        print("------------------------")
         return full_source_language_name,translation.text
     
-        # --------
+    def langToEng(self, keyword, language):
+        dict_l = googletrans.LANGUAGES
+        translator = Translator()
+        # Detect the source language
+        # detection = translator.detect(text)
+        # src_lang = detection.lang
+        # print(f"Detected source language: {dict_l[src_lang]}")
+
+        print(f"lang:{language}")
+        language = language.lower()
+        #taking the key for the value - from dictionaty
+        # print("One line Code Key value: ", list(dict_l.keys())
+        #   [list(dict_l.values()).index(language)])
+        key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
+
+        # Translating the text to English
+        main_out = translator.translate(keyword, dest='en', src=key_of_lang)
+        text_val = main_out.text
+
+        # Print the results
+        print(f"Source language: {language}")
+        print(f"English translation: {text_val}")
+        obj = allFunc()
+        print("before lang set")
+        key_of_lang=obj.set_key_of_lang(key_of_lang)  # Set the language code before calling Eng_to_user_language
+        print("AFter lang set")
+        return text_val,key_of_lang
+    
+    def Eng_to_user_language(self, response):
+        # dict_l = googletrans.LANGUAGES
+        translator = Translator()
+        # Detect the source language
+        # detection = translator.detect(text)
+        # src_lang = detection.lang
+        # print(f"Detected source language: {dict_l[src_lang]}")
+
+        # print(f"lang:{language}")
+        # language = language.lower()
+        #taking the key for the value - from dictionaty
+        # print("One line Code Key value: ", list(dict_l.keys())
+        #   [list(dict_l.values()).index(language)])
+        print(f" self.key_of_lang {self.key_of_lang}")
+        if self.key_of_lang is None:
+            print("Warning: key_of_lang is not set. Translating to default language.")
+            raise ValueError("key_of_lang is not set")
+        else:
+            key_of_lang = self.key_of_lang
+
+        # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
+
+        # Translating the text to English
+        main_out = translator.translate(response, dest=f'{key_of_lang}', src='en')
+        text_val = main_out.text
+
+        print(f"Translated to {key_of_lang}: {text_val}")
+        return key_of_lang, text_val
+    
         # translator = Translator()
 
         # # Detect the language using langid

@@ -108,9 +108,7 @@ if access_token:
             # print('success')
             return ['API STATUS: 200 OK']
 
-
         else:
-
             # Error occurred
 
             print('Error:', response.text)

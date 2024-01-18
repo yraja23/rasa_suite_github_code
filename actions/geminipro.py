@@ -227,7 +227,9 @@ class Geminipro:
 
   def send_message_and_get_response(self, user_input):
     try:
-      parsed_input = f"'{user_input}' - extract one main keyword from the text given"
+      # parsed_input = f"'{user_input}' - extract one main keyword from the text given"
+      parsed_input = f"Identify the language of the phrase '{user_input}'. Simply provide the language name."
+
       self.convo.send_message(parsed_input)
       model_response = self.convo.last.text
       print(f"model_response - {model_response}")
