@@ -1334,10 +1334,10 @@ class allFunc:
         # Print the results
         print(f"Source language: {language}")
         print(f"English translation: {text_val}")
-        obj = allFunc()
-        print("before lang set")
-        key_of_lang=obj.set_key_of_lang(key_of_lang)  # Set the language code before calling Eng_to_user_language
-        print("AFter lang set")
+        # obj = allFunc()
+        # print("before lang set")
+        # key_of_lang=obj.set_key_of_lang(key_of_lang)  # Set the language code before calling Eng_to_user_language
+        # print("AFter lang set")
         return text_val,key_of_lang
     
     def Eng_to_user_language(self, response):

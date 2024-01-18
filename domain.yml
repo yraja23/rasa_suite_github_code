@@ -168,6 +168,11 @@ slots:
     type: text
     mappings:
     - type: custom
+  user_query_language:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
 
 responses:
   utter_greet:

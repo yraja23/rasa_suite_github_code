@@ -229,11 +229,11 @@ class SupplierAction(Action):
                 dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
       
             dispatcher.utter_message(text=supplier_details) 
-            object=allFunc()     
+            # object=allFunc()     
 
             # key_lang, response_back_in_user_lang = object.Eng_to_user_language(supplier_details)
-            CheckKeywordAction.
-            print(f"key_lang {key_of_lang}")
+            # CheckKeywordAction.
+            # print(f"key_lang {key_of_lang}")
             # print(f"key_lang {key_lang} - response_back_in_user_lang {response_back_in_user_lang}")
             # if key_lang != 'en':
             #     dispatcher.utter_message(text=response_back_in_user_lang) 
@@ -566,13 +566,15 @@ class CheckKeywordAction(Action):
             object=allFunc()
             translation,key_of_lang = object.langToEng(keyword, lang)
             print (f"translation {translation}")
+            
+            print(f"text_val{translation}")
+            print(f"key_of_lang {key_of_lang}")
             # updated_keyword = translation
             # full_source_language_name, translation = object.translate_and_print_language(keyword)
             # print (f"full_source_language_name {full_source_language_name}")
             # print (f"translation {translation}")
             updated_keyword = translation
-            user_query_language = tracker.get_slot("user_query_language")
-            print(f"user_query_language1: {user_query_language}")
+
 
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
@@ -648,13 +650,13 @@ class CheckKeywordAction(Action):
                         print(f"printing res_domain {res_domain}")
                         print(f"printing result_after_matching {result_after_matching}")
                         res_domain = True 
-                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),SlotSet("user_query_language", None),FollowupAction("action_default_fallback")]
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
                     else:
                         print(f"true true {intent_name}")
                         print(f"printing res_domain {res_domain}")
                         print(f"printing result_after_matching {result_after_matching}")
                         res_domain = True   
-                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),SlotSet("user_query_language", None),FollowupAction("utter_specific_use_case_and_general_domain")]
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
                 elif result_after_matching == False:
                     print(f"true false {intent_name}")
                     print(f"printing res_domain {res_domain}")
@@ -663,7 +665,7 @@ class CheckKeywordAction(Action):
                     go_to_bard = "go to bard"
                     print(f"inside redirecting if {go_to_bard}")
 
-                    return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("action_default_fallback")] 
+                    return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),FollowupAction("action_default_fallback")] 
 
             else:
                 print(f"inside redirecting else - main {result_after_matching}")
@@ -677,7 +679,7 @@ class CheckKeywordAction(Action):
                         print(f"printing result_after_matching {result_after_matching}")
                         print(f"user clicked button {user_entered_value}")
 
-                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),SlotSet("user_query_language", None),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
                     elif result_after_matching==False:
                         res_domain = False
                         user_entered_value1 = tracker.latest_message.get("text")
@@ -789,7 +791,7 @@ class CheckKeywordAction(Action):
                             print("No unique words found or response is empty.")
                             error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
                             dispatcher.utter_message(text=error_text)
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_price_details")]  
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
 
                         object=allFunc()
                         print("before check_for_synonym_keywords call")
@@ -813,7 +815,7 @@ class CheckKeywordAction(Action):
                                     You can ask me anything related the domain, I will do my best to help you in any way that I can."      
                             dispatcher.utter_message(text=error_text)
                                     #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_price_details")]  
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
                         elif result == "none":
                                 raw_user_input_to_check_isRetail = tracker.latest_message.get("text")
                                 full_source_language_name, translation = object.translate_and_print_language(raw_user_input_to_check_isRetail)
@@ -834,12 +836,12 @@ class CheckKeywordAction(Action):
                                     else:
                                         print(response)
                                         dispatcher.utter_message(response)
-                                    return[FollowupAction("action_check_slot"),SlotSet("user_query_language", None)]
+                                    return[FollowupAction("action_check_slot")]
                                 else:
                                     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
                                                 You can ask me anything related the domain, I will do my best to help you in any way that I can."      
                                     dispatcher.utter_message(text=error_text)
-                                    return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_price_details")]  
+                                    return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
                             # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
                             # dispatcher.utter_message(text=error_text)
                             # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
@@ -848,37 +850,37 @@ class CheckKeywordAction(Action):
                             # Unpack the single-element list to get the numeric value
                             error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
                             dispatcher.utter_message(text=error_text)
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_redisplay_buttons_nonretail")]
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_redisplay_buttons_nonretail")]
 
                         # elif result in ['Supplier','supplier'] :
                         elif re.search(r'supp', result, re.IGNORECASE):
                             print(f"inside supplier {result}")
                             message = "It seems like you are looking for information related to suppliers."
                             dispatcher.utter_message(text=message)
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_supplier_number")]  
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
                         # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
                         elif re.search(r'order', result, re.IGNORECASE):
                             message = "It seems like you are looking for information related to orders."
                             dispatcher.utter_message(text=message)
                             print(f"inside order {result}")
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_order_number")]  
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
                         # elif result in [ 'Inventory','inventory']:
                         elif re.search(r'invent', result, re.IGNORECASE):
                             message = "It seems like you are looking for information related to inventory."
                             dispatcher.utter_message(text=message)
                             print(f"inside Inventory {result}")
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_loc_for_inventory")]  
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
                         # elif result in ['Price','Prices']:
                         elif re.search(r'pric', result, re.IGNORECASE):
                             message = "It seems like you are looking for information related to pricing."
                             dispatcher.utter_message(text=message)
                             print(f"inside Price {result}")
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_use_cases")]
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_use_cases")]
                         elif re.search(r'item', result, re.IGNORECASE):
                             message = "It seems like you are looking for information related to item."
                             dispatcher.utter_message(text=message)
                             print(f"inside item {result}")
-                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_item_number")]
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_item_number")]
 
                         # elif result is None:
                         #     error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
@@ -892,22 +894,23 @@ class CheckKeywordAction(Action):
                                     You can ask me anything related the domain, I will do my best to help you in any way that I can."      
                                 dispatcher.utter_message(text=error_text)
                                     #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                                return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),SlotSet("user_query_language", None),FollowupAction("utter_price_details")]  
+                                return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
             # else:
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      
             #     dispatcher.utter_message(text=error_text)
-        user_query_language = tracker.get_slot("user_query_language")
-        print(f"user_query_language2: {user_query_language}")
-        return [SlotSet("user_query_language", lang)] 
+        print(f"user_query_language from slot {key_of_lang}")
+        return [SlotSet("user_query_language", key_of_lang)]
+
           
     def load_nlu_data(self):
-        # Load the NLU training data from the nlu.yml file
+        # Load the NLU training data from the nlu.yml file      
         nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
-        
+    
+    
 
 #keeping the a"action_default_fallback" and "action_test_fallback" as it is, as, if suppose domain or nlu fallback gets hit directly, these two will work
 class ActionDefaultFallback(Action):
