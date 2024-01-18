@@ -136,6 +136,7 @@ nlu:
     - good afternoon
     - yo hi
     - Hi HI hii
+    
 # - hi helo how are you
 
 # - intent: feeling_intent

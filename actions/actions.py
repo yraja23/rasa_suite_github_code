@@ -229,11 +229,8 @@ class SupplierAction(Action):
                 dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
       
             dispatcher.utter_message(text=supplier_details) 
-            # object=allFunc()     
+            object=allFunc()     
 
-            # key_lang, response_back_in_user_lang = object.Eng_to_user_language(supplier_details)
-            # CheckKeywordAction.
-            # print(f"key_lang {key_of_lang}")
             # print(f"key_lang {key_lang} - response_back_in_user_lang {response_back_in_user_lang}")
             # if key_lang != 'en':
             #     dispatcher.utter_message(text=response_back_in_user_lang) 
@@ -248,7 +245,8 @@ class SupplierAction(Action):
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
 
-
+            user_entered_language=tracker.get_slot("user_query_language")
+            print(f"inside supp - user_entered_language {user_entered_language}")
         return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
 
 
@@ -566,16 +564,14 @@ class CheckKeywordAction(Action):
             object=allFunc()
             translation,key_of_lang = object.langToEng(keyword, lang)
             print (f"translation {translation}")
-            
-            print(f"text_val{translation}")
-            print(f"key_of_lang {key_of_lang}")
+            self.setLangSlot(key_of_lang)
+            print(f"slot set check : {self.setLangSlot(key_of_lang)}")
             # updated_keyword = translation
             # full_source_language_name, translation = object.translate_and_print_language(keyword)
             # print (f"full_source_language_name {full_source_language_name}")
             # print (f"translation {translation}")
             updated_keyword = translation
-
-
+            
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
         res=[]
@@ -899,18 +895,19 @@ class CheckKeywordAction(Action):
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      
             #     dispatcher.utter_message(text=error_text)
-        print(f"user_query_language from slot {key_of_lang}")
-        return [SlotSet("user_query_language", key_of_lang)]
-
+        user_query_language = tracker.get_slot("user_query_language")
+        print(f"user_query_language2: {user_query_language}")
+        #  C:\Users\yraja\LogicBot\local_test\data\nlu.yml
           
     def load_nlu_data(self):
-        # Load the NLU training data from the nlu.yml file      
+        # Load the NLU training data from the nlu.yml file
         nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
     
-    
+    def setLangSlot(self,slotVal):
+        return [SlotSet("user_query_language", slotVal)]
 
 #keeping the a"action_default_fallback" and "action_test_fallback" as it is, as, if suppose domain or nlu fallback gets hit directly, these two will work
 class ActionDefaultFallback(Action):

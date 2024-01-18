@@ -899,15 +899,15 @@ class jsonConversion:
 # -------------------------------------------------------------------------------------------------------
     
 class allFunc:
-    def __init__(self):
-        self.key_of_lang = None  # Initialize key_of_lang attribute
-        print(f"inside init key_of_lang {self.key_of_lang}")
+    # def __init__(self):
+    #     self.key_of_lang = None  # Initialize key_of_lang attribute
+    #     print(f"inside init key_of_lang {self.key_of_lang}")
 
 
-    def set_key_of_lang(self, language):
-        self.key_of_lang = language
-        print(f"After setting lang {self.key_of_lang}")
-        return self.key_of_lang
+    # def set_key_of_lang(self, language):
+    #     self.key_of_lang = language
+    #     print(f"After setting lang {self.key_of_lang}")
+    #     return self.key_of_lang
 
 
 
@@ -1322,15 +1322,15 @@ class allFunc:
 
         print(f"lang:{language}")
         language = language.lower()
+        print(language)
         #taking the key for the value - from dictionaty
         # print("One line Code Key value: ", list(dict_l.keys())
         #   [list(dict_l.values()).index(language)])
         key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
-
+ 
         # Translating the text to English
         main_out = translator.translate(keyword, dest='en', src=key_of_lang)
         text_val = main_out.text
-
         # Print the results
         print(f"Source language: {language}")
         print(f"English translation: {text_val}")
@@ -1338,7 +1338,7 @@ class allFunc:
         # print("before lang set")
         # key_of_lang=obj.set_key_of_lang(key_of_lang)  # Set the language code before calling Eng_to_user_language
         # print("AFter lang set")
-        return text_val,key_of_lang
+        return text_val, key_of_lang
     
     def Eng_to_user_language(self, response):
         # dict_l = googletrans.LANGUAGES
