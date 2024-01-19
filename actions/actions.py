@@ -536,52 +536,56 @@ class OrderWithNumberAction(Action):
 #(redirection step is added - but since it didn't work, adding the steps from the two functios again directly here)
 #THIS ACTION IS TRIGGERED WHENEVER THE USER ENTERS A STATEMENT - checks if it is retail specific or non retail specific and works accordingly
 class CheckKeywordAction(Action):
+    
     def name(self) -> Text:
         return "check_value_in_intent"
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
     ) -> List[Dict[Text, Any]]:
-        # keyword=tracker.get_slot("user_input_question")
+        # Get the user input from the tracker
         keyword=tracker.latest_message.get("text")
         print("------------------------------------------")
         print(f"before: {keyword}")
 
-        # prdict the user language using palmAPI
- 
+        # Identify the language of the user input using Geminipro 
+        gemini_instance = Geminipro()
         user_input = f"Identify the language of the phrase '{keyword}'. Simply provide the language name."
         print(f"befor bard call user_input {user_input}")
-        # object=allFunc()
-        # response = object.palmApi(user_input)
-        # predicted_lang = response.lower()
-        # print(f"predicting the user language using palmAPI {predicted_lang}")
-        gemini_instance = Geminipro()
         lang = gemini_instance.send_message_and_get_response(keyword) 
         print("Model's response:", lang)
 
-        if lang == 'english':
-            updated_keyword = keyword
+        # Translate the user input to English
+        object=allFunc()
+        translation,key_of_lang = object.langToEng(keyword, lang)
+        print(f"translation {translation}")
+        print(f"lang_key {key_of_lang}")
+
+
+        # Check if the language is English and the translation is the same as the original input
+        # if lang.lower() == 'english':
+        #     if  key_of_lang != 'en':
+        #         print("Translation and user input are the same. Please rephrase.")
+        #         dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
+        #         return [FollowupAction("utter_price_details")]
+        #     else:
+        #         updated_keyword = translation 
+        if lang.lower() == 'english' and key_of_lang != 'en':
+            print("Translation and user input are the same. Please rephrase.")
+            dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
+            return [FollowupAction("utter_price_details")]      
         else:
-            object=allFunc()
-            translation,key_of_lang = object.langToEng(keyword, lang)
-            print (f"translation {translation}")
-
-            if translation == keyword:
-                print("Translation and user input are the same. Please rephrase.")
-                dispatcher.utter_message(text="Your input and the translated text are same. Please provide a different input or rephrase for better understanding.")
-        # Send a message to the user or take appropriate action for rephrasing
-            else:
-                self.setLangSlot(key_of_lang)
-                print(f"slot set check : {self.setLangSlot(key_of_lang)}")
-                updated_keyword = translation
-
-            self.setLangSlot(key_of_lang)
-            print(f"slot set check : {self.setLangSlot(key_of_lang)}")
-            # updated_keyword = translation
-            # full_source_language_name, translation = object.translate_and_print_language(keyword)
-            # print (f"full_source_language_name {full_source_language_name}")
-            # print (f"translation {translation}")
+            if lang.lower() != 'english':
+                print("Different lang")
+                print(f"key language from langTo eng function {key_of_lang}")
+                slot_check = CheckKeywordAction()
+                slot_set = slot_check.setLangSlot(key_of_lang)
+                print(f" after slot set {slot_set}")
+                lang_slot_value = tracker.get_slot("user_query_language")
+                print(f"lang_slot_value ---> {lang_slot_value}")
+                # print(f"Slot set check: {self.setLangSlot(key_of_lang)}")
+            # Use the translated keyword for further processing
             updated_keyword = translation
-            
+
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
         res=[]
@@ -683,7 +687,7 @@ class CheckKeywordAction(Action):
                         res_domain = False
                         print(f"printing res_domain {res_domain}")
                         print(f"printing result_after_matching {result_after_matching}")
-                        print(f"user clicked button {user_entered_value}")
+                        print(f"user input {user_entered_value}")
 
                         return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
                     elif result_after_matching==False:
@@ -919,8 +923,9 @@ class CheckKeywordAction(Action):
             return yaml.safe_load(file)
     
     def setLangSlot(self,slotVal):
+        print(f"inside setLangSlot function {slotVal}")
         return [SlotSet("user_query_language", slotVal)]
-
+    
 #keeping the a"action_default_fallback" and "action_test_fallback" as it is, as, if suppose domain or nlu fallback gets hit directly, these two will work
 class ActionDefaultFallback(Action):
     def name(self) -> Text:
@@ -950,16 +955,16 @@ class ActionDefaultFallback(Action):
                 else:
                     dispatcher.utter_message(response)
             return[FollowupAction("action_check_slot")] #FollowupAction("action_check_slot")
-        elif get_res_domain_slot == None:
-            print("user_input ",user_input)
-            print("get_res_domain_slot ",get_res_domain_slot) 
-            dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
-            return[FollowupAction("action_check_slot")]
-        elif get_res_domain_slot == False:
-            print("user_input ",user_input)
-            print("get_res_domain_slot ",get_res_domain_slot) 
-            dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
-            return[FollowupAction("action_check_slot")]    
+        # elif get_res_domain_slot == None:
+        #     print("user_input ",user_input)
+        #     print("get_res_domain_slot ",get_res_domain_slot) 
+        #     dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
+        #     return[FollowupAction("action_check_slot")]
+        # elif get_res_domain_slot == False:
+        #     print("user_input ",user_input)
+        #     print("get_res_domain_slot ",get_res_domain_slot) 
+        #     dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
+        #     return[FollowupAction("action_check_slot")]    
         else:
             return[FollowupAction("action_check_slot")] #FollowupAction("action_check_slot")
         
