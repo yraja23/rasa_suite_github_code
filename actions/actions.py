@@ -564,6 +564,16 @@ class CheckKeywordAction(Action):
             object=allFunc()
             translation,key_of_lang = object.langToEng(keyword, lang)
             print (f"translation {translation}")
+
+            if translation == keyword:
+                print("Translation and user input are the same. Please rephrase.")
+                dispatcher.utter_message(text="Your input and the translated text are same. Please provide a different input or rephrase for better understanding.")
+        # Send a message to the user or take appropriate action for rephrasing
+            else:
+                self.setLangSlot(key_of_lang)
+                print(f"slot set check : {self.setLangSlot(key_of_lang)}")
+                updated_keyword = translation
+
             self.setLangSlot(key_of_lang)
             print(f"slot set check : {self.setLangSlot(key_of_lang)}")
             # updated_keyword = translation
@@ -895,8 +905,10 @@ class CheckKeywordAction(Action):
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      
             #     dispatcher.utter_message(text=error_text)
-        user_query_language = tracker.get_slot("user_query_language")
-        print(f"user_query_language2: {user_query_language}")
+        # user_query_language = tracker.get_slot("user_query_language")
+        # print(f"user_query_language2: {user_query_language}")
+        # return [SlotSet("user_query_language", key_of_lang)]
+
         #  C:\Users\yraja\LogicBot\local_test\data\nlu.yml
           
     def load_nlu_data(self):

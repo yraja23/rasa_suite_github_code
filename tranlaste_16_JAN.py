@@ -1,8 +1,8 @@
-# # import googletrans
-# # import translate 
-# # import deepl 
-# # from googletrans import Translator
-# # print(googletrans.LANGUAGES) # to know all available languages
+import googletrans
+import translate 
+import deepl 
+from googletrans import Translator
+print(googletrans.LANGUAGES) # to know all available languages
 
 # # text1 = "எனக்கு சப்ளையர் தகவல் தேவை" 
 # text1 = "I need supplier info" 
@@ -44,38 +44,47 @@
 
 # -------------------------------TRANSLATION-----------------------------------------
 
-from googletrans import Translator, LANGUAGES
-translator = Translator()
-# user_input = 'أحتاج إلى معلومات المورد'
+# from googletrans import Translator, LANGUAGES
+# translator = Translator()
+# # user_input = 'أحتاج إلى معلومات المورد'
 
-from googletrans import Translator, LANGUAGES
+# from googletrans import Translator, LANGUAGES
 
-translator = Translator()
-# user_input = 'أحتاج إلى معلومات المورد'
-user_input = f"بحاجة إلى معلومات المورد"
+# translator = Translator()
+# # user_input = 'أحتاج إلى معلومات المورد'
+# user_input = f"بحاجة إلى معلومات المورد"
 
 
-translation = translator.translate(user_input, dest='en')
+# translation = translator.translate(user_input, dest='en')
 
-full_source_language_name = LANGUAGES.get(translation.src)
+# full_source_language_name = LANGUAGES.get(translation.src)
 
-print(f"Source Language: {full_source_language_name}")
-print(f"Translated Text: {translation.text}")
+# print(f"Source Language: {full_source_language_name}")
+# print(f"Translated Text: {translation.text}")
 
-print(translation)
+# print(translation)
 
 # ----------------- LANGUAGE DETECTION ----------------------------------------
+
 # from googletrans import Translator
+
 # translator = Translator()
+# user_input = f" 'Xākāṣ̄ wạn nī̂ pĕn xỳāngrị b̂āng' what language is the phrase just give the language name"
+
 # print(f"1-------------------------------------")
-# print(translator.detect(f"'bihajat 'iilaa maelumat almawrid'"))
-# # <Detected lang=ko confidence=0.27041003>
+# # object=allFunc()
+# # response = object.palmApi(user_input)
+
+# # print(f"Guess the user language from palm API {response}")
+# print("guessed by google tans")
+# print(translator.detect(f"bihajat 'iilaa maelumat almawrid"))
+# <Detected lang=ko confidence=0.27041003>
 # print(f"2-------------------------------------")
 # print(translator.detect('この文章は日本語で書かれました。'))
 # # <Detected lang=ja confidence=0.64889508>
 # print(f"3-------------------------------------")
 # print(translator.detect('This sentence is written in English.'))
-# # <Detected lang=en confidence=0.22348526>
+# <Detected lang=en confidence=0.22348526>
 # print(f"4-------------------------------------")
 # print(translator.detect('Tiu frazo estas skribita en Esperanto.'))
 # # <Detected lang=eo confidence=0.10538048>
