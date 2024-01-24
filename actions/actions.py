@@ -897,7 +897,6 @@ class CheckKeywordAction(Action):
                         #     dispatcher.utter_message(text=error_text)
                         #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
                         else:
-                
                         # user_input_check= extract_keyword(user_entered_value1)
                         # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
                                 error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\

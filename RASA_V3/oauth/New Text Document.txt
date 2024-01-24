@@ -1,0 +1,35 @@
+class OAuth2:
+ def generate_token(self, filename):
+        client_id, client_secret, access_token_url, scope = self.read_client_details(filename)
+
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        data = {
+            'grant_type': 'client_credentials',
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'scope': scope
+        }
+
+        response = requests.post(access_token_url, headers=headers, data=data)
+        if response.status_code == 200:
+            access_token = response.json()['access_token']
+            return access_token
+        else:
+            print('Error generating in access token:', response.text)
+            return None
+
+def read_client_details(self, filename):
+        # Read the decrypted configuration
+        decrypted_config = self.read_encrypted_config(filename)
+
+        # Parse the configuration as INI
+        config_parser = configparser.ConfigParser()
+        config_parser.read_string(decrypted_config)
+
+        # Access the client details from the [client_details] section
+        client_id = config_parser.get('client_details', 'client_id')
+        client_secret = config_parser.get('client_details', 'client_secret_key')
+        access_token_url = config_parser.get('client_details', 'access_token_url')
+        scope = config_parser.get('client_details', 'scope')
+
+        return client_id, client_secret, access_token_url, scope

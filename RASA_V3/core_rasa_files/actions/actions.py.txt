@@ -1,0 +1,105 @@
+class AllPriceDetail(Action):
+
+  def name(self) -> Text:
+      return "allpricedetail"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class PriceAtSpecificLocation(Action):
+
+  def name(self) -> Text:
+      return "price_at_specific_location"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class PriceatAllLocation(Action):
+
+  def name(self) -> Text:
+      return "price_at_All_location"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class SupplierAction(Action):
+
+  def name(self) -> Text:
+      return "supplier_details"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class OrderAction(Action):
+
+  def name(self) -> Text:
+      return "order_details"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class InventoryActionForStore(Action):
+
+  def name(self) -> Text:
+      return "inventory_detail_for_store"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class InventoryActionForWh(Action):
+
+  def name(self) -> Text:
+      return "inventory_detail_for_wh"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+class ItemAction(Action):
+
+  def name(self) -> Text:
+      return "item_details"
+
+  def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+  ) -> List[Dict[Text, Any]]:
+
+      # custom behavior
+
+      return [...]
+
+
