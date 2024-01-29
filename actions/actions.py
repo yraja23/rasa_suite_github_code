@@ -75,17 +75,26 @@ class ItemDetailsOauthApi(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
-            else:
-                dispatcher.utter_message(text=allItemPrices)
-                allItemPrices = [allItemPrices]  
-                
+                    # dispatcher.utter_message(text=message)
+            # else:
+            #     dispatcher.utter_message(text=allItemPrices)
+                # allItemPrices = [allItemPrices]  
 
-            # Send the file URL as a clickable link
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en':
+                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                if allItemPrices is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=allItemPrices)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=allItemPrices)  
+#               
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
         return[]
-
 
 class Itemdetails(Action):
     def name(self)-> Text:
@@ -106,15 +115,23 @@ class Itemdetails(Action):
         if access_token:
             get_price_detail, file_url =out.get_api_response(access_token,item,loc)    
             if isinstance(get_price_detail, list):
+                lang = allFunc.key_of_lang
+                print("Class variable:", allFunc.key_of_lang)
                 for item_data in get_price_detail:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    translated_message = allFunc.Eng_to_user_language(self, message, lang)
             else:
                 # Wrap the error message in a list
                 dispatcher.utter_message(text=get_price_detail)
                 get_price_detail = [get_price_detail]  
+
+            if lang != 'en':
+                dispatcher.utter_message(text=translated_message)
+                dispatcher.utter_message(text=get_price_detail)
+            else:
+                dispatcher.utter_message(text=get_price_detail)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
@@ -131,23 +148,34 @@ class GetPriceatAllLocation(Action):
 
         item_loc = tracker.latest_message['text']
         item= tracker.get_slot("item")
-        print(item_loc+item)
         filename = "encrypted_client_details.ini"
         out = jsonConversion()
         access_token = out.generate_token(filename)
         if access_token:
             allItemPrices, file_url = out.get_api_response_usecase3(access_token,item_loc)
             if isinstance(allItemPrices, list):
+                lang = allFunc.key_of_lang
+                print("Class variable:", allFunc.key_of_lang)
                 for item_data in allItemPrices:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    translated_message = allFunc.Eng_to_user_language(self, message, lang)
             else:
                 # Wrap the error message in a list
                 dispatcher.utter_message(text=allItemPrices)
                 allItemPrices = [allItemPrices]  
 
+            if allItemPrices is None:
+                dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+                return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
+ 
+            if lang != 'en':
+                dispatcher.utter_message(text=translated_message)
+                dispatcher.utter_message(text=message)
+            else:
+                dispatcher.utter_message(text=allItemPrices)
+                
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
 
@@ -224,32 +252,25 @@ class SupplierAction(Action):
                         message += f"{key}: {value}\n"
                     dispatcher.utter_message(text=message)
             
-            if supplier_details == None:
-                print("inside none")
-                dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
-      
-            dispatcher.utter_message(text=supplier_details) 
-            object=allFunc()     
-
-            # print(f"key_lang {key_lang} - response_back_in_user_lang {response_back_in_user_lang}")
-            # if key_lang != 'en':
-            #     dispatcher.utter_message(text=response_back_in_user_lang) 
-            # else:
-            #     dispatcher.utter_message(text=supplier_details) 
-
-            # else: 
-            #     print("inside else")
-            #     dispatcher.utter_message(text=supplier_details)
-            #     supplier_details = [supplier_details]  
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en':
+                response_user_lang = allFunc.Eng_to_user_language(self, supplier_details, lang)
+                if supplier_details is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
+                    return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
+                else:
+                    dispatcher.utter_message(text=supplier_details)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=supplier_details) 
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
 
-            user_entered_language=tracker.get_slot("user_query_language")
-            print(f"inside supp - user_entered_language {user_entered_language}")
         return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
 
-
+  
             # dispatcher.utter_message("Accessing...")
             # out=str(allItemPrices)
             # if allItemPrices == None:
@@ -275,7 +296,7 @@ class displayPrevForSupplierUsecase(Action):
             dispatcher.utter_message("If you want to check for a different item, or to check for different locations,")
         else:
             print("the values are none. story continues..")
-                
+
 class InventoryAction(Action):
     def name(self) -> Text:
         return "action_inventory_details_for_store"
@@ -295,17 +316,65 @@ class InventoryAction(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+            if lang is None:
+                lang = 'en'
+            if lang != 'en':
+                dispatcher.utter_message(text=inventoryDetails)
+                dispatcher.utter_message(text=translated_message)
+            else:
+                dispatcher.utter_message(text=inventoryDetails)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
                 return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
             
-            if inventoryDetails == None:
-                dispatcher.utter_message("Looks like there is no data present for the given location and location type or the number doesn't exist. You can try checking for different values.")
-            dispatcher.utter_message(text=inventoryDetails)
         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
+
+        #     inventoryDetails, file_url = out.inventory_details_for_store(inv_loc,inv_locType,access_token)
+
+       
+        #     if isinstance(inventoryDetails, list):
+        #         lang = allFunc.key_of_lang
+        #         print("Class variable:", allFunc.key_of_lang)
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             # translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+        #     if inventoryDetails is None:
+        #         dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+    
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang is None:
+        #         lang = 'en'
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=inventoryDetails)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        #     # if file_url:
+        #     #     dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+        #     #     return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+            
+        #     # if inventoryDetails is None:
+        #     #     dispatcher.utter_message("Looks like there is no data present for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #     # dispatcher.utter_message(text=inventoryDetails)
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
 class InventoryActionWH(Action):
     def name(self) -> Text:
@@ -322,22 +391,85 @@ class InventoryActionWH(Action):
 
         if access_token:
             inventoryDetails , file_url = out.inventory_details_for_wh(inv_loc,inv_locType,access_token)
-            # dispatcher.utter_message("Accessing...")
             if isinstance(inventoryDetails, list):
                 for item_data in inventoryDetails:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+            if lang is None:
+                lang = 'en'
+            if lang != 'en':
+                dispatcher.utter_message(text=inventoryDetails)
+                dispatcher.utter_message(text=translated_message)
+            else:
+                dispatcher.utter_message(text=inventoryDetails)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
-                return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+                return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
             
-            if inventoryDetails == None:
-                dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
-            dispatcher.utter_message(text=inventoryDetails)
         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+
+        #     inventoryDetails , file_url = out.inventory_details_for_wh(inv_loc,inv_locType,access_token)
+        #     if isinstance(inventoryDetails, list):
+        #         lang = allFunc.key_of_lang
+        #         print("Class variable:", allFunc.key_of_lang)
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             translated_message = allFunc.Eng_to_user_language(self, message, lang)
+
+
+        #     if inventoryDetails is None and translated_message is None:
+        #         dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=inventoryDetails)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+
+        #     # dispatcher.utter_message("Accessing...")
+        #     if isinstance(inventoryDetails, list):
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             dispatcher.utter_message(text=message)
+
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang != 'en':
+        #         response_user_lang = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+        #         if inventoryDetails is None and response_user_lang is None:
+        #             dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #             return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+        #         else:
+        #             print(f"response_user_lang {response_user_lang}")
+        #             dispatcher.utter_message(text=response_user_lang)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
 class displayPrevForInvUsecase(Action):
     def name(self) -> Text:
@@ -386,17 +518,31 @@ class OrderAction(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+           
+            # if orderDetails is None:
+            #     # print("inside none")
+            #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' or lang is None:
+                response_user_lang = allFunc.Eng_to_user_language(self, orderDetails, lang)
+                if orderDetails is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+                    return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
+                else:
+                    # print(f"response_user_lang {response_user_lang}")
+                    dispatcher.utter_message(text=orderDetails) 
+                    dispatcher.utter_message(text=response_user_lang) 
+
+            else:
+                dispatcher.utter_message(text=orderDetails) 
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
                 return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)]  
-
-            if orderDetails == None:
-                # print("inside none")
-                dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
-            dispatcher.utter_message(text=orderDetails) 
-
 
         return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
     
@@ -415,9 +561,9 @@ class ItemAction(Action):
         access_token = out.generate_token(filename)
         if access_token:
             itemDetails, file_url = out.item_details(item_no,access_token)  
-            print(itemDetails)
-            print(file_url)
-            dispatcher.utter_message(text=itemDetails)
+            # print(itemDetails)
+            # print(file_url)
+            # dispatcher.utter_message(text=itemDetails)
 
             # if isinstance(itemDetails, list):
             #     for item_data in itemDetails:
@@ -427,15 +573,28 @@ class ItemAction(Action):
             #     dispatcher.utter_message(text=message)
 
 
+
+            # if itemDetails is None:
+            #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+            #     return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+#
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en':
+                response_user_lang = allFunc.Eng_to_user_language(self, itemDetails, lang)
+                if itemDetails is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+                    return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+            
+                else:
+                    dispatcher.utter_message(text=itemDetails)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=itemDetails)  
+#               
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
                 return [SlotSet('item_value',item_no)]  
-
-            if itemDetails is None:
-                dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
-            else:
-                dispatcher.utter_message(text=itemDetails)
-
         return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
     
     # -------------------------------------------------------------------------------------
@@ -483,7 +642,7 @@ class SupplierWithNumberAction(Action):
                         message += f"{key}: {value}\n"
                     dispatcher.utter_message(text=message)
             
-            if supplier_details == None:
+            if supplier_details is None:
                 print("inside none")
                 dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
             dispatcher.utter_message(text=supplier_details)      
@@ -536,7 +695,7 @@ class OrderWithNumberAction(Action):
 #(redirection step is added - but since it didn't work, adding the steps from the two functios again directly here)
 #THIS ACTION IS TRIGGERED WHENEVER THE USER ENTERS A STATEMENT - checks if it is retail specific or non retail specific and works accordingly
 class CheckKeywordAction(Action):
-    
+
     def name(self) -> Text:
         return "check_value_in_intent"
     def run(
@@ -560,7 +719,25 @@ class CheckKeywordAction(Action):
         print(f"translation {translation}")
         print(f"lang_key {key_of_lang}")
 
+        check_user_input_isRetail = f"Is the phrase '{translation}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
+        object=allFunc()
+        response = object.palmApi(check_user_input_isRetail)
+        print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
+        if response.lower() == 'no' :
+            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                        You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+            dispatcher.utter_message(text=error_text)
+            return [FollowupAction("utter_price_details")]  
+        else:
 
+            response1= gemini_instance.extract_nouns(translation)
+            print("after noun call")
+            print(f"response after extract_nouns {response1}")
+            result_string =' '.join(response1)
+            print(result_string)
+            updated_keyword = result_string
+            
+            print(f"updated_keyword --- {updated_keyword}")
         # Check if the language is English and the translation is the same as the original input
         # if lang.lower() == 'english':
         #     if  key_of_lang != 'en':
@@ -569,22 +746,23 @@ class CheckKeywordAction(Action):
         #         return [FollowupAction("utter_price_details")]
         #     else:
         #         updated_keyword = translation 
-        if lang.lower() == 'english' and key_of_lang != 'en':
-            print("Translation and user input are the same. Please rephrase.")
-            dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
-            return [FollowupAction("utter_price_details")]      
-        else:
-            if lang.lower() != 'english':
-                print("Different lang")
-                print(f"key language from langTo eng function {key_of_lang}")
-                slot_check = CheckKeywordAction()
-                slot_set = slot_check.setLangSlot(key_of_lang)
-                print(f" after slot set {slot_set}")
-                lang_slot_value = tracker.get_slot("user_query_language")
-                print(f"lang_slot_value ---> {lang_slot_value}")
-                # print(f"Slot set check: {self.setLangSlot(key_of_lang)}")
-            # Use the translated keyword for further processing
-            updated_keyword = translation
+            
+            # if lang.lower() == 'english' and key_of_lang != 'en':
+            #     print("Translation and user input are the same. Please rephrase.")
+            #     dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
+            #     return [FollowupAction("utter_price_details")]      
+            # else:
+            #     if lang.lower() != 'english':
+            #         print("Different lang")
+            #         print(f"key language from langTo eng function {key_of_lang}")
+            #         slot_check = CheckKeywordAction()
+            #         slot_set = slot_check.setLangSlot(key_of_lang)
+            #         print(f" after slot set {slot_set}")
+            #         lang_slot_value = tracker.get_slot("user_query_language")
+            #         print(f"lang_slot_value ---> {lang_slot_value}")
+
+            #     # Use the translated keyword for further processing
+            #     updated_keyword = translation
 
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
@@ -621,6 +799,35 @@ class CheckKeywordAction(Action):
                         # IF EEN ONE TRUE EXISTS IN THE ARRAY, SETTING THE VALUE TO TRUE
                         # IF NO TRUE EXISTS IN THE ARRAY, SETTING THE VAL TO FALSE
                         print(f"result_after_matching list {result_after_matching_list}")  # True/False
+                        print(f"result_after_matching intent_name {intent_name}")  # True/False
+                        item_price = None  # Initialize item_price outside of the block
+                        # Check if intent_name is a list and has multiple elements
+                        if isinstance(intent_name, list) and len(intent_name) > 1:
+                            contains_item_details = False
+                            contains_price_details = False
+                            for item in intent_name:
+                                if "item_details" in item:
+                                    contains_item_details = True
+                                if "price_details" in item:
+                                    contains_price_details = True
+                            
+                            # Check if both item_details and price_details are present
+                            if contains_item_details and contains_price_details:
+                                print("True")
+                                item_price = "True"
+                            else:
+                                print("False")
+                                item_price = "False"
+
+                            # print("Item price:", item_price)
+                            print(f"Multiple elements: {intent_name}")
+                            intent_name = "multiple"
+                            print(f"Printing intent name multiple -- {intent_name}")
+                        else:
+                            intent_name = intent_name[0]
+                            print(f"Single element: {intent_name}")
+                            print(f"Printing intent name Single -- {intent_name}")
+
                         # HIS FOR LOOP CHECKS AND STORES THE OUTPUT IF THE VALUES PRESENT IN OTHER INTENTS
 
                         if not result_after_matching_list and not res_domain_list:
@@ -661,12 +868,15 @@ class CheckKeywordAction(Action):
                         print(f"printing result_after_matching {result_after_matching}")
                         res_domain = True 
                         return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
+                            # return [SlotSet("user_query_language", key_of_lang)]
+
                     else:
                         print(f"true true {intent_name}")
                         print(f"printing res_domain {res_domain}")
                         print(f"printing result_after_matching {result_after_matching}")
                         res_domain = True   
                         return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
+                    
                 elif result_after_matching == False:
                     print(f"true false {intent_name}")
                     print(f"printing res_domain {res_domain}")
@@ -688,7 +898,6 @@ class CheckKeywordAction(Action):
                         print(f"printing res_domain {res_domain}")
                         print(f"printing result_after_matching {result_after_matching}")
                         print(f"user input {user_entered_value}")
-
                         return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
                     elif result_after_matching==False:
                         res_domain = False
@@ -715,9 +924,11 @@ class CheckKeywordAction(Action):
                         # object=allFunc()
                         # result= object.check_for_synonym_keywords(find_synonyms)
                         # print("before noun call")
-                        response1= gemini_instance.extract_nouns(translation)
-                        print("after noun call")
-                        print(f"response after extract_nouns {response1}")
+# **********************************************************
+                        # response1= gemini_instance.extract_nouns(translation)
+                        # print("after noun call")
+                        # print(f"response after extract_nouns {response1}")
+# **********************************************************
 
 
                         # ------------------------------------------------------------
@@ -857,7 +1068,6 @@ class CheckKeywordAction(Action):
                             # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
 
                         elif result == "multiple" :
-                            # Unpack the single-element list to get the numeric value
                             error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
                             dispatcher.utter_message(text=error_text)
                             return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_redisplay_buttons_nonretail")]
@@ -897,6 +1107,7 @@ class CheckKeywordAction(Action):
                         #     dispatcher.utter_message(text=error_text)
                         #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
                         else:
+                
                         # user_input_check= extract_keyword(user_entered_value1)
                         # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
                                 error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
@@ -910,7 +1121,7 @@ class CheckKeywordAction(Action):
             #     dispatcher.utter_message(text=error_text)
         # user_query_language = tracker.get_slot("user_query_language")
         # print(f"user_query_language2: {user_query_language}")
-        # return [SlotSet("user_query_language", key_of_lang)]
+        return [SlotSet("intent_name", intent_name)]
 
         #  C:\Users\yraja\LogicBot\local_test\data\nlu.yml
           
@@ -920,7 +1131,8 @@ class CheckKeywordAction(Action):
         # nlu_file_path="/app/data/nlu.yml"
         with open(nlu_file_path, "r") as file:
             return yaml.safe_load(file)
-    
+        
+
     def setLangSlot(self,slotVal):
         print(f"inside setLangSlot function {slotVal}")
         return [SlotSet("user_query_language", slotVal)]
@@ -1164,10 +1376,14 @@ class ActionCheckSlot(Action):
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("Action_new_features")]
             elif slot_value1 == "hello":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("utter_session_started")]
-            elif slot_value1 == "item_details":
+            elif slot_value1 == "item_details":  
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_Notification")]
-            # elif slot_value1 == "nlu_fallback_math_operations":
-            #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_handle_numeric_values")]
+            elif slot_value1 == "multiple": 
+                # if item_price == "True":
+                    # return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
+                msg="It seems your query falls under multiple categories. Please rephrase your statement."
+                dispatcher.utter_message(text=msg)
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_details")]
             # elif slot_value1 == "supplier_details+user_entered_numeric_values":
             #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_supplier_with_number_details")]
             
@@ -1241,6 +1457,8 @@ class ActionCheckSlot(Action):
                     elif fifth_prev_action_name == "action_all_item_prices":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
                     elif fifth_prev_action_name == "action_get_pricedetail":
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
+                    elif fifth_prev_action_name == "action_getPrice_at_All_Location":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
                     elif fifth_prev_action_name == "action_getPrice_at_All_Location":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]

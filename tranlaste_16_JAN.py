@@ -44,25 +44,24 @@ print(googletrans.LANGUAGES) # to know all available languages
 
 # -------------------------------TRANSLATION-----------------------------------------
 
-# from googletrans import Translator, LANGUAGES
-# translator = Translator()
-# # user_input = 'أحتاج إلى معلومات المورد'
-
-# from googletrans import Translator, LANGUAGES
-
-# translator = Translator()
-# # user_input = 'أحتاج إلى معلومات المورد'
-# user_input = f"بحاجة إلى معلومات المورد"
+from googletrans import Translator, LANGUAGES
+translator = Translator()
+# user_input = 'أحتاج إلى معلومات المورد'
 
 
-# translation = translator.translate(user_input, dest='en')
+translator = Translator()
+# user_input = 'أحتاج إلى معلومات المورد'
+user_input = f" item Grandparent : item Parent : item :  item Description :  status : item Level: tran Level :"
 
-# full_source_language_name = LANGUAGES.get(translation.src)
 
-# print(f"Source Language: {full_source_language_name}")
-# print(f"Translated Text: {translation.text}")
+translation = translator.translate(user_input, dest='hi')
 
-# print(translation)
+full_source_language_name = LANGUAGES.get(translation.src)
+
+print(f"Source Language: {full_source_language_name}")
+print(f"Translated Text: {translation.text}")
+
+print(translation)
 
 # ----------------- LANGUAGE DETECTION ----------------------------------------
 

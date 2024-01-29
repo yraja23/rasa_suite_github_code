@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href= "widget\static\img\favicon.ico" type="image/icon">
+  <title>LOGIC RETAIL BOT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="index.css">
+  <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+
+  <script src="https://cdn.jsdelivr.net/npm/rasa-webchat/lib/index.min.js" type="application/javascript"></script> 
+  <script>!(function () {
+      let e = document.createElement("script"),
+        t = document.head || document.getElementsByTagName("head")[0];
+      (e.src =
+        "https://cdn.jsdelivr.net/npm/rasa-webchat/lib/index.min.js"),
+        (e.async = !0),
+        (e.onload = () => {
+          setTimeout(() => {
+          window.WebChat.default(
+            {
+              customData: { language: "en" },
+              socketUrl: "http://localhost:5005", 
+              socketPath: "/socket.io/",
+              title: "LOGIC RETAIL BOT",
+	            initPayload: "/hello",
+              showFullScreenButton: true,
+              // docViewer: true,
+            },
+            null
+          );
+        }, 100);
+    }),
+        t.insertBefore(e, t.firstChild);
+    })();     
+
+    localStorage.clear();
+    document.getElementById("clear-chat-btn").addEventListener("click", function () {
+      localStorage.removeItem("rasa-demo-chat-history");
+      location.reload();
+    });
+  </script> 
+
+<script>
+  // Function to clear the conversation state
+  function clearConversationState() {
+    if (localStorage) {
+      localStorage.clear(); // For "local" storage
+    } else if (sessionStorage) {
+      sessionStorage.clear(); // For "session" storage
+    }
+  }
+
+</script>
+  
+  <div class="heading2 col-md-12 col-md-6" id="heading" style=" color: beige;">
+    <h1 class="display-4 text-center mb-4">Hello! I am here to help you with all your queries. <br> </h1>
+  </div>
+  <style>
+    /* Add this CSS code */
+    .rw-replies {
+      display: flex;
+      flex-direction: column;
+    }
+    .rw-reply {
+      margin-bottom: 10px;
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+      // Detect when chat widget is opened
+      $('.rw-launcher').on('click', function () {
+        // Modify the size of the div
+        $('.heading2').css('padding', '500px');
+      });
+    });
+  </script>
+  <!-- <button id="clear-chat-btn">Clear Chat</button> -->
+</body>
+</html>

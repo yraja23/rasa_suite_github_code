@@ -59,7 +59,7 @@ encrypted_config = cipher.encrypt(config_string.encode()).decode()
 
 with open('secret.key', 'wb') as key_file:
     key_file.write(secret_key)
-
+    
 # Save the encrypted configuration to a file
 with open('encrypted_config.ini', 'w') as encrypted_file:
     encrypted_file.write(encrypted_config)

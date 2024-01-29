@@ -281,7 +281,8 @@ class Geminipro:
       retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
 
         # Filter out 'i' and words with less than 3 characters
-      retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
+      # retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
+      retail_keywords = [word for word in retail_keywords if len(word) > 2 ]
 
       return retail_keywords
 
