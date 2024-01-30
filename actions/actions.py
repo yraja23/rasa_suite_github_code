@@ -121,22 +121,37 @@ class Itemdetails(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    translated_message = allFunc.Eng_to_user_language(self, message, lang)
-            else:
-                # Wrap the error message in a list
-                dispatcher.utter_message(text=get_price_detail)
-                get_price_detail = [get_price_detail]  
 
-            if lang != 'en':
-                dispatcher.utter_message(text=translated_message)
-                dispatcher.utter_message(text=get_price_detail)
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' and lang is not None:
+                response_user_lang = allFunc.Eng_to_user_language(self, get_price_detail, lang)
+                if get_price_detail is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=get_price_detail)
+                    dispatcher.utter_message(text=response_user_lang)
             else:
-                dispatcher.utter_message(text=get_price_detail)
-
+                dispatcher.utter_message(text=get_price_detail)  
+               
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
         return [SlotSet('item', None), SlotSet('loc', None), SlotSet('item_prev', item), SlotSet('item_value_prev', loc), SlotSet('uc2_output', get_price_detail)]
    
+        #     else:
+        #         # Wrap the error message in a list
+        #         dispatcher.utter_message(text=get_price_detail)
+        #         get_price_detail = [get_price_detail]  
+
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=get_price_detail)
+        #     else:
+        #         dispatcher.utter_message(text=get_price_detail)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+        # return [SlotSet('item', None), SlotSet('loc', None), SlotSet('item_prev', item), SlotSet('item_value_prev', loc), SlotSet('uc2_output', get_price_detail)]
 class GetPriceatAllLocation(Action):
     def name(self)-> Text:
         return "action_getPrice_at_All_Location"
@@ -147,12 +162,14 @@ class GetPriceatAllLocation(Action):
         
 
         item_loc = tracker.latest_message['text']
-        item= tracker.get_slot("item")
+        # item= tracker.get_slot("item")
+        # print(item_loc+item)
         filename = "encrypted_client_details.ini"
         out = jsonConversion()
         access_token = out.generate_token(filename)
         if access_token:
             allItemPrices, file_url = out.get_api_response_usecase3(access_token,item_loc)
+            print(f"all item {allItemPrices}")
             if isinstance(allItemPrices, list):
                 lang = allFunc.key_of_lang
                 print("Class variable:", allFunc.key_of_lang)
@@ -160,33 +177,62 @@ class GetPriceatAllLocation(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    translated_message = allFunc.Eng_to_user_language(self, message, lang)
-            else:
-                # Wrap the error message in a list
-                dispatcher.utter_message(text=allItemPrices)
-                allItemPrices = [allItemPrices]  
 
-            if allItemPrices is None:
-                dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
-                return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
- 
-            if lang != 'en':
-                dispatcher.utter_message(text=translated_message)
-                dispatcher.utter_message(text=message)
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' and lang is not None:
+                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                if allItemPrices is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=allItemPrices)
+                    dispatcher.utter_message(text=response_user_lang)
             else:
-                dispatcher.utter_message(text=allItemPrices)
-                
+                dispatcher.utter_message(text=allItemPrices)  
+               
             if file_url:
-                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
-
-            # dispatcher.utter_message("Accessing...")
-            # out=str(allItemPrices)
-            # if allItemPrices == None:
-            #     # print("inside action else part")
-            #     dispatcher.utter_message("Looks like, the item is not present in the mentioned location.\n you can try checking if the entered values are correct or try searching for different values.")
-            # dispatcher.utter_message(text=allItemPrices)
-            #error message is also returned from the file. So  both are pprinted through the if statement.
+                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")   
         return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
+
+# class GetPriceatAllLocation(Action):
+#     def name(self)-> Text:
+#         return "action_getPrice_at_All_Location"
+    
+#     def run(self, dispatcher: CollectingDispatcher,
+#             tracker: Tracker,
+#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+#         item_loc = tracker.latest_message['text']
+#         item= tracker.get_slot("item")
+#         filename = "encrypted_client_details.ini"
+#         out = jsonConversion()
+#         access_token = out.generate_token(filename)
+#         if access_token:
+#             allItemPrices, file_url = out.get_api_response_usecase3(access_token,item_loc)
+#             if isinstance(allItemPrices, list):
+#                 lang = allFunc.key_of_lang
+#                 print("Class variable:", allFunc.key_of_lang)
+#                 for item_data in allItemPrices:
+#                     message = ""
+#                     for key, value in item_data.items():
+#                         message += f"{key}: {value}\n"
+
+#             lang = allFunc.key_of_lang
+#             print("Class variable:", allFunc.key_of_lang)
+#             if lang != 'en':
+#                 response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+#                 if allItemPrices is None and response_user_lang is None:
+#                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+#                 else:
+#                     dispatcher.utter_message(text=allItemPrices)
+#                     dispatcher.utter_message(text=response_user_lang)
+#             else:
+#                 dispatcher.utter_message(text=allItemPrices)  
+           
+#             if file_url:
+#                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+#             return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
 
 
 class CustomActionUtterRepeat(Action):
