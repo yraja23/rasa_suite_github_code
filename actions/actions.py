@@ -846,33 +846,54 @@ class CheckKeywordAction(Action):
                         # IF NO TRUE EXISTS IN THE ARRAY, SETTING THE VAL TO FALSE
                         print(f"result_after_matching list {result_after_matching_list}")  # True/False
                         print(f"result_after_matching intent_name {intent_name}")  # True/False
-                        item_price = None  # Initialize item_price outside of the block
-                        # Check if intent_name is a list and has multiple elements
-                        if isinstance(intent_name, list) and len(intent_name) > 1:
-                            contains_item_details = False
-                            contains_price_details = False
-                            for item in intent_name:
-                                if "item_details" in item:
-                                    contains_item_details = True
-                                if "price_details" in item:
-                                    contains_price_details = True
-                            
-                            # Check if both item_details and price_details are present
-                            if contains_item_details and contains_price_details:
-                                print("True")
-                                item_price = "True"
-                            else:
-                                print("False")
-                                item_price = "False"
+                        # item_price = None  # Initialize item_price outside of the block
+                        # # Check if intent_name is a list and has multiple elements
+                        # Case 1: ['price_details', 'item_details']
+                        if len(intent_name) == 2 and "item_details" in intent_name and "price_details" in intent_name:
+                            intent_name = 'item_price'
+                            print(f"Intent name: {intent_name}")
 
-                            # print("Item price:", item_price)
-                            print(f"Multiple elements: {intent_name}")
-                            intent_name = "multiple"
-                            print(f"Printing intent name multiple -- {intent_name}")
-                        else:
+                        # Case 2: ['order_details', 'supplier_details', 'inventory_details']
+                        elif len(intent_name) > 2:
+                            intent_name = 'multiple'
+                            print(f"Intent name: {intent_name}")
+
+                        # Case 3: ['item_details']
+                        elif len(intent_name) == 1:
                             intent_name = intent_name[0]
-                            print(f"Single element: {intent_name}")
-                            print(f"Printing intent name Single -- {intent_name}")
+                            print(f"Intent name: {intent_name}")
+                        else:
+                            intent_name = 'multiple'
+                            print(f"Intent name: {intent_name}")
+                        # if len(intent_name) == 2 and "item_details" in intent_name and "price_details" in intent_name:
+                        #         print("Intent is pricing  -- item_price")
+                        #         intent_name = "item_price"
+                        # if isinstance(intent_name, list) and len(intent_name) > 1:
+                        #     #     contains_item_details = False
+                        #     #     contains_price_details = False
+                        #     #     for item in intent_name:
+                        #     #         if "item_details" in item:
+                        #     #             contains_item_details = True
+                        #     #         if "price_details" in item:
+                        #     #             contains_price_details = True
+                                
+                        #     #     # Check if both item_details and price_details are present
+                        #     #     if contains_item_details and contains_price_details:
+                        #     #         print("True")
+                        #     #         item_price = "True"
+                        #     #     else:
+                        #     #         print("False")
+                        #     #         item_price = "False"
+
+                        #         # print("Item price:", item_price)
+                        #         print(f"Multiple elements: {intent_name}")
+                        #         intent_name = "multiple"
+                        #         print(f"Printing intent name multiple -- {intent_name}")
+                            
+                        # else:
+                        #     intent_name = intent_name[0]
+                        #     print(f"Single element: {intent_name}")
+                        #     print(f"Printing intent name Single -- {intent_name}")
 
                         # HIS FOR LOOP CHECKS AND STORES THE OUTPUT IF THE VALUES PRESENT IN OTHER INTENTS
 
@@ -1430,6 +1451,9 @@ class ActionCheckSlot(Action):
                 msg="It seems your query falls under multiple categories. Please rephrase your statement."
                 dispatcher.utter_message(text=msg)
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_details")]
+            elif slot_value1 == "item_price":
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
+
             # elif slot_value1 == "supplier_details+user_entered_numeric_values":
             #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_supplier_with_number_details")]
             
