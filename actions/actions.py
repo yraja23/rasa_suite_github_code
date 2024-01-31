@@ -626,7 +626,7 @@ class ItemAction(Action):
 #
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang != 'en':
+            if lang != 'en' and lang is not None:
                 response_user_lang = allFunc.Eng_to_user_language(self, itemDetails, lang)
                 if itemDetails is None and response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")

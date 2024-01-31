@@ -12,6 +12,8 @@ from googletrans import Translator, LANGUAGES
 import langid
 import googletrans
 
+from .FileDownloader.ExcelFileDownloader import ExcelFileDownloader
+
 #spellchecker modules
 # from nltk.stem import WordNetLemmatizer
 # from textblob import Word
@@ -1120,20 +1122,25 @@ class jsonConversion:
 
             }
             if item_data:
-# #local code starts
-                # Create a DataFrame from the list of dictionaries
-                df = pd.DataFrame([item_data])
-                # Save the DataFrame to an Excel file
-                filename = "item_info.xlsx"
-                df.to_excel(filename, index=False)
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                downloads_path = os.path.expanduser("~\\Downloads")
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
-                # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
+                 # Call the download_excel function from the FileDownloader class
+                file_url = ExcelFileDownloader.download_excelfile_in_local([item_data], "item_info.xlsx")
+
                 return item_details, file_url
+
+# # #local code starts
+#                 # Create a DataFrame from the list of dictionaries
+#                 df = pd.DataFrame([item_data])
+#                 # Save the DataFrame to an Excel file
+#                 filename = "item_info.xlsx"
+#                 df.to_excel(filename, index=False)
+#                 # Move the file to the Downloads directory (similar to previous code)
+#                 file_path = os.path.join(os.getcwd(), filename)
+#                 downloads_path = os.path.expanduser("~\\Downloads")
+#                 new_file_path = os.path.join(downloads_path, filename)
+#                 shutil.move(file_path, new_file_path)
+#                 # Get the file URL for sending to the user
+#                 file_url = f"file://{new_file_path}"
+#                 return item_details, file_url
 # #local code ends
 
 #  # server code start
