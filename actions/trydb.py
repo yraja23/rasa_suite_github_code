@@ -1112,18 +1112,17 @@ class jsonConversion:
             item_details += f"item Grandparent : {itemGrandparent} \nitem Parent : {itemParent}\n item : {item}\n item Description : {itemDesc}\n status : {status}\n item Level : {itemLevel}\n tran Level : {tranLevel}"
 
             item_data = {
-                'itemGrandparent ': itemGrandparent,
-                'itemParent ': itemParent,
-                'item ': item,
-                'itemDesc ': itemDesc,
-                'status ': status,
-                'itemLevel ': itemLevel,
-                'tranLevel ': tranLevel
-
+                'ItemGrandparent ': itemGrandparent,
+                'ItemParent ': itemParent,
+                'Item ': item,
+                'ItemDesc ': itemDesc,
+                'Status ': status,
+                'ItemLevel ': itemLevel,
+                'TranLevel ': tranLevel
             }
             if item_data:
                  # Call the download_excel function from the FileDownloader class
-                file_url = ExcelFileDownloader.download_excelfile_in_local([item_data], "item_info.xlsx")
+                file_url = ExcelFileDownloader.download_excelfile_in_server([item_data], "item_info.xlsx")
 
                 return item_details, file_url
 
@@ -1605,8 +1604,11 @@ class allFunc:
         # src_lang = detection.lang
         # print(f"Detected source language: {dict_l[src_lang]}")
         print(f"lang:{language}")
-        self.language = language.lower()
-        print(self.language)
+        if language is None:
+            self.language = 'en'
+        else:
+            self.language = language.lower()
+            print(self.language)
         #taking the key for the value - from dictionaty
         # print("One line Code Key value: ", list(dict_l.keys())
         #   [list(dict_l.values()).index(language)])
