@@ -765,25 +765,24 @@ class CheckKeywordAction(Action):
         print(f"translation {translation}")
         print(f"lang_key {key_of_lang}")
 
-        check_user_input_isRetail = f"Is the phrase '{translation}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
-        object=allFunc()
-        response = object.palmApi(check_user_input_isRetail)
-        print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
-        if response.lower() == 'no' :
-            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                        You can ask me anything related the domain, I will do my best to help you in any way that I can."      
-            dispatcher.utter_message(text=error_text)
-            return [FollowupAction("utter_price_details")]  
-        else:
-
-            response1= gemini_instance.extract_nouns(translation)
-            print("after noun call")
-            print(f"response after extract_nouns {response1}")
-            result_string =' '.join(response1)
-            print(result_string)
-            updated_keyword = result_string
-            
-            print(f"updated_keyword --- {updated_keyword}")
+        # check_user_input_isRetail = f"Is the phrase '{translation}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
+        # object=allFunc()
+        # response = object.palmApi(check_user_input_isRetail)
+        # print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
+        # if response.lower() == 'no' :
+        #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+        #                 You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+        #     dispatcher.utter_message(text=error_text)
+        #     return [FollowupAction("utter_price_details")]  
+        # else:
+        response1= gemini_instance.extract_nouns(translation)
+        print("after noun call")
+        print(f"response after extract_nouns {response1}")
+        result_string =' '.join(response1)
+        print(result_string)
+        updated_keyword = result_string
+        
+        print(f"updated_keyword --- {updated_keyword}")
         # Check if the language is English and the translation is the same as the original input
         # if lang.lower() == 'english':
         #     if  key_of_lang != 'en':

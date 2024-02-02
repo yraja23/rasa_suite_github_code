@@ -1129,7 +1129,7 @@ class jsonConversion:
 # # #local code starts
 #                 # Create a DataFrame from the list of dictionaries
 #                 df = pd.DataFrame([item_data])
-#                 # Save the DataFrame to an Excel file
+#                 # Save the DataFrame to an Excel file 
 #                 filename = "item_info.xlsx"
 #                 df.to_excel(filename, index=False)
 #                 # Move the file to the Downloads directory (similar to previous code)
@@ -1382,23 +1382,29 @@ class allFunc:
         order_keyword = ['order','Order'] # ,'purchase order'
         inventory_keywords = ['Inventory','inventory','stock']
         pricing_keywords = [ 'Price', 'Prices'] # 'cost'
-        item_keywords = [ 'item', 'Items']
+        item_keywords = ['item', 'Items']
 
 
         supplier_keywords_lower = [word.lower() for word in supplier_keywords]
-        order_keyword_lower = [word.lower() for word in order_keyword]
+        order_keywords_lower = [word.lower() for word in order_keyword]
         inventory_keywords_lower = [word.lower() for word in inventory_keywords]
         pricing_keywords_lower = [word.lower() for word in pricing_keywords]
         item_keywords_lower = [word.lower() for word in item_keywords]
 
+    # Compile regular expressions with word boundaries
+        supplier_regex = re.compile(r'\b(?:' + '|'.join(supplier_keywords_lower) + r')\b', re.IGNORECASE)
+        order_regex = re.compile(r'\b(?:' + '|'.join(order_keywords_lower) + r')\b', re.IGNORECASE)
+        inventory_regex = re.compile(r'\b(?:' + '|'.join(inventory_keywords_lower) + r')\b', re.IGNORECASE)
+        pricing_regex = re.compile(r'\b(?:' + '|'.join(pricing_keywords_lower) + r')\b', re.IGNORECASE)
+        item_regex = re.compile(r'\b(?:' + '|'.join(item_keywords_lower) + r')\b', re.IGNORECASE)
 
-        
-      # Compile regular expressions
-        supplier_regex = re.compile('|'.join(supplier_keywords_lower), re.IGNORECASE)
-        order_regex = re.compile('|'.join(order_keyword_lower), re.IGNORECASE)
-        inventory_regex = re.compile('|'.join(inventory_keywords_lower), re.IGNORECASE)
-        pricing_regex = re.compile('|'.join(pricing_keywords_lower), re.IGNORECASE)
-        item_regex = re.compile('|'.join(item_keywords_lower), re.IGNORECASE)
+            
+    #   # Compile regular expressions
+    #     supplier_regex = re.compile('|'.join(supplier_keywords_lower), re.IGNORECASE)
+    #     order_regex = re.compile('|'.join(order_keyword_lower), re.IGNORECASE)
+    #     inventory_regex = re.compile('|'.join(inventory_keywords_lower), re.IGNORECASE)
+    #     pricing_regex = re.compile('|'.join(pricing_keywords_lower), re.IGNORECASE)
+    #     item_regex = re.compile('|'.join(item_keywords_lower), re.IGNORECASE)
 
 
         # all_keywords_pattern = '|'.join(supplier_keywords_lower + order_keyword_lower + inventory_keywords_lower + pricing_keywords_lower)
@@ -1625,9 +1631,10 @@ class allFunc:
         allFunc.key_of_lang = user_lang
         return text_val, user_lang
 
-
-   
     def Eng_to_user_language(self, response, lang):
+        dict_l = {'af': 'afrikaans', 'sq': 'albanian', 'am': 'amharic', 'ar': 'arabic', 'hy': 'armenian', 'az': 'azerbaijani', 'eu': 'basque', 'be': 'belarusian', 'bn': 'bengali', 'bs': 'bosnian', 'bg': 'bulgarian', 'ca': 'catalan', 'ceb': 'cebuano', 'ny': 'chichewa', 'zh-cn': 'chinese (simplified)', 'zh-tw': 'chinese (traditional)', 'co': 'corsican', 'hr': 'croatian', 'cs': 'czech', 'da': 'danish', 'nl': 'dutch', 'en': 'english', 'eo': 'esperanto', 'et': 'estonian', 'tl': 'filipino', 'fi': 'finnish', 'fr': 'french', 'fy': 'frisian', 'gl': 'galician', 'ka': 'georgian', 'de': 'german', 'el': 'greek', 'gu': 'gujarati', 'ht': 'haitian creole', 'ha': 'hausa', 'haw': 'hawaiian', 'iw': 'hebrew', 'he': 'hebrew', 'hi': 'hindi', 'hmn': 'hmong', 'hu': 'hungarian', 'is': 'icelandic', 'ig': 'igbo', 'id': 'indonesian', 'ga': 'irish', 'it': 'italian', 'ja': 'japanese', 'jw': 'javanese', 'kn': 'kannada', 'kk': 'kazakh', 'km': 'khmer', 'ko': 'korean', 'ku': 'kurdish (kurmanji)', 'ky': 'kyrgyz', 'lo': 'lao', 'la': 'latin', 'lv': 'latvian', 'lt': 'lithuanian', 'lb': 'luxembourgish', 'mk': 'macedonian', 'mg': 'malagasy', 'ms': 'malay', 'ml': 'malayalam', 'mt': 'maltese', 'mi': 'maori', 'mr': 'marathi', 'mn': 'mongolian', 'my': 'myanmar (burmese)', 'ne': 'nepali', 'no': 'norwegian', 'or': 'odia', 'ps': 'pashto', 'fa': 'persian', 'pl': 'polish', 'pt': 'portuguese', 'pa': 'punjabi', 'ro': 'romanian', 'ru': 'russian', 'sm': 'samoan', 'gd': 'scots gaelic', 'sr': 'serbian', 'st': 'sesotho', 'sn': 'shona', 'sd': 'sindhi', 'si': 'sinhala', 'sk': 'slovak', 'sl': 'slovenian', 'so': 'somali', 'es': 'spanish', 'su': 'sundanese', 'sw': 'swahili', 'sv': 'swedish', 'tg': 'tajik', 'ta': 'tamil', 'te': 'telugu', 'th': 'thai', 'tr': 'turkish', 'uk': 'ukrainian', 'ur': 'urdu', 'ug': 'uyghur', 'uz': 'uzbek', 'vi': 'vietnamese', 'cy': 'welsh', 'xh': 'xhosa', 'yi': 'yiddish', 'yo': 'yoruba', 'zu': 'zulu'}
+        key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(self.language)]
+        user_lang = key_of_lang
         if response is None:
             return None
         # dict_l = googletrans.LANGUAGES
@@ -1637,10 +1644,31 @@ class allFunc:
         if lang is None:
             lang = 'en'
         # Translating the text to English
-        main_out = translator.translate(response, dest=lang, src='en')
-        text_val = main_out.text
+        # text = " Supplier Name: A REHMAN S. AL RASHID (YOUSAF)|RBFTCO-SAUDI "
+        user_input = f"{response}\n Translate into {user_lang} language and give a newline after every key and value. don't need extra definition "
+        object=allFunc()
+        response = object.palmApi(user_input)
+        print(f"palm translation after translating into user langugage {response}")
+        # main_out = translator.translate(response, dest=lang, src='en')
+        # text_val = main_out.text
+        text_val = response
 
         return text_val
+   
+    # def Eng_to_user_language(self, response, lang):
+    #     if response is None:
+    #         return None
+    #     # dict_l = googletrans.LANGUAGES
+    #     translator = Translator()
+    #     # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
+    #     print(f"response to Eng_to_user_language {response}")
+    #     if lang is None:
+    #         lang = 'en'
+    #     # Translating the text to English
+    #     main_out = translator.translate(response, dest=lang, src='en')
+    #     text_val = main_out.text
+
+    #     return text_val
 # #          # Create a translator object
 #  # Create a translator object
 #         translator = Translator()
