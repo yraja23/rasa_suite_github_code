@@ -89,6 +89,8 @@ class ItemDetailsOauthApi(Action):
                 else:
                     dispatcher.utter_message(text=allItemPrices)
                     dispatcher.utter_message(text=response_user_lang)
+            elif lang is None:
+                dispatcher.utter_message(text=allItemPrices)  
             else:
                 dispatcher.utter_message(text=allItemPrices)  
 #               
@@ -133,7 +135,7 @@ class Itemdetails(Action):
                     dispatcher.utter_message(text=response_user_lang)
             else:
                 dispatcher.utter_message(text=get_price_detail)  
-               
+
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
         return [SlotSet('item', None), SlotSet('loc', None), SlotSet('item_prev', item), SlotSet('item_value_prev', loc), SlotSet('uc2_output', get_price_detail)]

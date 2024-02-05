@@ -261,42 +261,42 @@ class jsonConversion:
                     print(price_u1_details)
 
             if output:
-                    # Create a DataFrame from the list of dictionaries
-                    df = pd.DataFrame(output)
+                    # # Create a DataFrame from the list of dictionaries
+                    # df = pd.DataFrame(output)
 
-                    # Save the DataFrame to an Excel file
-                    filename = "item_prices-u3.xlsx"
-                    df.to_excel(filename, index=False)
+                    # # Save the DataFrame to an Excel file
+                    # filename = "item_prices-u3.xlsx"
+                    # df.to_excel(filename, index=False)
 
-                    # Move the file to the Downloads directory (similar to previous code)
-                    file_path = os.path.join(os.getcwd(), filename)
-                    downloads_path = os.path.expanduser("~\\Downloads")
-                    # downloads_path = "/app/excel_files"
-                    new_file_path = os.path.join(downloads_path, filename)
-                    shutil.move(file_path, new_file_path)
+                    # # Move the file to the Downloads directory (similar to previous code)
+                    # file_path = os.path.join(os.getcwd(), filename)
+                    # downloads_path = os.path.expanduser("~\\Downloads")
+                    # # downloads_path = "/app/excel_files"
+                    # new_file_path = os.path.join(downloads_path, filename)
+                    # shutil.move(file_path, new_file_path)
 
-                    # Get the file URL for sending to the user
-                    file_url = f"file://{new_file_path}"
+                    # # Get the file URL for sending to the user
+                    # file_url = f"file://{new_file_path}"
 
-                    # # return file_url  # Return the file URL for further processing
-                    return price_u1_details, file_url
-                # df = pd.DataFrame(output)
-                # filename = "item_prices-u3.xlsx"
+                    # # # return file_url  # Return the file URL for further processing
+                    # return price_u1_details, file_url
+                df = pd.DataFrame(output)
+                filename = "item_prices-u3.xlsx"
 
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
 
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
 
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
                 
-                # server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices-u3.xlsx"
-                # file_url = server_new_file_path
+                server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices-u3.xlsx"
+                file_url = server_new_file_path
 
-                # return price_u1_details, file_url
+                return price_u1_details, file_url
             else:
                 output_error = "No details exist for the given item or location. You can try searching for different items or locations."
                 return output_error, None
@@ -373,55 +373,55 @@ class jsonConversion:
                     print(price_u1_details)
             if output:
 ##server code starts
-                # df = pd.DataFrame(output)
-                # filename = "item_prices_u2.xlsx"
+                df = pd.DataFrame(output)
+                filename = "item_prices_u2.xlsx"
 
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
 
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
 
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
                 
-                # # # Define the server-specific downloads directory
-                # # server_downloads_path = "/datadrive/rasa_github_new/downloads"
+                # # Define the server-specific downloads directory
+                # server_downloads_path = "/datadrive/rasa_github_new/downloads"
 
-                # # # Ensure the server downloads directory exists
-                # # os.makedirs(server_downloads_path, exist_ok=True)
+                # # Ensure the server downloads directory exists
+                # os.makedirs(server_downloads_path, exist_ok=True)
 
-                # # Specify the new file path in the server downloads directory
-                # server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices_u2.xlsx"
-                # # Move the file to the server downloads directory
-                # # shutil.move(server_filepath, server_new_file_path)
+                # Specify the new file path in the server downloads directory
+                server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices_u2.xlsx"
+                # Move the file to the server downloads directory
+                # shutil.move(server_filepath, server_new_file_path)
 
-                # # Get the file URL for sending to the user
-                # file_url = server_new_file_path
+                # Get the file URL for sending to the user
+                file_url = server_new_file_path
 
-                # return output, file_url
+                return output, file_url
 ##server code ends
 
 ##local code starts 
-                # Create a DataFrame from the list of dictionaries
-                df = pd.DataFrame(output)
+                # # Create a DataFrame from the list of dictionaries
+                # df = pd.DataFrame(output)
 
-                # Save the DataFrame to an Excel file
-                filename = "item_prices-u2.xlsx"
-                df.to_excel(filename, index=False)
+                # # Save the DataFrame to an Excel file
+                # filename = "item_prices-u2.xlsx"
+                # df.to_excel(filename, index=False)
 
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                downloads_path = os.path.expanduser("~\\Downloads")
-                # downloads_path = "/app/excel_files"
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
+                # # Move the file to the Downloads directory (similar to previous code)
+                # file_path = os.path.join(os.getcwd(), filename)
+                # downloads_path = os.path.expanduser("~\\Downloads")
+                # # downloads_path = "/app/excel_files"
+                # new_file_path = os.path.join(downloads_path, filename)
+                # shutil.move(file_path, new_file_path)
 
-                # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
+                # # Get the file URL for sending to the user
+                # file_url = f"file://{new_file_path}"
 
-                return price_u1_details, file_url
+                # return price_u1_details, file_url
 ##local code ends
 
             else:
@@ -477,56 +477,56 @@ class jsonConversion:
                     print(price_u1_details)
             if output:
 ##server code ends
-                # df = pd.DataFrame(output)
-                # filename = "item_prices-u1.xlsx"
+                df = pd.DataFrame(output)
+                filename = "item_prices-u1.xlsx"
                 
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
 
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
 
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
                 
-                # # # Define the server-specific downloads directory
-                # # server_downloads_path = "/datadrive/rasa_github_new/downloads"
+                # # Define the server-specific downloads directory
+                # server_downloads_path = "/datadrive/rasa_github_new/downloads"
 
-                # # # Ensure the server downloads directory exists
-                # # os.makedirs(server_downloads_path, exist_ok=True)
+                # # Ensure the server downloads directory exists
+                # os.makedirs(server_downloads_path, exist_ok=True)
 
-                # # Specify the new file path in the server downloads directory
-                # server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices-u1.xlsx"
-                # # Move the file to the server downloads directory
-                # # shutil.move(server_filepath, server_new_file_path)
+                # Specify the new file path in the server downloads directory
+                server_new_file_path = "http://20.235.145.135:7739/excel_files/item_prices-u1.xlsx"
+                # Move the file to the server downloads directory
+                # shutil.move(server_filepath, server_new_file_path)
 
-                # # Get the file URL for sending to the user
-                # file_url = server_new_file_path
+                # Get the file URL for sending to the user
+                file_url = server_new_file_path
 
-                # return output, file_url
+                return price_u1_details, file_url
 ##server code ends
 
 ##local code starts
-            #   Create a DataFrame from the list of dictionaries
-                df = pd.DataFrame(output)
+            # #   Create a DataFrame from the list of dictionaries
+            #     df = pd.DataFrame(output)
 
-                # Save the DataFrame to an Excel file
-                filename = "item_prices-u1.xlsx"
-                df.to_excel(filename, index=False)
+            #     # Save the DataFrame to an Excel file
+            #     filename = "item_prices-u1.xlsx"
+            #     df.to_excel(filename, index=False)
 
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                downloads_path = os.path.expanduser("~\\Downloads")
-                # downloads_path = "/app/excel_files"
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
+            #     # Move the file to the Downloads directory (similar to previous code)
+            #     file_path = os.path.join(os.getcwd(), filename)
+            #     downloads_path = os.path.expanduser("~\\Downloads")
+            #     # downloads_path = "/app/excel_files"
+            #     new_file_path = os.path.join(downloads_path, filename)
+            #     shutil.move(file_path, new_file_path)
 
-                # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
+            #     # Get the file URL for sending to the user
+            #     file_url = f"file://{new_file_path}"
 
-                # # return file_url  # Return the file URL for further processing
-                return price_u1_details, file_url
+            #     # # return file_url  # Return the file URL for further processing
+            #     return price_u1_details, file_url
 ##local code ends
             else:
                 output_error = "No details exist for the given item. You can try searching for different items."
@@ -569,58 +569,58 @@ class jsonConversion:
                 print(order_details_string)
 
             if order_data:
-             # uncomment  the below code for local xslx file download
-                #   Create a DataFrame from the list of dictionaries
-                    df = pd.DataFrame(order_data)
-
-                    # Save the DataFrame to an Excel file
-                    filename = "order_info.xlsx"
-                    df.to_excel(filename, index=False)
-
-                    # Move the file to the Downloads directory (similar to previous code)
-                    file_path = os.path.join(os.getcwd(), filename)
-                    print(f"file path in local {file_path}")
-                    current_directory = os.getcwd()
-                    print("Current Working Directory:", current_directory)
-                    downloads_path = os.path.expanduser("~\\Downloads")
-                    # downloads_path = "/app/excel_files"
-                    new_file_path = os.path.join(downloads_path, filename)
-                    shutil.move(file_path, new_file_path)
-
-                    # Get the file URL for sending to the user
-                    file_url = f"file://{new_file_path}"
-
-                    return order_details_string, file_url
-            # # uncomment  the below code for server xslx file download
+            #  # uncomment  the below code for local xslx file download
+            #     #   Create a DataFrame from the list of dictionaries
             #         df = pd.DataFrame(order_data)
+
+            #         # Save the DataFrame to an Excel file
             #         filename = "order_info.xlsx"
+            #         df.to_excel(filename, index=False)
 
-            #         # Define the directory where you want to save the file on the server
-            #         server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
-
-            #         # Ensure the directory exists
-            #         os.makedirs(server_excel_directory, exist_ok=True)
-
-            #         # Save the DataFrame to an Excel file in the server directory
-            #         server_filepath = os.path.join(server_excel_directory, filename)
-            #         df.to_excel(server_filepath, index=False)
-                    
-            #         # # Define the server-specific downloads directory
-            #         # server_downloads_path = "/datadrive/rasa_github_new/downloads"
-
-            #         # # Ensure the server downloads directory exists
-            #         # os.makedirs(server_downloads_path, exist_ok=True)
-
-            #         # Specify the new file path in the server downloads directory
-            #         server_new_file_path = "http://20.235.145.135:7739/excel_files/order_info.xlsx"
-            #         # Move the file to the server downloads directory
-            #         # shutil.move(server_filepath, server_new_file_path)
+            #         # Move the file to the Downloads directory (similar to previous code)
+            #         file_path = os.path.join(os.getcwd(), filename)
+            #         print(f"file path in local {file_path}")
+            #         current_directory = os.getcwd()
+            #         print("Current Working Directory:", current_directory)
+            #         downloads_path = os.path.expanduser("~\\Downloads")
+            #         # downloads_path = "/app/excel_files"
+            #         new_file_path = os.path.join(downloads_path, filename)
+            #         shutil.move(file_path, new_file_path)
 
             #         # Get the file URL for sending to the user
-            #         file_url = server_new_file_path
+            #         file_url = f"file://{new_file_path}"
+
+            #         return order_details_string, file_url
+            # uncomment  the below code for server xslx file download
+                    df = pd.DataFrame(order_data)
+                    filename = "order_info.xlsx"
+
+                    # Define the directory where you want to save the file on the server
+                    server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+
+                    # Ensure the directory exists
+                    os.makedirs(server_excel_directory, exist_ok=True)
+
+                    # Save the DataFrame to an Excel file in the server directory
+                    server_filepath = os.path.join(server_excel_directory, filename)
+                    df.to_excel(server_filepath, index=False)
+                    
+                    # # Define the server-specific downloads directory
+                    # server_downloads_path = "/datadrive/rasa_github_new/downloads"
+
+                    # # Ensure the server downloads directory exists
+                    # os.makedirs(server_downloads_path, exist_ok=True)
+
+                    # Specify the new file path in the server downloads directory
+                    server_new_file_path = "http://20.235.145.135:7739/excel_files/order_info.xlsx"
+                    # Move the file to the server downloads directory
+                    # shutil.move(server_filepath, server_new_file_path)
+
+                    # Get the file URL for sending to the user
+                    file_url = server_new_file_path
 
 
-            #         return order_details_string, file_url              
+                    return order_details_string, file_url              
             
         else:
             print("Error - Unable to fetch order details:", response.status_code)
@@ -826,54 +826,54 @@ class jsonConversion:
 
             if output:
 ##server code starts
-                # df = pd.DataFrame(output)
-                # filename = "inventory_for_store.xlsx"
+                df = pd.DataFrame(output)
+                filename = "inventory_for_store.xlsx"
 
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
 
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
 
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
                 
-                # # # Define the server-specific downloads directory
-                # # server_downloads_path = "/datadrive/rasa_github_new/downloads"
+                # # Define the server-specific downloads directory
+                # server_downloads_path = "/datadrive/rasa_github_new/downloads"
 
-                # # # Ensure the server downloads directory exists
-                # # os.makedirs(server_downloads_path, exist_ok=True)
+                # # Ensure the server downloads directory exists
+                # os.makedirs(server_downloads_path, exist_ok=True)
 
-                # # Specify the new file path in the server downloads directory
-                # server_new_file_path = "http://20.235.145.135:7739/excel_files/inventory_for_store.xlsx"
-                # # Move the file to the server downloads directory
-                # # shutil.move(server_filepath, server_new_file_path)
+                # Specify the new file path in the server downloads directory
+                server_new_file_path = "http://20.235.145.135:7739/excel_files/inventory_for_store.xlsx"
+                # Move the file to the server downloads directory
+                # shutil.move(server_filepath, server_new_file_path)
 
-                # # Get the file URL for sending to the user
-                # file_url = server_new_file_path
-                # return output, file_url
+                # Get the file URL for sending to the user
+                file_url = server_new_file_path
+                return output, file_url
             
 ##server code ends
 ##local code starts
 
-                # Create a DataFrame from the list of dictionaries
-                df = pd.DataFrame(output)
+                # # Create a DataFrame from the list of dictionaries
+                # df = pd.DataFrame(output)
 
-                # Save the DataFrame to an Excel file
-                filename = "inventory_for_store.xlsx"
-                df.to_excel(filename, index=False)
+                # # Save the DataFrame to an Excel file
+                # filename = "inventory_for_store.xlsx"
+                # df.to_excel(filename, index=False)
 
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                downloads_path = os.path.expanduser("~\\Downloads")
-                # downloads_path = "/app/excel_files"
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
+                # # Move the file to the Downloads directory (similar to previous code)
+                # file_path = os.path.join(os.getcwd(), filename)
+                # downloads_path = os.path.expanduser("~\\Downloads")
+                # # downloads_path = "/app/excel_files"
+                # new_file_path = os.path.join(downloads_path, filename)
+                # shutil.move(file_path, new_file_path)
 
-                # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
-                return inventory_details_string, file_url
+                # # Get the file URL for sending to the user
+                # file_url = f"file://{new_file_path}"
+                # return inventory_details_string, file_url
 # #local code ends
 
             else:
@@ -949,53 +949,53 @@ class jsonConversion:
         #         output.append(inventory_for_wh)
 
 # ##server code starts
-                # df = pd.DataFrame(output)
-                # filename = "inventory_for_wh.xlsx"
+                df = pd.DataFrame(output)
+                filename = "inventory_for_wh.xlsx"
 
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
 
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
 
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
                 
-                # # # Define the server-specific downloads directory
-                # # server_downloads_path = "/datadrive/rasa_github_new/downloads"
+                # # Define the server-specific downloads directory
+                # server_downloads_path = "/datadrive/rasa_github_new/downloads"
 
-                # # # Ensure the server downloads directory exists
-                # # os.makedirs(server_downloads_path, exist_ok=True)
+                # # Ensure the server downloads directory exists
+                # os.makedirs(server_downloads_path, exist_ok=True)
 
-                # # Specify the new file path in the server downloads directory
-                # server_new_file_path = "http://20.235.145.135:7739/excel_files/inventory_for_wh.xlsx"
-                # # Move the file to the server downloads directory
-                # # shutil.move(server_filepath, server_new_file_path)
+                # Specify the new file path in the server downloads directory
+                server_new_file_path = "http://20.235.145.135:7739/excel_files/inventory_for_wh.xlsx"
+                # Move the file to the server downloads directory
+                # shutil.move(server_filepath, server_new_file_path)
 
-                # # Get the file URL for sending to the user
-                # file_url = server_new_file_path
-                # return output, file_url
+                # Get the file URL for sending to the user
+                file_url = server_new_file_path
+                return output, file_url
 ##server code ends
 
 ##local code starts
                 # Create a DataFrame from the list of dictionaries
-                df = pd.DataFrame(output)
+                # df = pd.DataFrame(output)
 
-                # Save the DataFrame to an Excel file
-                filename = "inventory_for_wh.xlsx"
-                df.to_excel(filename, index=False)
+                # # Save the DataFrame to an Excel file
+                # filename = "inventory_for_wh.xlsx"
+                # df.to_excel(filename, index=False)
 
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                downloads_path = os.path.expanduser("~\\Downloads")
-                # downloads_path = "/app/excel_files"
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
+                # # Move the file to the Downloads directory (similar to previous code)
+                # file_path = os.path.join(os.getcwd(), filename)
+                # downloads_path = os.path.expanduser("~\\Downloads")
+                # # downloads_path = "/app/excel_files"
+                # new_file_path = os.path.join(downloads_path, filename)
+                # shutil.move(file_path, new_file_path)
 
-                # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
-                return inventory_details_string, file_url
+                # # Get the file URL for sending to the user
+                # file_url = f"file://{new_file_path}"
+                # return inventory_details_string, file_url
 ##local code ends
             else:
                 print('No inventory items found.')
@@ -1027,7 +1027,7 @@ class jsonConversion:
             currencyCode = api_response[0]['currencyCode']
             vatRegion = api_response[0]['vatRegion']
             freight_terms = api_response[0]['freightTerms']
-            supplier_details += f"Supplier: {supplier}\nSupplier Name: {supName}\nCurrency Code: {currencyCode}\nVAT Region: {vatRegion}\nFreight_terms: {freight_terms}"
+            supplier_details += f"Supplier: {supplier}\nSupplier Name: {supName}\nCurrency Code: {currencyCode}\nVAT Region: {vatRegion}\nFreight terms: {freight_terms}"
 
             supplier_data = {
                 'Supplier': supplier,
@@ -1038,46 +1038,46 @@ class jsonConversion:
             }
             if supplier_data:
 # #server start
-                # df = pd.DataFrame([supplier_data])
-                # filename = "supplier_info.xlsx"
-
-                # # Define the directory where you want to save the file on the server
-                # server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
-
-                # # Ensure the directory exists
-                # os.makedirs(server_excel_directory, exist_ok=True)
-
-                # # Save the DataFrame to an Excel file in the server directory
-                # server_filepath = os.path.join(server_excel_directory, filename)
-                # df.to_excel(server_filepath, index=False)
-                
-                # # Specify the new file path in the server downloads directory
-                # server_new_file_path = f"http://20.235.145.135:7739/excel_files/supplier_info.xlsx"
-
-                # # Get the file URL for sending to the user
-                # file_url = server_new_file_path
-                # return supplier_details, file_url
-# #server ends
-# #local starts
-                # Create a DataFrame from the list of dictionaries
                 df = pd.DataFrame([supplier_data])
-
-                # Save the DataFrame to an Excel file
                 filename = "supplier_info.xlsx"
-                df.to_excel(filename, index=False)
 
-                # Move the file to the Downloads directory (similar to previous code)
-                file_path = os.path.join(os.getcwd(), filename)
-                print(f"file path in local {file_path}")
-                downloads_path = os.path.expanduser("~\\Downloads")
-                # downloads_path = "/app/excel_files"
-                new_file_path = os.path.join(downloads_path, filename)
-                shutil.move(file_path, new_file_path)
+                # Define the directory where you want to save the file on the server
+                server_excel_directory = "/app/excel_files"  # Adjust this path to your server's configuration
+
+                # Ensure the directory exists
+                os.makedirs(server_excel_directory, exist_ok=True)
+
+                # Save the DataFrame to an Excel file in the server directory
+                server_filepath = os.path.join(server_excel_directory, filename)
+                df.to_excel(server_filepath, index=False)
+                
+                # Specify the new file path in the server downloads directory
+                server_new_file_path = f"http://20.235.145.135:7739/excel_files/supplier_info.xlsx"
 
                 # Get the file URL for sending to the user
-                file_url = f"file://{new_file_path}"
-
+                file_url = server_new_file_path
                 return supplier_details, file_url
+# #server ends
+# #local starts
+                # # Create a DataFrame from the list of dictionaries
+                # df = pd.DataFrame([supplier_data])
+
+                # # Save the DataFrame to an Excel file
+                # filename = "supplier_info.xlsx"
+                # df.to_excel(filename, index=False)
+
+                # # Move the file to the Downloads directory (similar to previous code)
+                # file_path = os.path.join(os.getcwd(), filename)
+                # print(f"file path in local {file_path}")
+                # downloads_path = os.path.expanduser("~\\Downloads")
+                # # downloads_path = "/app/excel_files"
+                # new_file_path = os.path.join(downloads_path, filename)
+                # shutil.move(file_path, new_file_path)
+
+                # # Get the file URL for sending to the user
+                # file_url = f"file://{new_file_path}"
+
+                # return supplier_details, file_url
 # # local ends
 
   
@@ -1601,58 +1601,56 @@ class allFunc:
         print("------------------------")
         return full_source_language_name,translation.text
     
+
     def langToEng(self, keyword, language):
         dict_l = {'af': 'afrikaans', 'sq': 'albanian', 'am': 'amharic', 'ar': 'arabic', 'hy': 'armenian', 'az': 'azerbaijani', 'eu': 'basque', 'be': 'belarusian', 'bn': 'bengali', 'bs': 'bosnian', 'bg': 'bulgarian', 'ca': 'catalan', 'ceb': 'cebuano', 'ny': 'chichewa', 'zh-cn': 'chinese (simplified)', 'zh-tw': 'chinese (traditional)', 'co': 'corsican', 'hr': 'croatian', 'cs': 'czech', 'da': 'danish', 'nl': 'dutch', 'en': 'english', 'eo': 'esperanto', 'et': 'estonian', 'tl': 'filipino', 'fi': 'finnish', 'fr': 'french', 'fy': 'frisian', 'gl': 'galician', 'ka': 'georgian', 'de': 'german', 'el': 'greek', 'gu': 'gujarati', 'ht': 'haitian creole', 'ha': 'hausa', 'haw': 'hawaiian', 'iw': 'hebrew', 'he': 'hebrew', 'hi': 'hindi', 'hmn': 'hmong', 'hu': 'hungarian', 'is': 'icelandic', 'ig': 'igbo', 'id': 'indonesian', 'ga': 'irish', 'it': 'italian', 'ja': 'japanese', 'jw': 'javanese', 'kn': 'kannada', 'kk': 'kazakh', 'km': 'khmer', 'ko': 'korean', 'ku': 'kurdish (kurmanji)', 'ky': 'kyrgyz', 'lo': 'lao', 'la': 'latin', 'lv': 'latvian', 'lt': 'lithuanian', 'lb': 'luxembourgish', 'mk': 'macedonian', 'mg': 'malagasy', 'ms': 'malay', 'ml': 'malayalam', 'mt': 'maltese', 'mi': 'maori', 'mr': 'marathi', 'mn': 'mongolian', 'my': 'myanmar (burmese)', 'ne': 'nepali', 'no': 'norwegian', 'or': 'odia', 'ps': 'pashto', 'fa': 'persian', 'pl': 'polish', 'pt': 'portuguese', 'pa': 'punjabi', 'ro': 'romanian', 'ru': 'russian', 'sm': 'samoan', 'gd': 'scots gaelic', 'sr': 'serbian', 'st': 'sesotho', 'sn': 'shona', 'sd': 'sindhi', 'si': 'sinhala', 'sk': 'slovak', 'sl': 'slovenian', 'so': 'somali', 'es': 'spanish', 'su': 'sundanese', 'sw': 'swahili', 'sv': 'swedish', 'tg': 'tajik', 'ta': 'tamil', 'te': 'telugu', 'th': 'thai', 'tr': 'turkish', 'uk': 'ukrainian', 'ur': 'urdu', 'ug': 'uyghur', 'uz': 'uzbek', 'vi': 'vietnamese', 'cy': 'welsh', 'xh': 'xhosa', 'yi': 'yiddish', 'yo': 'yoruba', 'zu': 'zulu'}
-        # print(f"dict_l---->{dict_l}")
         translator = Translator()
-        # Detect the source language
-        # detection = translator.detect(text)
-        # src_lang = detection.lang
-        # print(f"Detected source language: {dict_l[src_lang]}")
-        print(f"lang:{language}")
+        
         if language is None:
-            self.language = 'en'
-        else:
-            self.language = language.lower()
-            print(self.language)
-        #taking the key for the value - from dictionaty
-        # print("One line Code Key value: ", list(dict_l.keys())
-        #   [list(dict_l.values()).index(language)])
-        key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(self.language)]
- 
-        # Translating the text to English
+            language = 'en'  # Set default language to 'en' if language is None
+        
+        lang = language.lower()
+        key_of_lang = list(dict_l.keys())[list(dict_l.values()).index(lang)]
+
         main_out = translator.translate(keyword, dest='en', src=key_of_lang)
         text_val = main_out.text
         user_lang = key_of_lang
-        # Print the results
-        print(f"Source language: {language}")
-        print(f"English translation: {text_val}")
-        # Update the global class variable
         allFunc.key_of_lang = user_lang
+        print(f"Source language: {language}")
+        print(f"English translation user_lang: {text_val}")
+        print(f"English translation allFunc.key_of_lang: {allFunc.key_of_lang}")
+         
         return text_val, user_lang
-
+    
+    # def Eng_to_user_language(self, response, lang):
+    #     if response is None:
+    #         return None
+    #     # dict_l = googletrans.LANGUAGES
+    #     translator = Translator()
+    #     # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
+    #     print(f" lang to Eng_to_user_language {lang}")
+    #     print(f"response to Eng_to_user_language {response}")
+    #     if lang is None:
+    #         lang = 'en'
+    #     # Translating the text to English
+    #     main_out = translator.translate(response, dest=lang, src='en')
+    #     text_val = main_out.text
+ 
+        # return text_val
     def Eng_to_user_language(self, response, lang):
-        dict_l = {'af': 'afrikaans', 'sq': 'albanian', 'am': 'amharic', 'ar': 'arabic', 'hy': 'armenian', 'az': 'azerbaijani', 'eu': 'basque', 'be': 'belarusian', 'bn': 'bengali', 'bs': 'bosnian', 'bg': 'bulgarian', 'ca': 'catalan', 'ceb': 'cebuano', 'ny': 'chichewa', 'zh-cn': 'chinese (simplified)', 'zh-tw': 'chinese (traditional)', 'co': 'corsican', 'hr': 'croatian', 'cs': 'czech', 'da': 'danish', 'nl': 'dutch', 'en': 'english', 'eo': 'esperanto', 'et': 'estonian', 'tl': 'filipino', 'fi': 'finnish', 'fr': 'french', 'fy': 'frisian', 'gl': 'galician', 'ka': 'georgian', 'de': 'german', 'el': 'greek', 'gu': 'gujarati', 'ht': 'haitian creole', 'ha': 'hausa', 'haw': 'hawaiian', 'iw': 'hebrew', 'he': 'hebrew', 'hi': 'hindi', 'hmn': 'hmong', 'hu': 'hungarian', 'is': 'icelandic', 'ig': 'igbo', 'id': 'indonesian', 'ga': 'irish', 'it': 'italian', 'ja': 'japanese', 'jw': 'javanese', 'kn': 'kannada', 'kk': 'kazakh', 'km': 'khmer', 'ko': 'korean', 'ku': 'kurdish (kurmanji)', 'ky': 'kyrgyz', 'lo': 'lao', 'la': 'latin', 'lv': 'latvian', 'lt': 'lithuanian', 'lb': 'luxembourgish', 'mk': 'macedonian', 'mg': 'malagasy', 'ms': 'malay', 'ml': 'malayalam', 'mt': 'maltese', 'mi': 'maori', 'mr': 'marathi', 'mn': 'mongolian', 'my': 'myanmar (burmese)', 'ne': 'nepali', 'no': 'norwegian', 'or': 'odia', 'ps': 'pashto', 'fa': 'persian', 'pl': 'polish', 'pt': 'portuguese', 'pa': 'punjabi', 'ro': 'romanian', 'ru': 'russian', 'sm': 'samoan', 'gd': 'scots gaelic', 'sr': 'serbian', 'st': 'sesotho', 'sn': 'shona', 'sd': 'sindhi', 'si': 'sinhala', 'sk': 'slovak', 'sl': 'slovenian', 'so': 'somali', 'es': 'spanish', 'su': 'sundanese', 'sw': 'swahili', 'sv': 'swedish', 'tg': 'tajik', 'ta': 'tamil', 'te': 'telugu', 'th': 'thai', 'tr': 'turkish', 'uk': 'ukrainian', 'ur': 'urdu', 'ug': 'uyghur', 'uz': 'uzbek', 'vi': 'vietnamese', 'cy': 'welsh', 'xh': 'xhosa', 'yi': 'yiddish', 'yo': 'yoruba', 'zu': 'zulu'}
-        key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(self.language)]
-        user_lang = key_of_lang
         if response is None:
             return None
         # dict_l = googletrans.LANGUAGES
         translator = Translator()
         # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
+        print(f" lang to Eng_to_user_language {lang}")
         print(f"response to Eng_to_user_language {response}")
         if lang is None:
             lang = 'en'
         # Translating the text to English
-        # text = " Supplier Name: A REHMAN S. AL RASHID (YOUSAF)|RBFTCO-SAUDI "
-        user_input = f"{response}\n Translate into {user_lang} language and give a newline after every key and value. don't need extra definition "
-        object=allFunc()
-        response = object.palmApi(user_input)
-        print(f"palm translation after translating into user langugage {response}")
-        # main_out = translator.translate(response, dest=lang, src='en')
-        # text_val = main_out.text
-        text_val = response
-
+        main_out = translator.translate(response, dest=lang, src='en')
+        text_val = main_out.text
+ 
         return text_val
    
     # def Eng_to_user_language(self, response, lang):
