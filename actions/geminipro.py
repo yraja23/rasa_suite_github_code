@@ -114,15 +114,17 @@ $ pip install google-generativeai
 import google_auth_oauthlib
 from textblob import TextBlob
 import yaml
-import google.generativeai as genai
+import google.generativeai as genai #0.3.2
 import time
 import datetime
 # AIzaSyAxAkTbuGGD7yJeIPqU7pi-RpEZSXIudRQ --YR
 # AIzaSyBbc7JgiMLNOvTFLparUqH62TqPtkHpyvE - Meenatchi
 # AIzaSyBCNdp_YJZAljw80e8qL87fVqbux2eJWP8
 class Geminipro:
-  genai.configure(api_key="AIzaSyDunsMXggY0kt-UvXYf2XQywBMx-4purvg")
-
+  # genai.configure(api_key="AIzaSyA_jQKm0zIo-jE6VraK_obygudqO4UC5Lw") 
+  genai.configure(api_key="AIzaSyBtMsuOxdtvGTBgJAEHrRDNF6fiV3JuRpo")#
+  # genai.configure(api_key="AIzaSyD2v4bhF2KvtrMdPYktHIAH1sTxvZ4uNXA")
+  # genai.configure(api_key="AIzaSyDunsMXggY0kt-UvXYf2XQywBMx-4purvg") 
   # Set up the model
   generation_config = {
     "temperature": 0.9, 
@@ -227,7 +229,9 @@ class Geminipro:
 
   def send_message_and_get_response(self, user_input):
     try:
-      parsed_input = f"'{user_input}' - extract one main keyword from the text given"
+      # parsed_input = f"'{user_input}' - extract one main keyword from the text given"
+      parsed_input = f"Identify the language of the phrase '{user_input}'. Simply provide the language name."
+
       self.convo.send_message(parsed_input)
       model_response = self.convo.last.text
       print(f"model_response - {model_response}")
@@ -251,12 +255,55 @@ class Geminipro:
           return None
 
   def find_synonyms(self,keyword):
-      user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
-      gemini_instance.convo.send_message(user_input_synonyms)
-      model_response_synonyms = gemini_instance.convo.last.text
-      extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
-      # print(f"extracted_synonyms - {extracted_synonyms}")
-      return extracted_synonyms
+    user_input_synonyms = f"give me all maximum possible synonyms for  the word {keyword}, in retail."
+    gemini_instance.convo.send_message(user_input_synonyms)
+    model_response_synonyms = gemini_instance.convo.last.text
+    extracted_synonyms = gemini_instance.extract_synonyms(model_response_synonyms)
+    # print(f"extracted_synonyms - {extracted_synonyms}")
+    return extracted_synonyms
+  
+  def Eng_to_user_language1(self, response, lang_name):
+    if response is None:
+        return None
+    
+    print(type(response))
+    print(lang_name)
+
+    translated_array=[] 
+    for key, value in response.items():
+      if isinstance(key, str):
+        key = key.lower()
+      if isinstance(value, str):
+        value = value.lower()
+
+      print(f"{key} {value} {type(value)}")
+
+      try:
+        key_output = f"translate {key} to {lang_name}" 
+        gemini_instance.convo.send_message(key_output)
+        key1=gemini_instance.convo.last.text
+        print(f"if:{key1}")
+
+        if isinstance(value, int) or isinstance(value, float):
+          trans_Str = f" {key1} : {value} "
+          translated_array.append(trans_Str)
+        else: #value is no null
+          val_output = f"translate {value} to {lang_name}" 
+          gemini_instance.convo.send_message(val_output)
+          val1 = gemini_instance.convo.last.text
+          if val1 is None:
+            trans_Str = f" {key1} : {value} "
+            translated_array.append(trans_Str)
+          else:
+            trans_Str = f" {key1} : {val1} "
+            translated_array.append(trans_Str)
+      except Exception as e:
+          print(f"exception: {e}")
+
+    print(f"transaled_array: {translated_array}")
+    return translated_array
+
+
   
   def extract_synonyms(self,response):
       start_marker = "\n* "
@@ -279,7 +326,8 @@ class Geminipro:
       retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
 
         # Filter out 'i' and words with less than 3 characters
-      retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
+      # retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
+      retail_keywords = [word for word in retail_keywords if len(word) > 2 ]
 
       return retail_keywords
 

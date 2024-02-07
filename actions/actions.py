@@ -75,17 +75,28 @@ class ItemDetailsOauthApi(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
-            else:
-                dispatcher.utter_message(text=allItemPrices)
-                allItemPrices = [allItemPrices]  
-                
+                    # dispatcher.utter_message(text=message)
+            # else:
+            #     dispatcher.utter_message(text=allItemPrices)
+                # allItemPrices = [allItemPrices]  
 
-            # Send the file URL as a clickable link
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en':
+                print(f"res type: {type(allItemPrices)}")
+                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                
+                if allItemPrices is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=allItemPrices)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=allItemPrices)  
+#               
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
         return[]
-
 
 class Itemdetails(Action):
     def name(self)-> Text:
@@ -106,20 +117,43 @@ class Itemdetails(Action):
         if access_token:
             get_price_detail, file_url =out.get_api_response(access_token,item,loc)    
             if isinstance(get_price_detail, list):
+                lang = allFunc.key_of_lang
+                print("Class variable:", allFunc.key_of_lang)
                 for item_data in get_price_detail:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
-            else:
-                # Wrap the error message in a list
-                dispatcher.utter_message(text=get_price_detail)
-                get_price_detail = [get_price_detail]  
 
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' and lang is not None:
+                response_user_lang = allFunc.Eng_to_user_language(self, get_price_detail, lang)
+                if get_price_detail is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=get_price_detail)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=get_price_detail)  
+               
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
         return [SlotSet('item', None), SlotSet('loc', None), SlotSet('item_prev', item), SlotSet('item_value_prev', loc), SlotSet('uc2_output', get_price_detail)]
    
+        #     else:
+        #         # Wrap the error message in a list
+        #         dispatcher.utter_message(text=get_price_detail)
+        #         get_price_detail = [get_price_detail]  
+
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=get_price_detail)
+        #     else:
+        #         dispatcher.utter_message(text=get_price_detail)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+        # return [SlotSet('item', None), SlotSet('loc', None), SlotSet('item_prev', item), SlotSet('item_value_prev', loc), SlotSet('uc2_output', get_price_detail)]
 class GetPriceatAllLocation(Action):
     def name(self)-> Text:
         return "action_getPrice_at_All_Location"
@@ -130,35 +164,77 @@ class GetPriceatAllLocation(Action):
         
 
         item_loc = tracker.latest_message['text']
-        item= tracker.get_slot("item")
-        print(item_loc+item)
+        # item= tracker.get_slot("item")
+        # print(item_loc+item)
         filename = "encrypted_client_details.ini"
         out = jsonConversion()
         access_token = out.generate_token(filename)
         if access_token:
             allItemPrices, file_url = out.get_api_response_usecase3(access_token,item_loc)
+            print(f"all item {allItemPrices}")
             if isinstance(allItemPrices, list):
+                lang = allFunc.key_of_lang
+                print("Class variable:", allFunc.key_of_lang)
                 for item_data in allItemPrices:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' and lang is not None:
+                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                if allItemPrices is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                else:
+                    dispatcher.utter_message(text=allItemPrices)
+                    dispatcher.utter_message(text=response_user_lang)
             else:
-                # Wrap the error message in a list
-                dispatcher.utter_message(text=allItemPrices)
-                allItemPrices = [allItemPrices]  
-
+                dispatcher.utter_message(text=allItemPrices)  
+               
             if file_url:
-                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
-
-            # dispatcher.utter_message("Accessing...")
-            # out=str(allItemPrices)
-            # if allItemPrices == None:
-            #     # print("inside action else part")
-            #     dispatcher.utter_message("Looks like, the item is not present in the mentioned location.\n you can try checking if the entered values are correct or try searching for different values.")
-            # dispatcher.utter_message(text=allItemPrices)
-            #error message is also returned from the file. So  both are pprinted through the if statement.
+                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")   
         return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
+
+# class GetPriceatAllLocation(Action):
+#     def name(self)-> Text:
+#         return "action_getPrice_at_All_Location"
+    
+#     def run(self, dispatcher: CollectingDispatcher,
+#             tracker: Tracker,
+#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+#         item_loc = tracker.latest_message['text']
+#         item= tracker.get_slot("item")
+#         filename = "encrypted_client_details.ini"
+#         out = jsonConversion()
+#         access_token = out.generate_token(filename)
+#         if access_token:
+#             allItemPrices, file_url = out.get_api_response_usecase3(access_token,item_loc)
+#             if isinstance(allItemPrices, list):
+#                 lang = allFunc.key_of_lang
+#                 print("Class variable:", allFunc.key_of_lang)
+#                 for item_data in allItemPrices:
+#                     message = ""
+#                     for key, value in item_data.items():
+#                         message += f"{key}: {value}\n"
+
+#             lang = allFunc.key_of_lang
+#             print("Class variable:", allFunc.key_of_lang)
+#             if lang != 'en':
+#                 response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+#                 if allItemPrices is None and response_user_lang is None:
+#                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+#                 else:
+#                     dispatcher.utter_message(text=allItemPrices)
+#                     dispatcher.utter_message(text=response_user_lang)
+#             else:
+#                 dispatcher.utter_message(text=allItemPrices)  
+           
+#             if file_url:
+#                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+#             return[SlotSet('item_value', item_loc),SlotSet('item_loc', item_loc), SlotSet('uc3_output', allItemPrices)]
 
 
 class CustomActionUtterRepeat(Action):
@@ -213,33 +289,42 @@ class SupplierAction(Action):
         access_token = out.generate_token(filename)
         # print(access_token)
         if access_token:
-            supplier_details, file_url = out.supplier_details(supplier_no,access_token)
+            supplier_details, file_url, supplier_data_str = out.supplier_details(supplier_no,access_token)
             # print(supplier_details)
             # print(file_url)
             if isinstance(supplier_details, list):
-                print("inside if")
+                # print("inside if")
                 for item_data in supplier_details:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
                     dispatcher.utter_message(text=message)
             
-            if supplier_details == None:
-                print("inside none")
-                dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
-            dispatcher.utter_message(text=supplier_details)      
-            # else:
-            #     print("inside else")
-            #     dispatcher.utter_message(text=supplier_details)
-            #     supplier_details = [supplier_details]  
+            lang = allFunc.key_of_lang
+            lang_name = allFunc.g_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en':
+                response_user_lang = allFunc.Eng_to_user_language(self, supplier_details, lang, lang_name)
+                response_user_lang_string =""
+                if supplier_details is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
+                    return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
+                else:
+                    for item in response_user_lang:
+                        response_user_lang_string += item + "<br>"
+                    print(response_user_lang_string)
+                    dispatcher.utter_message(text=response_user_lang_string)
+                    dispatcher.utter_message(text=supplier_data_str)
+            else:
+                dispatcher.utter_message(text=supplier_data_str)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
-
-
+        allFunc.key_of_lang=None
+        allFunc.g_lang=None
         return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
 
-
+  
             # dispatcher.utter_message("Accessing...")
             # out=str(allItemPrices)
             # if allItemPrices == None:
@@ -265,7 +350,7 @@ class displayPrevForSupplierUsecase(Action):
             dispatcher.utter_message("If you want to check for a different item, or to check for different locations,")
         else:
             print("the values are none. story continues..")
-                
+
 class InventoryAction(Action):
     def name(self) -> Text:
         return "action_inventory_details_for_store"
@@ -285,17 +370,65 @@ class InventoryAction(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+            if lang is None:
+                lang = 'en'
+            if lang != 'en':
+                dispatcher.utter_message(text=inventoryDetails)
+                dispatcher.utter_message(text=translated_message)
+            else:
+                dispatcher.utter_message(text=inventoryDetails)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
                 return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
             
-            if inventoryDetails == None:
-                dispatcher.utter_message("Looks like there is no data present for the given location and location type or the number doesn't exist. You can try checking for different values.")
-            dispatcher.utter_message(text=inventoryDetails)
         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
+
+        #     inventoryDetails, file_url = out.inventory_details_for_store(inv_loc,inv_locType,access_token)
+
+       
+        #     if isinstance(inventoryDetails, list):
+        #         lang = allFunc.key_of_lang
+        #         print("Class variable:", allFunc.key_of_lang)
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             # translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+        #     if inventoryDetails is None:
+        #         dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+    
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang is None:
+        #         lang = 'en'
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=inventoryDetails)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        #     # if file_url:
+        #     #     dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+        #     #     return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+            
+        #     # if inventoryDetails is None:
+        #     #     dispatcher.utter_message("Looks like there is no data present for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #     # dispatcher.utter_message(text=inventoryDetails)
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
 class InventoryActionWH(Action):
     def name(self) -> Text:
@@ -312,22 +445,85 @@ class InventoryActionWH(Action):
 
         if access_token:
             inventoryDetails , file_url = out.inventory_details_for_wh(inv_loc,inv_locType,access_token)
-            # dispatcher.utter_message("Accessing...")
             if isinstance(inventoryDetails, list):
                 for item_data in inventoryDetails:
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+
+            if lang is None:
+                lang = 'en'
+            if lang != 'en':
+                dispatcher.utter_message(text=inventoryDetails)
+                dispatcher.utter_message(text=translated_message)
+            else:
+                dispatcher.utter_message(text=inventoryDetails)
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
-                return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+                return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
             
-            if inventoryDetails == None:
-                dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
-            dispatcher.utter_message(text=inventoryDetails)
         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+
+        #     inventoryDetails , file_url = out.inventory_details_for_wh(inv_loc,inv_locType,access_token)
+        #     if isinstance(inventoryDetails, list):
+        #         lang = allFunc.key_of_lang
+        #         print("Class variable:", allFunc.key_of_lang)
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             translated_message = allFunc.Eng_to_user_language(self, message, lang)
+
+
+        #     if inventoryDetails is None and translated_message is None:
+        #         dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #         return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang != 'en':
+        #         dispatcher.utter_message(text=translated_message)
+        #         dispatcher.utter_message(text=inventoryDetails)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
+
+        #     # dispatcher.utter_message("Accessing...")
+        #     if isinstance(inventoryDetails, list):
+        #         for item_data in inventoryDetails:
+        #             message = ""
+        #             for key, value in item_data.items():
+        #                 message += f"{key}: {value}\n"
+        #             dispatcher.utter_message(text=message)
+
+
+        #     lang = allFunc.key_of_lang
+        #     print("Class variable:", allFunc.key_of_lang)
+        #     if lang != 'en':
+        #         response_user_lang = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+        #         if inventoryDetails is None and response_user_lang is None:
+        #             dispatcher.utter_message("Looks like there is no data for the given location and location type or the number doesn't exist. You can try checking for different values.")
+        #             return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]
+        #         else:
+        #             print(f"response_user_lang {response_user_lang}")
+        #             dispatcher.utter_message(text=response_user_lang)
+        #     else:
+        #         dispatcher.utter_message(text=inventoryDetails)
+
+        #     if file_url:
+        #         dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+
+        # return [SlotSet('inv_loc',inv_loc),SlotSet('inv_locType',inv_locType),SlotSet('inventory_output',inventoryDetails)]    
 
 class displayPrevForInvUsecase(Action):
     def name(self) -> Text:
@@ -355,7 +551,6 @@ class InventoryLocationCapture(Action):
         user_value = tracker.latest_message['text']
         return[SlotSet('inv_loc',user_value)]
   
-  
 class OrderAction(Action):
     def name(self) -> Text:
         return "action_order_details"
@@ -377,20 +572,86 @@ class OrderAction(Action):
                     message = ""
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
-                    dispatcher.utter_message(text=message)
+                    # dispatcher.utter_message(text=message)
+
+           
+            # if orderDetails is None:
+            #     # print("inside none")
+            #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' or lang is None:
+                response_user_lang = allFunc.Eng_to_user_language(self, orderDetails, lang)
+                if orderDetails is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+                    return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
+                else:
+                    # print(f"response_user_lang {response_user_lang}")
+                    dispatcher.utter_message(text=orderDetails) 
+                    dispatcher.utter_message(text=response_user_lang) 
+
+            else:
+                dispatcher.utter_message(text=orderDetails) 
 
             if file_url:
                 dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
                 return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)]  
 
-            if orderDetails == None:
-                # print("inside none")
-                dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
-            dispatcher.utter_message(text=orderDetails) 
-
-
         return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
     
+# -------------------------------------------------------------------------------------
+ 
+class ItemAction(Action):
+    def name(self) -> Text:
+        return "action_item_details"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        # order_no = tracker.latest_message['text']
+        item_no = tracker.get_slot('numeric_values')
+        # dispatcher.utter_message("Accessing...")
+        filename = "encrypted_client_details.ini"
+        out = jsonConversion()
+        access_token = out.generate_token(filename)
+        if access_token:
+            itemDetails, file_url = out.item_details(item_no,access_token)  
+            # print(itemDetails)
+            # print(file_url)
+            # dispatcher.utter_message(text=itemDetails)
+
+            # if isinstance(itemDetails, list):
+            #     for item_data in itemDetails:
+            #         message = ""
+            #         for key, value in item_data.items():
+            #             message += f"{key}: {value}\n"
+            #     dispatcher.utter_message(text=message)
+
+
+
+            # if itemDetails is None:
+            #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+            #     return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+#
+            lang = allFunc.key_of_lang
+            print("Class variable:", allFunc.key_of_lang)
+            if lang != 'en' and lang is not None:
+                response_user_lang = allFunc.Eng_to_user_language(self, itemDetails, lang)
+                if itemDetails is None and response_user_lang is None:
+                    dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+                    return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+            
+                else:
+                    dispatcher.utter_message(text=itemDetails)
+                    dispatcher.utter_message(text=response_user_lang)
+            else:
+                dispatcher.utter_message(text=itemDetails)  
+#               
+            if file_url:
+                dispatcher.utter_message(text=f"[Click here to download the file]({file_url})", parse_mode="markdown")
+                return [SlotSet('item_value',item_no)]  
+        return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
+    
+    # -------------------------------------------------------------------------------------
 class displayPrevForOrderUsecase(Action):
     def name(self) -> Text:
         return "action_prevData_for_order"
@@ -435,7 +696,7 @@ class SupplierWithNumberAction(Action):
                         message += f"{key}: {value}\n"
                     dispatcher.utter_message(text=message)
             
-            if supplier_details == None:
+            if supplier_details is None:
                 print("inside none")
                 dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
             dispatcher.utter_message(text=supplier_details)      
@@ -488,15 +749,75 @@ class OrderWithNumberAction(Action):
 #(redirection step is added - but since it didn't work, adding the steps from the two functios again directly here)
 #THIS ACTION IS TRIGGERED WHENEVER THE USER ENTERS A STATEMENT - checks if it is retail specific or non retail specific and works accordingly
 class CheckKeywordAction(Action):
+
     def name(self) -> Text:
         return "check_value_in_intent"
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
     ) -> List[Dict[Text, Any]]:
-        # keyword=tracker.get_slot("user_input_question")
+        # Get the user input from the tracker
         keyword=tracker.latest_message.get("text")
         print("------------------------------------------")
         print(f"before: {keyword}")
+
+        # Identify the language of the user input using Geminipro 
+        gemini_instance = Geminipro()
+        user_input = f"Identify the language of the phrase '{keyword}'. Simply provide the language name."
+        print(f"befor bard call user_input {user_input}")
+        lang = gemini_instance.send_message_and_get_response(keyword) 
+        print("Model's response:", lang)
+
+        # Translate the user input to English
+        object=allFunc()
+        translation,key_of_lang, lang_name = object.langToEng(keyword, lang)
+        # lang name is not used her - it is returned to use it in the translation part - in trdb
+        print(f"translation {translation}")
+        print(f"lang_key {key_of_lang}")
+
+        # check_user_input_isRetail = f"Is the phrase '{translation}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
+        # object=allFunc()
+        # response = object.palmApi(check_user_input_isRetail)
+        # print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
+        # if response.lower() == 'no' :
+        #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+        #                 You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+        #     dispatcher.utter_message(text=error_text)
+        #     return [FollowupAction("utter_price_details")]  
+        # else:
+        response1= gemini_instance.extract_nouns(translation)
+        print("after noun call")
+        print(f"response after extract_nouns {response1}")
+        result_string =' '.join(response1)
+        print(result_string)
+        updated_keyword = result_string
+        
+        print(f"updated_keyword --- {updated_keyword}")
+        # Check if the language is English and the translation is the same as the original input
+        # if lang.lower() == 'english':
+        #     if  key_of_lang != 'en':
+        #         print("Translation and user input are the same. Please rephrase.")
+        #         dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
+        #         return [FollowupAction("utter_price_details")]
+        #     else:
+        #         updated_keyword = translation 
+            
+            # if lang.lower() == 'english' and key_of_lang != 'en':
+            #     print("Translation and user input are the same. Please rephrase.")
+            #     dispatcher.utter_message(text="Your input and the translated text are the same. Please provide a different input or rephrase for better understanding.")
+            #     return [FollowupAction("utter_price_details")]      
+            # else:
+            #     if lang.lower() != 'english':
+            #         print("Different lang")
+            #         print(f"key language from langTo eng function {key_of_lang}")
+            #         slot_check = CheckKeywordAction()
+            #         slot_set = slot_check.setLangSlot(key_of_lang)
+            #         print(f" after slot set {slot_set}")
+            #         lang_slot_value = tracker.get_slot("user_query_language")
+            #         print(f"lang_slot_value ---> {lang_slot_value}")
+
+            #     # Use the translated keyword for further processing
+            #     updated_keyword = translation
+
         # Load the NLU training data
         nlu_data = self.load_nlu_data()
         res=[]
@@ -519,7 +840,7 @@ class CheckKeywordAction(Action):
                         # print(f"2 {examples}") 
                         object=allFunc()
                         #calling the check_words function here                  
-                        result = object.check_words_in_intent(keyword, examples)
+                        result = object.check_words_in_intent(updated_keyword, examples)
                         print(f"domain list: {result}")  # True/False
 
                         res_domain_list.extend(result)
@@ -527,11 +848,61 @@ class CheckKeywordAction(Action):
                         # If the word comes from test fallback, it has to check if the word is there in the other intents
                         # so repeating the above steps for other intents in this function
                         #this is a list - that has true or false output for other intents
-                        result_after_matching_list, intent_name = object.checking_other_intents(keyword)
+                        result_after_matching_list, intent_name = object.checking_other_intents(updated_keyword)
                         #an array of true or false is returned. 
                         # IF EEN ONE TRUE EXISTS IN THE ARRAY, SETTING THE VALUE TO TRUE
                         # IF NO TRUE EXISTS IN THE ARRAY, SETTING THE VAL TO FALSE
                         print(f"result_after_matching list {result_after_matching_list}")  # True/False
+                        print(f"result_after_matching intent_name {intent_name}")  # True/False
+                        # item_price = None  # Initialize item_price outside of the block
+                        # # Check if intent_name is a list and has multiple elements
+                        # Case 1: ['price_details', 'item_details']
+                        if len(intent_name) == 2 and "item_details" in intent_name and "price_details" in intent_name:
+                            intent_name = 'item_price'
+                            print(f"Intent name: {intent_name}")
+
+                        # Case 2: ['order_details', 'supplier_details', 'inventory_details']
+                        elif len(intent_name) > 2:
+                            intent_name = 'multiple'
+                            print(f"Intent name: {intent_name}")
+
+                        # Case 3: ['item_details']
+                        elif len(intent_name) == 1:
+                            intent_name = intent_name[0]
+                            print(f"Intent name: {intent_name}")
+                        else:
+                            intent_name = 'multiple'
+                            print(f"Intent name: {intent_name}")
+                        # if len(intent_name) == 2 and "item_details" in intent_name and "price_details" in intent_name:
+                        #         print("Intent is pricing  -- item_price")
+                        #         intent_name = "item_price"
+                        # if isinstance(intent_name, list) and len(intent_name) > 1:
+                        #     #     contains_item_details = False
+                        #     #     contains_price_details = False
+                        #     #     for item in intent_name:
+                        #     #         if "item_details" in item:
+                        #     #             contains_item_details = True
+                        #     #         if "price_details" in item:
+                        #     #             contains_price_details = True
+                                
+                        #     #     # Check if both item_details and price_details are present
+                        #     #     if contains_item_details and contains_price_details:
+                        #     #         print("True")
+                        #     #         item_price = "True"
+                        #     #     else:
+                        #     #         print("False")
+                        #     #         item_price = "False"
+
+                        #         # print("Item price:", item_price)
+                        #         print(f"Multiple elements: {intent_name}")
+                        #         intent_name = "multiple"
+                        #         print(f"Printing intent name multiple -- {intent_name}")
+                            
+                        # else:
+                        #     intent_name = intent_name[0]
+                        #     print(f"Single element: {intent_name}")
+                        #     print(f"Printing intent name Single -- {intent_name}")
+
                         # HIS FOR LOOP CHECKS AND STORES THE OUTPUT IF THE VALUES PRESENT IN OTHER INTENTS
 
                         if not result_after_matching_list and not res_domain_list:
@@ -563,229 +934,271 @@ class CheckKeywordAction(Action):
         # if res_domain == True and result_after_matching == True :
         #     res_domain == False 
         # if is_result_after_matching_list_empty == True:
-        #     return [FollowupAction("utter_default_msg")]  
-         
-        if res_domain == True:   
-            if result_after_matching == True:
-                if intent_name is None:
-                    print(f"true true {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
-                    res_domain = True           
-                    # return [SlotSet("user_input_question_true", result_after_matching),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] 
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
-                else:
-                    print(f"true true {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
-                    res_domain = True           
-                    # return [SlotSet("user_input_question_true", result_after_matching),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] 
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
-            elif result_after_matching == False:
-                print(f"true false {intent_name}")
-                print(f"printing res_domain {res_domain}")
-                print(f"printing result_after_matching {result_after_matching}")
-                res_domain = True
-                go_to_bard = "go to bard"
-                print(f"inside redirecting if {go_to_bard}")
-                return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),FollowupAction("action_default_fallback")] 
-         
-        else:
-            print(f"inside redirecting else - main {result_after_matching}")
-            # IF ONE TRUE EXIST IN ARRAY, THEN IT IS DOMAIN SPECIFIC(Filtered)            
-            if res_domain == False:
+        #     return [FollowupAction("utter_default_msg")] 
+            if res_domain == True:   
                 if result_after_matching == True:
-                    user_entered_value = tracker.latest_message.get("text")
-                    print(f"false true {intent_name}")
-                    res_domain = False
+                    if intent_name is None:
+                        print(f"true true {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        res_domain = True 
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_default_fallback")]
+                            # return [SlotSet("user_query_language", key_of_lang)]
+
+                    else:
+                        print(f"true true {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        res_domain = True   
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("utter_specific_use_case_and_general_domain")]
+                    
+                elif result_after_matching == False:
+                    print(f"true false {intent_name}")
                     print(f"printing res_domain {res_domain}")
                     print(f"printing result_after_matching {result_after_matching}")
-                    print(f"user clicked button {user_entered_value}")
-                    return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
-                elif result_after_matching==False:
-                    res_domain = False
-                    user_entered_value1 = tracker.latest_message.get("text")
-                    # gemini_instance  = gemini_instance.Geminipro()
-                    print(f"user input for synonym {user_entered_value1}")
-                    print(f"false false {intent_name}")
-                    print(f"printing res_domain {res_domain}")
-                    print(f"printing result_after_matching {result_after_matching}")
+                    res_domain = True
+                    go_to_bard = "go to bard"
+                    print(f"inside redirecting if {go_to_bard}")
 
-    # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
-                    gemini_instance = Geminipro()
-                    print("after gemini call")
-                    # response = gemini_instance.send_message_and_get_response(user_entered_value1) 
-                    # print("Model's response:", response)
-                    # extract_keyword = gemini_instance.extract_keyword(response)
-                    # print("Extracted Keyword:", extract_keyword)
-                    # find_synonyms = gemini_instance.find_synonyms(extract_keyword)
-                    # print("found synonym:", find_synonyms)
-                    # object=allFunc()
-                    # result= object.check_for_synonym_keywords(find_synonyms)
-                    # print("before noun call")
-                    response1= gemini_instance.extract_nouns(user_entered_value1)
-                    print("after noun call")
-                    print(f"response after extract_nouns {response1}")
+                    return[SlotSet("user_input_question", go_to_bard),SlotSet("res_domain", res_domain),FollowupAction("action_default_fallback")] 
 
-
-                    # ------------------------------------------------------------
-
-                    # user_input= "list all the synonym for today in retail"
-                    # object=allFunc()
-                    # response = object.palmApi(user_input)
-                    # print("inside PALM3.....")
-                    # if response == None:
-                    #     print("inside palm response")
-                    # else:
-                    #     print(f"inside palm response -- {response}")
-
-                    # ------------------------------------------------------------
-                    if response1 is not None and len(response1) > 0:
-                        words_array1 = response1  # Assuming response1 is your list of words
-                        unique_words = list(set(words_array1))  # Removing duplicates
-                        print(f"unique_words {unique_words}")
-
-                        # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
-                        user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
+            else:
+                print(f"inside redirecting else - main {result_after_matching}")
+                # IF ONE TRUE EXIST IN ARRAY, THEN IT IS DOMAIN SPECIFIC(Filtered)            
+                if res_domain == False:
+                    if result_after_matching == True:
+                        user_entered_value = tracker.latest_message.get("text")
+                        print(f"false true {intent_name}")
+                        res_domain = False
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
+                        print(f"user input {user_entered_value}")
+                        return [SlotSet("user_input_question_true", result_after_matching),SlotSet("res_domain", res_domain),SlotSet("getting_intent_name", intent_name),FollowupAction("action_check_slot")] #, FollowupAction("action_check_slot")
+                    elif result_after_matching==False:
+                        res_domain = False
+                        user_entered_value1 = tracker.latest_message.get("text")
+                        # gemini_instance  = gemini_instance.Geminipro()
                         object=allFunc()
-                        response = object.palmApi(user_input)
-                        print(f" palm taking retail keyword from user {response}")
-                        #-------------- 
-                        # Extracting the array from the response string
-                        array_start_index = response.find("[")
-                        array_end_index = response.rfind("]") + 1  # Include the closing bracket
+                        full_source_language_name, translation = object.translate_and_print_language(user_entered_value1)
+                        # print(f"Source Language key: {lang_key}")
+                        # print (f"full_source_language_name {full_source_language_name}")
+                        # print(f"user input for synonym {translation}")
+                        print(f"false false {intent_name}")
+                        print(f"printing res_domain {res_domain}")
+                        print(f"printing result_after_matching {result_after_matching}")
 
-                        if array_start_index != -1 and array_end_index != -1:
-                            array_string = response[array_start_index:array_end_index]
-                            array = ast.literal_eval(array_string)
-                            print(f"printing the array - {array}")
-                        else:
-                            print("Array not found in the response")
-                        # -------------
-                        if response is None:
-                            print("try again later!!!")
-                        else:
-                            print("inside noun call from palm" , array)
-                            
-                            # words_array1 = array  # Assuming response1 is your list of words
-                            # print(f"words_array1 {words_array1}")
-                            # print(f"word array1 type {type(words_array1)}")
-                            # words_array2 = ast.literal_eval(words_array1)
+        # ----------------------------SYNONYMS FILTERING-------------------------------------------------------------
+                        gemini_instance = Geminipro()
+                        print("after gemini call")
+                        # response = gemini_instance.send_message_and_get_response(user_entered_value1) 
+                        # print("Model's response:", response)
+                        # extract_keyword = gemini_instance.extract_keyword(response)
+                        # print("Extracted Keyword:", extract_keyword)
+                        # find_synonyms = gemini_instance.find_synonyms(extract_keyword)
+                        # print("found synonym:", find_synonyms)
+                        # object=allFunc()
+                        # result= object.check_for_synonym_keywords(find_synonyms)
+                        # print("before noun call")
+# **********************************************************
+                        # response1= gemini_instance.extract_nouns(translation)
+                        # print("after noun call")
+                        # print(f"response after extract_nouns {response1}")
+# **********************************************************
 
+
+                        # ------------------------------------------------------------
+
+                        # user_input= "list all the synonym for today in retail"
+                        # object=allFunc()
+                        # response = object.palmApi(user_input)
+                        # print("inside PALM3.....")
+                        # if response == None:
+                        #     print("inside palm response")
+                        # else:
+                        #     print(f"inside palm response -- {response}")
+
+                        # ------------------------------------------------------------
+                        if response1 is not None and len(response1) > 0:
+                            words_array1 = response1  # Assuming response1 is your list of words
+                            unique_words = list(set(words_array1))  # Removing duplicates
+                            print(f"unique_words {unique_words}")
+
+                            # user_input = f" {response1} in the array pick all the retail related word only no need any defintion just pick the retail related keyword from the array and give all the output in an array with retail words only "
+                            user_input = f"Extract all retail-related keywords from the array {response1} and return a new array containing only those keywords."
+                            object=allFunc()
+                            response = object.palmApi(user_input)
+                            print(f"palm taking retail keyword from user {response}")
+                            #-------------- 
+                            # Extracting the array from the response string
+                            array_start_index = response.find("[")
+                            array_end_index = response.rfind("]") + 1  # Include the closing bracket
+
+                            if array_start_index != -1 and array_end_index != -1:
+                                array_string = response[array_start_index:array_end_index]
+                                array = ast.literal_eval(array_string)
+                                print(f"printing the array - {array}")
+                            else:
+                                print("Array not found in the response")
+                            # -------------
+                            if response is None:
+                                print("try again later!!!")
+                            else:
+                                print("inside noun call from palm" , array)
+                                
+                                # words_array1 = array  # Assuming response1 is your list of words
+                                # print(f"words_array1 {words_array1}")
+                                # print(f"word array1 type {type(words_array1)}")
+                                # words_array2 = ast.literal_eval(words_array1)
+
+                                for word in array:
+                                    print(word)
+
+                                # for word in words_array1:
+                                #     print(f"Word: {word}")
+                                    # Call the function to find synonyms for each word
+                                    # find_synonyms = gemini_instance.find_synonyms(word)
+                                    # # Further processing with synonyms if needed
+                                    # if find_synonyms is not None:
+                                    #     print(f"Synonyms for '{word}': {find_synonyms}")
+                                    # else:
+                                    #     print(f"No synonyms found for '{word}'")
+                                # for word in words_array1:
+                                #     print(''.join(word))
+        # ----------------------
+                            synonyms_combined = []
+                            # array = []
+        # ---------------------------------
+                            # Printing each word individually
                             for word in array:
-                                print(word)
-
-                            # for word in words_array1:
-                            #     print(f"Word: {word}")
-                                # Call the function to find synonyms for each word
-                                # find_synonyms = gemini_instance.find_synonyms(word)
-                                # # Further processing with synonyms if needed
-                                # if find_synonyms is not None:
-                                #     print(f"Synonyms for '{word}': {find_synonyms}")
-                                # else:
-                                #     print(f"No synonyms found for '{word}'")
-                            # for word in words_array1:
-                            #     print(''.join(word))
-    # ----------------------
-                        synonyms_combined = []
-                        # array = []
-    # ---------------------------------
-                        # Printing each word individually
-                        for word in array:
-                            if word is None:
-                                synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
-                                # print("Combined synonyms array:", synonyms_combined)
-                            else:                            
-                                find_synonyms = gemini_instance.find_synonyms(word)
-                                if find_synonyms is None:
+                                if word is None:
                                     synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
                                     # print("Combined synonyms array:", synonyms_combined)
-                                else:
-                                    print(f"found synonym for '{word}'---> {find_synonyms}")
-                                    synonyms_combined.extend(find_synonyms)
-                                    # print("Combined synonyms array:", synonyms_combined)
-                    
-                    else:  
-                        print("No unique words found or response is empty.")
-                        error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
-                        dispatcher.utter_message(text=error_text)
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-
-                    object=allFunc()
-                    print("before check_for_synonym_keywords call")
-                    result= object.check_for_synonym_keywords(synonyms_combined)
-                    print("After check_for_synonym_keywords call")
-                    print(f"result {result}")
-
-                    # print("Model's response - 2:", response1) 
-                    # extract_keyword1 = gemini_instance.extract_keyword(response1)
-                    # print("Extracted Keyword -2 :", extract_keyword1)
-                    # find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
-                    # print("found synonym - 2:", find_synonyms1)
-                    # # object=allFunc()
-                    # result1= object.check_for_synonym_keywords(find_synonyms1)
-                    # print(f"second result-{result1}")
-
-# --------------------------------------FINAL RESULT---------------------------------------------------
-                    # print(f"result {result}")
-                    if result is None:
-                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
-                        dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-                    elif result == "none":
-                        error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
-                        dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-  
-                        # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
-                        # dispatcher.utter_message(text=error_text)
-                        # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-
-                    # elif isinstance(result, list) and len(result) == 1 and isinstance(result[0], (int, float)):
-                    elif result == "multiple" :
-                        # Unpack the single-element list to get the numeric value
-                        error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
-                        dispatcher.utter_message(text=error_text)
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain), FollowupAction("utter_price_details")]
-
-                    # elif result in ['Supplier','supplier'] :
-                    elif re.search(r'supp', result, re.IGNORECASE):
-                        print(f"inside supplier {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
-                    # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
-                    elif re.search(r'order', result, re.IGNORECASE):
-                        print(f"inside order {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
-                    # elif result in [ 'Inventory','inventory']:
-                    elif re.search(r'invent', result, re.IGNORECASE):
-                        print(f"inside Inventory {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
-                    # elif result in ['Price','Prices']:
-                    elif re.search(r'price', result, re.IGNORECASE):
-                        print(f"inside Price {result}")
-                        return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("action_all_item_prices")]
-                    # elif result is None:
-                    #     error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
-                    #     dispatcher.utter_message(text=error_text)
-                    #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
-                    else:
-             
-                    # user_input_check= extract_keyword(user_entered_value1)
-                    # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
-                            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
-                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                else:                            
+                                    find_synonyms = gemini_instance.find_synonyms(word)
+                                    if find_synonyms is None:
+                                        synonyms_combined.extend(['sample', 'check'])  # Adding default values if find_synonyms is None
+                                        # print("Combined synonyms array:", synonyms_combined)
+                                    else:
+                                        print(f"found synonym for '{word}'---> {find_synonyms}")
+                                        synonyms_combined.extend(find_synonyms)
+                                        # print("Combined synonyms array:", synonyms_combined)
+                        
+                        else:  
+                            print("No unique words found or response is empty.")
+                            error_text = "I am not quite sure what you're asking.You can ask me anything related to retail domain, I will do my best to help you in any way that I can."
                             dispatcher.utter_message(text=error_text)
-                                #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
                             return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+
+                        object=allFunc()
+                        print("before check_for_synonym_keywords call")
+                        result= object.check_for_synonym_keywords(synonyms_combined)
+                        print("After check_for_synonym_keywords call")
+                        print(f"result {result}")
+
+                        # print("Model's response - 2:", response1) 
+                        # extract_keyword1 = gemini_instance.extract_keyword(response1)
+                        # print("Extracted Keyword -2 :", extract_keyword1)
+                        # find_synonyms1 = gemini_instance.find_synonyms(extract_keyword1)
+                        # print("found synonym - 2:", find_synonyms1)
+                        # # object=allFunc()
+                        # result1= object.check_for_synonym_keywords(find_synonyms1)
+                        # print(f"second result-{result1}")
+
+                # --------------------------------------FINAL RESULT---------------------------------------------------
+                        # print(f"result {result}")
+                        if result is None:
+                            error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                    You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                            dispatcher.utter_message(text=error_text)
+                                    #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                        elif result == "none":
+                                raw_user_input_to_check_isRetail = tracker.latest_message.get("text")
+                                full_source_language_name, translation = object.translate_and_print_language(raw_user_input_to_check_isRetail)
+                                print (f"full_source_language_name {full_source_language_name}")
+                                print (f"translation {translation}")
+                                updated_keyword = translation
+
+                                check_user_input_isRetail = f"Is the phrase '{updated_keyword}' related to the retail domain? Please respond with a simple 'Yes' or 'No' without providing an explanation."
+                                object=allFunc()
+                                response = object.palmApi(check_user_input_isRetail)
+                                print(f"Printing the Palm response for the user input to determine if it belongs to the retail domain: {response}")
+                                if response == 'Yes' or response == 'yes':
+                                    user_input= "Definition of " +updated_keyword+" in retail"
+                                    object=allFunc()
+                                    response = object.palmApi(user_input)
+                                    if response == None:
+                                        dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
+                                    else:
+                                        print(response)
+                                        dispatcher.utter_message(response)
+                                    return[FollowupAction("action_check_slot")]
+                                else:
+                                    error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                                You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                    dispatcher.utter_message(text=error_text)
+                                    return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                            # error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
+                            # dispatcher.utter_message(text=error_text)
+                            # return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+
+                        elif result == "multiple" :
+                            error_text = "It seems your query falls under multiple categories. Please rephrase your statement or select the below usecase"
+                            dispatcher.utter_message(text=error_text)
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_redisplay_buttons_nonretail")]
+
+                        # elif result in ['Supplier','supplier'] :
+                        elif re.search(r'supp', result, re.IGNORECASE):
+                            print(f"inside supplier {result}")
+                            message = "It seems like you are looking for information related to suppliers."
+                            dispatcher.utter_message(text=message)
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_supplier_number")]  
+                        # elif result in ['order', 'Purchase order', 'PO', 'purchase order', 'Order']:
+                        elif re.search(r'order', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to orders."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside order {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_order_number")]  
+                        # elif result in [ 'Inventory','inventory']:
+                        elif re.search(r'invent', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to inventory."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside Inventory {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_loc_for_inventory")]  
+                        # elif result in ['Price','Prices']:
+                        elif re.search(r'pric', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to pricing."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside Price {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_use_cases")]
+                        elif re.search(r'item', result, re.IGNORECASE):
+                            message = "It seems like you are looking for information related to item."
+                            dispatcher.utter_message(text=message)
+                            print(f"inside item {result}")
+                            return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_item_number")]
+
+                        # elif result is None:
+                        #     error_text = "I'm sorry, I didn't quite catch that. Could you please rephrase your question?"
+                        #     dispatcher.utter_message(text=error_text)
+                        #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
+                        else:
+                
+                        # user_input_check= extract_keyword(user_entered_value1)
+                        # IF NO TRUE EXISTS IN THE ARRAY, THEN IT IS NOT RETAIL SPECIFIC, RETURN ERROR MESSAGE
+                                error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
+                                    You can ask me anything related the domain, I will do my best to help you in any way that I can."      
+                                dispatcher.utter_message(text=error_text)
+                                    #setting this slot because, after setting this,chec if this vale is true in the slot and if yes, buttons has to be displayed
+                                return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")]  
             # else:
             #     error_text = "I apologize, but it looks like the information that you are trying to get is not retail specific.\n\
             #                   You can ask me anything related the domain, I will do my best to help you in any way that I can."      
             #     dispatcher.utter_message(text=error_text)
-            #     return [SlotSet("user_input_question_true", result_after_matching), SlotSet("res_domain", res_domain),FollowupAction("utter_price_details")] 
+        # user_query_language = tracker.get_slot("user_query_language")
+        # print(f"user_query_language2: {user_query_language}")
+        return [SlotSet("intent_name", intent_name)]
+
+        #  C:\Users\yraja\LogicBot\local_test\data\nlu.yml
           
     def load_nlu_data(self):
         # Load the NLU training data from the nlu.yml file
@@ -795,6 +1208,10 @@ class CheckKeywordAction(Action):
             return yaml.safe_load(file)
         
 
+    def setLangSlot(self,slotVal):
+        print(f"inside setLangSlot function {slotVal}")
+        return [SlotSet("user_query_language", slotVal)]
+    
 #keeping the a"action_default_fallback" and "action_test_fallback" as it is, as, if suppose domain or nlu fallback gets hit directly, these two will work
 class ActionDefaultFallback(Action):
     def name(self) -> Text:
@@ -824,16 +1241,16 @@ class ActionDefaultFallback(Action):
                 else:
                     dispatcher.utter_message(response)
             return[FollowupAction("action_check_slot")] #FollowupAction("action_check_slot")
-        elif get_res_domain_slot == None:
-            print("user_input ",user_input)
-            print("get_res_domain_slot ",get_res_domain_slot) 
-            dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
-            return[FollowupAction("action_check_slot")]
-        elif get_res_domain_slot == False:
-            print("user_input ",user_input)
-            print("get_res_domain_slot ",get_res_domain_slot) 
-            dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
-            return[FollowupAction("action_check_slot")]    
+        # elif get_res_domain_slot == None:
+        #     print("user_input ",user_input)
+        #     print("get_res_domain_slot ",get_res_domain_slot) 
+        #     dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
+        #     return[FollowupAction("action_check_slot")]
+        # elif get_res_domain_slot == False:
+        #     print("user_input ",user_input)
+        #     print("get_res_domain_slot ",get_res_domain_slot) 
+        #     dispatcher.utter_message("I'm here to assist with retail-related queries. If you have any questions or need help regarding retail, feel free to ask! Unfortunately, I might not be able to assist with other topics outside the retail domain.")
+        #     return[FollowupAction("action_check_slot")]    
         else:
             return[FollowupAction("action_check_slot")] #FollowupAction("action_check_slot")
         
@@ -874,12 +1291,17 @@ class ActionGoToBardMoreInfo(Action):
 
         # dispatcher.utter_message("I apologize, but I am currently in development stage, so, I am not yet ready \n\
         # #                             with the data that you expect. Please check back later.")
+
         if user_input:
-            # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
-            user_input= "Definition of " +user_input+ " in retail"
-            print(" important check ******************* ")
+            object=allFunc()
+            full_source_language_name, translation = object.translate_and_print_language(user_input)
+            print (f"full_source_language_name {full_source_language_name}")
+            print (f"translation {translation}")
+            updated_keyword = translation
+                # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
+            user_input= "Definition of " + updated_keyword + " in retail"
+            print("*******BARD() check************ ")
             print(f"{user_input}")
-            print("******************* ")
             object=allFunc()
             response = object.palmApi(user_input)
             if response == None:
@@ -954,7 +1376,7 @@ class ActionCheckSlot(Action):
                     # print('6.inside supplier if',sup1)
                     if not numeric_values:
                         print('empty list')
-                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_order_number")]
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_order_Notification")]
                     else:
                         print('Non empty list')
                         order_num = tracker.get_slot("supplier_with_number")
@@ -977,7 +1399,7 @@ class ActionCheckSlot(Action):
                     print('6.inside supplier if',sup1)
                     if not numeric_values:
                         print('empty list')     
-                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_number")]
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_Notification")]
                         # return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_supplier_number")]
                     else:
                         print('Non empty list')
@@ -986,7 +1408,7 @@ class ActionCheckSlot(Action):
                         return [SlotSet("user_input_question_true", slotVal),SlotSet("supplier_with_number", i),FollowupAction("action_supplier_with_number_details")]
 
             elif slot_value1 == "inventory_details":
-                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_loc_for_inventory")]
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_inventory_Notification")]
             elif slot_value1 == "asking_help":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_details")]
             # elif slot_value1 == "price_details":
@@ -998,7 +1420,7 @@ class ActionCheckSlot(Action):
             elif slot_value1 == "price_details" and user_entered_value == "Get Specific Price":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_utter_display_prev_item")]
             elif slot_value1 == "price_details" or user_entered_value == "price details":
-                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_use_cases")]
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
             elif slot_value1 == "inventory_loc_type1":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_inventory_details_for_wh")]
             elif slot_value1 == "inventory_loc_type2":
@@ -1029,8 +1451,17 @@ class ActionCheckSlot(Action):
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("Action_new_features")]
             elif slot_value1 == "hello":
                 return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_session_started"),FollowupAction("utter_session_started")]
-            # elif slot_value1 == "nlu_fallback_math_operations":
-            #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_handle_numeric_values")]
+            elif slot_value1 == "item_details":  
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_Notification")]
+            elif slot_value1 == "multiple": 
+                # if item_price == "True":
+                    # return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
+                msg="It seems your query falls under multiple categories. Please rephrase your statement."
+                dispatcher.utter_message(text=msg)
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_details")]
+            elif slot_value1 == "item_price":
+                return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_price_Notification")]
+
             # elif slot_value1 == "supplier_details+user_entered_numeric_values":
             #     return [SlotSet("user_input_question_true", slotVal),FollowupAction("action_supplier_with_number_details")]
             
@@ -1104,6 +1535,8 @@ class ActionCheckSlot(Action):
                     elif fifth_prev_action_name == "action_all_item_prices":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
                     elif fifth_prev_action_name == "action_get_pricedetail":
+                        return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
+                    elif fifth_prev_action_name == "action_getPrice_at_All_Location":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
                     elif fifth_prev_action_name == "action_getPrice_at_All_Location":
                         return [SlotSet("user_input_question_true", slotVal),FollowupAction("utter_item_buttons_repeat")]
@@ -1255,10 +1688,9 @@ class ActionNewFeatures(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        # texts
+        
         dispatcher.utter_message(text="Hello 😀")  
 
-        # images
         dispatcher.utter_message(text="Here is something to cheer you up 😉", image="https://b.zmtcdn.com/data/pictures/1/17428541/da50010b1a953dfbb109306fba5a6c06.jpg") 
 
         return [FollowupAction("Action_new_features2")]
@@ -1386,35 +1818,29 @@ class ActionNewFeatures5(Action):
         dispatcher.utter_message(text="Check this PDF", attachment=data3)
 
         return [FollowupAction("utter_price_details")]
-
-# class ActionGoToBardForSynonyms(Action):
-#     def name(self) -> Text:
-#         return "action_synonym_from_bard"
-#     def run(
-#         self,
-#         dispatcher: CollectingDispatcher,
-#         tracker: Tracker,
-#         domain: Dict[Text, Any],
-#     ) -> List[Dict[Text, Any]]:
-#         # if res_domain == True:   
-#             # if result_after_matching == True:
-#         get_res_domain_slot=tracker.get_slot("res_domain")
-#         print("get_res_domain_slot to print from bard",get_res_domain_slot)
-#         user_input=tracker.latest_message.get("text")
-#         if get_res_domain_slot == True:
-#             user_input=tracker.latest_message.get("text")
-#             if user_input:
-#                 print("user_input ",user_input)
-#                 print("get_res_domain_slot ",get_res_domain_slot)
-#                 # if user_input=="Get Item Prices" or "Get Specific Price" or "Get Price at All Locs" or "get_item_prices" or "get_specific_price" or "get_item_all_locs":
-#                 user_input= "Definition of " +user_input+" in retail"
-#                 object=allFunc()
-#                 response = object.palmApi(user_input)
-#                 if response == None:
-#                     dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
-#                 else:
-#                     dispatcher.utter_message(response)
-#             return[FollowupAction("action_check_slot")]
+    
+  
+class ActionCheckForRetailDomain(Action):
+    def name(self) -> Text:
+        return "action_check_for_retial_domain"
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+ 
+            user_input=tracker.latest_message.get("text")
+            if user_input:
+                print("user_input ",user_input)
+                user_input= "Definition of " +user_input+" in retail"
+                object=allFunc()
+                response = object.palmApi(user_input)
+                if response == None:
+                    dispatcher.utter_message("Sorry, I couldn't generate a response for that input. Please try again with a different prompt.")
+                else:
+                    dispatcher.utter_message(response)
+            return[FollowupAction("action_check_slot")]
 
 
 # # download  chat as file
