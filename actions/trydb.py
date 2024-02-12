@@ -1636,7 +1636,6 @@ class allFunc:
     def Eng_to_user_language(self, response, lang, lang_name):
         if response is None:
             return None
-        
         # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
         print(f"response to Eng_to_user_language {response}")
         if lang is None:
@@ -1647,100 +1646,7 @@ class allFunc:
         print(f"returning the array - array type: {type(output)}")
         return output
     
-    # def Eng_to_user_language(self, response, lang):
-    #     dict_l = {'af': 'afrikaans', 'sq': 'albanian', 'am': 'amharic', 'ar': 'arabic', 'hy': 'armenian', 'az': 'azerbaijani', 'eu': 'basque', 'be': 'belarusian', 'bn': 'bengali', 'bs': 'bosnian', 'bg': 'bulgarian', 'ca': 'catalan', 'ceb': 'cebuano', 'ny': 'chichewa', 'zh-cn': 'chinese (simplified)', 'zh-tw': 'chinese (traditional)', 'co': 'corsican', 'hr': 'croatian', 'cs': 'czech', 'da': 'danish', 'nl': 'dutch', 'en': 'english', 'eo': 'esperanto', 'et': 'estonian', 'tl': 'filipino', 'fi': 'finnish', 'fr': 'french', 'fy': 'frisian', 'gl': 'galician', 'ka': 'georgian', 'de': 'german', 'el': 'greek', 'gu': 'gujarati', 'ht': 'haitian creole', 'ha': 'hausa', 'haw': 'hawaiian', 'iw': 'hebrew', 'he': 'hebrew', 'hi': 'hindi', 'hmn': 'hmong', 'hu': 'hungarian', 'is': 'icelandic', 'ig': 'igbo', 'id': 'indonesian', 'ga': 'irish', 'it': 'italian', 'ja': 'japanese', 'jw': 'javanese', 'kn': 'kannada', 'kk': 'kazakh', 'km': 'khmer', 'ko': 'korean', 'ku': 'kurdish (kurmanji)', 'ky': 'kyrgyz', 'lo': 'lao', 'la': 'latin', 'lv': 'latvian', 'lt': 'lithuanian', 'lb': 'luxembourgish', 'mk': 'macedonian', 'mg': 'malagasy', 'ms': 'malay', 'ml': 'malayalam', 'mt': 'maltese', 'mi': 'maori', 'mr': 'marathi', 'mn': 'mongolian', 'my': 'myanmar (burmese)', 'ne': 'nepali', 'no': 'norwegian', 'or': 'odia', 'ps': 'pashto', 'fa': 'persian', 'pl': 'polish', 'pt': 'portuguese', 'pa': 'punjabi', 'ro': 'romanian', 'ru': 'russian', 'sm': 'samoan', 'gd': 'scots gaelic', 'sr': 'serbian', 'st': 'sesotho', 'sn': 'shona', 'sd': 'sindhi', 'si': 'sinhala', 'sk': 'slovak', 'sl': 'slovenian', 'so': 'somali', 'es': 'spanish', 'su': 'sundanese', 'sw': 'swahili', 'sv': 'swedish', 'tg': 'tajik', 'ta': 'tamil', 'te': 'telugu', 'th': 'thai', 'tr': 'turkish', 'uk': 'ukrainian', 'ur': 'urdu', 'ug': 'uyghur', 'uz': 'uzbek', 'vi': 'vietnamese', 'cy': 'welsh', 'xh': 'xhosa', 'yi': 'yiddish', 'yo': 'yoruba', 'zu': 'zulu'}
-    #     key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(self.language)]
-    #     user_lang = key_of_lang
-    #     if response is None:
-    #         return None
-    #     # dict_l = googletrans.LANGUAGES
-    #     translator = Translator()
-    #     # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
-    #     print(f"response to Eng_to_user_language {response}")
-    #     if lang is None:
-    #         lang = 'en'
-    #     # Translating the text to English
-    #     # text = " Supplier Name: A REHMAN S. AL RASHID (YOUSAF)|RBFTCO-SAUDI "
-    #     user_input = f"{response}\n Translate into {user_lang} language and give a newline after every key and value. don't need extra definition "
-    #     object=allFunc()
-    #     response = object.palmApi(user_input)
-    #     print(f"palm translation after translating into user langugage {response}")
-    #     # main_out = translator.translate(response, dest=lang, src='en')
-    #     # text_val = main_out.text
-    #     text_val = response
-
-    #     return text_val
    
-    # def Eng_to_user_language(self, response, lang):
-    #     if response is None:
-    #         return None
-    #     # dict_l = googletrans.LANGUAGES
-    #     translator = Translator()
-    #     # key_of_lang=list(dict_l.keys())[list(dict_l.values()).index(language)]
-    #     print(f"response to Eng_to_user_language {response}")
-    #     if lang is None:
-    #         lang = 'en'
-    #     # Translating the text to English
-    #     main_out = translator.translate(response, dest=lang, src='en')
-    #     text_val = main_out.text
-
-    #     return text_val
-# #          # Create a translator object
-#  # Create a translator object
-#         translator = Translator()
-
-#         # Split the response into lines
-#         response_lines = response.split('\n')
-#         print("1")
-#         print(response_lines)
-
-#         # Translate and print each line
-#         translated_lines = []
-#         for line in response_lines:
-#             # Split each line into key and value
-#             key, value = line.split(': ', 1) if ': ' in line else (line, '')
-#             print("2")
-
-#             print(key)
-#             print("3")
-
-#             print(value)
-
-#             # Translate only the value part
-#             # translated_value = translator.translate(value, dest=lang, src='en').text
-#             translated_value = translator.translate(key, dest=lang, src='en').text
-
-#             print("4")
-
-#             print(translated_value)
-
-#             # Join the translated key and translated value
-#             translated_line = f"{translated_value}: {value}"
-#             translated_lines.append(translated_line)
-
-#         # Join the translated lines
-#         translated_response = '\n'.join(translated_lines)
-#         print("5")
-
-#         print(translated_response)
-
-#         return translated_response
-    
-        # translator = Translator()
-
-        # # Detect the language using langid
-        # lang, _ = langid.classify(user_input)
-
-        # # Translate the text to English
-        # translation = translator.translate(user_input, dest='en')
-
-        # # Get the full language name
-        # full_source_language_name = LANGUAGES.get(lang)
-
-        # print(f"Source Language: {full_source_language_name}")
-        # print(f"Translated Text: {translation.text}")
-
-        # return translation
 
     def check_plural(self,word):
         p = inflect.engine()
