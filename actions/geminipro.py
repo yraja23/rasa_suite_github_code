@@ -121,7 +121,7 @@ import datetime
 # AIzaSyBbc7JgiMLNOvTFLparUqH62TqPtkHpyvE - Meenatchi
 # AIzaSyBCNdp_YJZAljw80e8qL87fVqbux2eJWP8
 class Geminipro:
-  genai.configure(api_key="AIzaSyDunsMXggY0kt-UvXYf2XQywBMx-4purvg")
+  genai.configure(api_key="AIzaSyBCNdp_YJZAljw80e8qL87fVqbux2eJWP8")
 
   # Set up the model
   generation_config = {
@@ -223,8 +223,6 @@ class Geminipro:
   # print("output for supplier", stored_response)
 
   # ------------------------------------
-
-
   def send_message_and_get_response(self, user_input):
     try:
       # parsed_input = f"'{user_input}' - extract one main keyword from the text given"
@@ -286,6 +284,96 @@ class Geminipro:
 
       return retail_keywords
 
+  def translate_into_user_language_Gemini(self, user_input, language):
+      try:
+        # user_input= 'Supplier: 9006 Supplier Name: ARABIAN RADIO NETWORK LLC|MGTLLC-DUBAI Currency Code: AEDVAT Region: 1000 Freight terms: FOB'
+        # language = 'Thai'
+        parsed_input = f"Translate the {user_input} into {language} language and print in a new line"  # Replace this with your user input
+        self.convo.send_message(parsed_input)
+        model_response = self.convo.last.text
+        print(f"model_response - {model_response}")
+
+        # Storing the model's response in a variable
+        stored_response = model_response
+
+        # Printing or using the stored response
+        print(f"unformatted_output", stored_response)
+
+        # Split the response by the line break '\n'
+        lines = stored_response.split('\n')
+
+        # Initialize an empty dictionary to store the key-value pairs
+        parsed_output = {}
+        parsed_output_str = ""
+        # Iterate through each line
+        for line in lines:
+            # Split the line by the colon ':' to separate key and value
+            parts = line.split(':')
+            
+            # If there are exactly two parts (key and value), add them to the dictionary
+            if len(parts) == 2:
+                key = parts[0].strip()
+                value = parts[1].strip()
+                parsed_output_str += f"{key}: {value}<br>"  # Append HTML line break
+                
+                # parsed_output[key] = value
+                # return model_response
+                 # Print the parsed output string
+        print("Parsed Output String:")
+        print(parsed_output_str)
+        return parsed_output_str
+
+            # for key, value in parsed_output.items():
+            #     # print(f"{key}: {value}")
+            #     parsed_output_str += f"{key}: {value}\n"
+            #     print(f"parsed_output_str in gemini {parsed_output_str}")
+            # return parsed_output_str
+         
+      except Exception  as e:
+        print(f"Error: {e}")
+
+
+  def Eng_to_user_language1(self, response, lang_name):
+      if response is None:
+          return None
+
+      print(type(response))
+      print(lang_name)
+
+      translated_array=[] 
+      for key, value in response.items():
+        if isinstance(key, str):
+          key = key.lower()
+        if isinstance(value, str):
+          value = value.lower()
+
+        print(f"{key} {value} {type(value)}")
+
+        try:
+          key_output = f"translate {key} to {lang_name}" 
+          gemini_instance.convo.send_message(key_output)
+          key1=gemini_instance.convo.last.text
+          print(f"if:{key1}")
+
+          if isinstance(value, int) or isinstance(value, float):
+            trans_Str = f" {key1} : {value} "
+            translated_array.append(trans_Str)
+          else: #value is no null
+            val_output = f"translate {value} to {lang_name}" 
+            gemini_instance.convo.send_message(val_output)
+            val1 = gemini_instance.convo.last.text
+            if val1 is None:
+              trans_Str = f" {key1} : {value} "
+              translated_array.append(trans_Str)
+            else:
+              trans_Str = f" {key1} : {val1} "
+              translated_array.append(trans_Str)
+        except Exception as e:
+            print(f"exception: {e}")
+
+      print(f"transaled_array: {translated_array}")
+      return translated_array
+  
 gemini_instance = Geminipro()
 
 

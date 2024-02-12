@@ -11,7 +11,7 @@ import re
 from googletrans import Translator, LANGUAGES
 import langid
 import googletrans
-# from  geminipro import Eng_to_user_language_Gemini
+
 from .FileDownloader.ExcelFileDownloader import ExcelFileDownloader
 
 #spellchecker modules
@@ -1026,7 +1026,7 @@ class jsonConversion:
             currencyCode = api_response[0]['currencyCode']
             vatRegion = api_response[0]['vatRegion']
             freight_terms = api_response[0]['freightTerms']
-            supplier_details += f"Supplier: {supplier}<br>Supplier Name: {supName}<br> Currency Code: {currencyCode}<br>VAT Region: {vatRegion}<br> Freight terms: {freight_terms}"
+            supplier_details += f"Supplier: {supplier}<br>Supplier Name: {supName}<br>Currency Code: {currencyCode}<br>VAT Region: {vatRegion}<br>Freight terms: {freight_terms}"
 
             supplier_data = {
                 'Supplier': supplier,
@@ -1055,7 +1055,7 @@ class jsonConversion:
 
                 # Get the file URL for sending to the user
                 file_url = server_new_file_path
-                return supplier_details, file_url , supplier_data
+                return supplier_details, file_url
 # #server ends
 # #local starts
                 # # Create a DataFrame from the list of dictionaries
@@ -1185,7 +1185,7 @@ class allFunc:
 #      #new -ZAiGpSg0uIH2xwPGnYn2oL-rON6OjZ5urmtqeesnALQX6PYi6x1sWTp6iqNWO7ANGpQySA.
 #   #old - YwiGpT53EGvjiLA9g2QGpH0TUnQwqLCo110s3WYpPsXJVqKcGKvujc1VX5QJZayTIXAHqA.
     def palmApi(self, user_input: Text) -> Text:
-        API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText?key=AIzaSyDSWNlyibcYAk-ivUIrlDrzz3S4BJr236E"
+        API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText?key=a5fa60de44d3494f5ca55ef80d31c405a47aa17b"
         print(" ******************* ")
         print(f"{user_input}")
         headers = {
@@ -1215,8 +1215,8 @@ class allFunc:
 
     def checking_other_intents(self, keyword):
         # Specify the path to the NLU training data YAML file
-        nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
-        # nlu_file_path="/app/data/nlu.yml"
+        # nlu_file_path=r"C:\Users\yraja\LogicBot\local_test\data\nlu.yml"
+        nlu_file_path="/app/data/nlu.yml"
 
         # Load the NLU training data from the YAML file
         with open(nlu_file_path, "r") as file:
@@ -1604,23 +1604,21 @@ class allFunc:
     def langToEng(self, keyword, language):
         dict_l = {'af': 'afrikaans', 'sq': 'albanian', 'am': 'amharic', 'ar': 'arabic', 'hy': 'armenian', 'az': 'azerbaijani', 'eu': 'basque', 'be': 'belarusian', 'bn': 'bengali', 'bs': 'bosnian', 'bg': 'bulgarian', 'ca': 'catalan', 'ceb': 'cebuano', 'ny': 'chichewa', 'zh-cn': 'chinese (simplified)', 'zh-tw': 'chinese (traditional)', 'co': 'corsican', 'hr': 'croatian', 'cs': 'czech', 'da': 'danish', 'nl': 'dutch', 'en': 'english', 'eo': 'esperanto', 'et': 'estonian', 'tl': 'filipino', 'fi': 'finnish', 'fr': 'french', 'fy': 'frisian', 'gl': 'galician', 'ka': 'georgian', 'de': 'german', 'el': 'greek', 'gu': 'gujarati', 'ht': 'haitian creole', 'ha': 'hausa', 'haw': 'hawaiian', 'iw': 'hebrew', 'he': 'hebrew', 'hi': 'hindi', 'hmn': 'hmong', 'hu': 'hungarian', 'is': 'icelandic', 'ig': 'igbo', 'id': 'indonesian', 'ga': 'irish', 'it': 'italian', 'ja': 'japanese', 'jw': 'javanese', 'kn': 'kannada', 'kk': 'kazakh', 'km': 'khmer', 'ko': 'korean', 'ku': 'kurdish (kurmanji)', 'ky': 'kyrgyz', 'lo': 'lao', 'la': 'latin', 'lv': 'latvian', 'lt': 'lithuanian', 'lb': 'luxembourgish', 'mk': 'macedonian', 'mg': 'malagasy', 'ms': 'malay', 'ml': 'malayalam', 'mt': 'maltese', 'mi': 'maori', 'mr': 'marathi', 'mn': 'mongolian', 'my': 'myanmar (burmese)', 'ne': 'nepali', 'no': 'norwegian', 'or': 'odia', 'ps': 'pashto', 'fa': 'persian', 'pl': 'polish', 'pt': 'portuguese', 'pa': 'punjabi', 'ro': 'romanian', 'ru': 'russian', 'sm': 'samoan', 'gd': 'scots gaelic', 'sr': 'serbian', 'st': 'sesotho', 'sn': 'shona', 'sd': 'sindhi', 'si': 'sinhala', 'sk': 'slovak', 'sl': 'slovenian', 'so': 'somali', 'es': 'spanish', 'su': 'sundanese', 'sw': 'swahili', 'sv': 'swedish', 'tg': 'tajik', 'ta': 'tamil', 'te': 'telugu', 'th': 'thai', 'tr': 'turkish', 'uk': 'ukrainian', 'ur': 'urdu', 'ug': 'uyghur', 'uz': 'uzbek', 'vi': 'vietnamese', 'cy': 'welsh', 'xh': 'xhosa', 'yi': 'yiddish', 'yo': 'yoruba', 'zu': 'zulu'}
         translator = Translator()
-        print(f"language {language}")
+        print(f"language{language}")
         if language is None:
             language = 'english'          
 
         lang = language.lower()
-        print(f"language lower {lang}")
+        print(f"language lower {language}")
 
         key_of_lang = list(dict_l.keys())[list(dict_l.values()).index(lang)]
         print(f"dict_l.keys() {list(dict_l.keys())}")
         print(f"dict_l.values() {list(dict_l.values())}")
         print(f"list(dict_l.values()).index(lang) {list(dict_l.values()).index(lang)}")
-        print(f"key_of_lang {key_of_lang}")
 
-        main_out = translator.translate(keyword, dest='en', src=f'{key_of_lang}')
+        main_out = translator.translate(keyword, dest='en', src=key_of_lang)
         text_val = main_out.text
-        # user_lang = key_of_lang # enable if googletrans package
-        user_lang = lang # enable if makerusite call 
+        user_lang = key_of_lang
         allFunc.key_of_lang = user_lang
         print(f"Source language: {language}")
         print(f"English translation user_lang: {text_val}")
@@ -1653,32 +1651,10 @@ class allFunc:
         print(f"response to Eng_to_user_language {response}")
         if lang is None:
             lang = 'en'
-
-        # # Split the response into key-value pairs
-        # pairs = response.split('<br>')
-        
-        # translated_pairs = []
-        
-        # for pair in pairs:
-        #     # Split each pair into key and value
-        #     key, value = pair.split(': ')
-        #     # Translate the key and value separately
-        #     translated_key = translator.translate(key, dest=lang, src='en').text
-        #     translated_value = translator.translate(value, dest=lang, src='en').text
-        #     # Append the translated pair to the list
-        #     translated_pairs.append(f"{translated_key}: {translated_value}")
-        
-        # # Join the translated pairs into a single string
-        # translated_response = '<br>'.join(translated_pairs)
-        
-        # return translated_response
-    
-
         # Translating the text to English
         main_out = translator.translate(response, dest=lang, src='en')
-
         text_val = main_out.text
-        
+ 
         return text_val
    
     # def Eng_to_user_language(self, response, lang):
