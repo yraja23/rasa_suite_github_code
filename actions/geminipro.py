@@ -111,6 +111,7 @@ At the command line, only need to run once to install the package via pip:
 $ pip install google-generativeai
 """
 
+import re
 import google_auth_oauthlib
 from textblob import TextBlob
 import yaml
@@ -231,7 +232,16 @@ class Geminipro:
       self.convo.send_message(parsed_input)
       model_response = self.convo.last.text
       print(f"model_response - {model_response}")
-      return model_response
+
+      # Extract language name using regular expression
+      language_match = re.search(r'\b[A-Za-z]+\b', model_response)
+      if language_match:
+          language_name = language_match.group(0).capitalize()  # Capitalize the language name
+          print(f"parsed language name from GeminiPro {language_name}")
+          return language_name
+      else:
+          return "Language not detected"  # Return a default message if no language name is found
+      # return model_response
     
     except Exception  as e:
         print(f"Error: {e}")
@@ -276,7 +286,7 @@ class Geminipro:
       blob = TextBlob(sentence)
       for word, pos in blob.tags:
         print(f"{word}: {pos}")
-      retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ')]
+      retail_keywords = [word for word, pos in blob.tags if pos.startswith('NN') or pos.startswith('JJ') or  pos.startswith('RB')]
 
         # Filter out 'i' and words with less than 3 characters
       # retail_keywords = [word for word in retail_keywords if word.lower() != 'i' and len(word) > 2 ]
@@ -289,37 +299,41 @@ class Geminipro:
         # user_input= ' '
         # user_input= 'Supplier: 9006 Supplier Name: ARABIAN RADIO NETWORK LLC|MGTLLC-DUBAI Currency Code: AEDVAT Region: 1000 Freight terms: FOB'
         # language = 'Thai'
-        parsed_input = f"Translate the {user_input} into {language} language "  # Replace this with your user input
-        self.convo.send_message(parsed_input)
-        model_response = self.convo.last.text
-        print(f"model_response - {model_response}")
+        if language is not None:
+          parsed_input = f"Translate the {user_input} into {language} language "  # Replace this with your user input
+          self.convo.send_message(parsed_input)
+          model_response = self.convo.last.text
+          print(f"model_response - {model_response}")
 
-        # Storing the model's response in a variable
-        stored_response = model_response
+          # Storing the model's response in a variable
+          stored_response = model_response
 
-        # Printing or using the stored response
-        print(f"unformatted_output", stored_response)
+          # Printing or using the stored response
+          print(f"unformatted_output", stored_response)
 
-        # Split the response by the line break '\n'
-        lines = stored_response.split('<br>')
+          # Split the response by the line break '\n'
+          lines = stored_response.split('<br>')
 
-        # Initialize an empty dictionary to store the key-value pairs
-        parsed_output = {}
-        parsed_output_str = ""
+          # Initialize an empty dictionary to store the key-value pairs
+          parsed_output = {}
+          parsed_output_str = ""
 
-         # Iterate through each line
-        for line in lines:
-            # Remove leading and trailing whitespaces
-            line = line.strip()
-            
-            # Append the line to the formatted output string
-            parsed_output_str += f"{line}<br>"
+          # Iterate through each line
+          for line in lines:
+              # Remove leading and trailing whitespaces
+              line = line.strip()
+              
+              # Append the line to the formatted output string
+              parsed_output_str += f"{line}<br>"
 
-        # Print the parsed output string
-        print("Parsed Output String:")
-        print(parsed_output_str)
+          # Print the parsed output string
+          print("Parsed Output String:")
+          print(parsed_output_str)
 
-        return parsed_output_str
+          return parsed_output_str
+        else:
+           return None
+           
         # # Iterate through each line
         # for line in lines:
         #     # Split the line by the colon ':' to separate key and value

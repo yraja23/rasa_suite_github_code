@@ -127,17 +127,21 @@ class Itemdetails(Action):
             gemini_instance = Geminipro()
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang != 'english' and  allFunc.key_of_lang is not None:
+            if allFunc.key_of_lang is not None:
                 # response_user_lang = allFunc.Eng_to_user_language(self, get_price_detail, lang)
                 response_user_lang = gemini_instance.translate_into_user_language_Gemini(get_price_detail, lang)
-
-                if get_price_detail is None and response_user_lang is None:
+                print(f" inside if ")
+                print(f"language {lang} ----> response_user_lang {response_user_lang}")
+                if get_price_detail is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
+                elif response_user_lang is None:
+                    dispatcher.utter_message(text=get_price_detail)  
                 else:
                     dispatcher.utter_message(text=get_price_detail)
                     dispatcher.utter_message(text=response_user_lang)
 
-            elif allFunc.key_of_lang is None or lang == 'english' :
+            elif allFunc.key_of_lang is None:
+                print(f" inside elif ")
                 dispatcher.utter_message(text=get_price_detail)  
 
             allFunc.key_of_lang = None
@@ -795,12 +799,15 @@ class CheckKeywordAction(Action):
         user_input = f"Identify the language of the phrase '{keyword}'. Simply provide the language name."
         print(f"befor bard call user_input {user_input}")
         lang = gemini_instance.send_message_and_get_response(keyword) 
+
         # object=allFunc()
         # lang = object.palmApi(user_input)
         # print(f"palm taking retail keyword from user {lang}")
         print("Model's response:", lang)
-
         # Translate the user input to English
+        if lang == "Language not detected":
+            lang = 'english'
+                
         object=allFunc()
         translation,key_of_lang = object.langToEng(keyword, lang)
         print(f"translation {translation}")

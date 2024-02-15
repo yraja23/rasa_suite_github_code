@@ -1014,7 +1014,7 @@ class jsonConversion:
             'Authorization': 'Bearer ' + access_token
         }
         supplier_details =''
-        response = requests.get(API_ENDPOINT, headers=headers)
+        response = requests.post(API_ENDPOINT, headers=headers)
 
         # Check the response status code
         if response.status_code == 200:
@@ -1055,7 +1055,7 @@ class jsonConversion:
 
                 # Get the file URL for sending to the user
                 file_url = server_new_file_path
-                return supplier_details, file_url , supplier_data
+                return supplier_details, file_url 
 # #server ends
 # #local starts
                 # # Create a DataFrame from the list of dictionaries
