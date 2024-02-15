@@ -286,9 +286,10 @@ class Geminipro:
 
   def translate_into_user_language_Gemini(self, user_input, language):
       try:
+        # user_input= ' '
         # user_input= 'Supplier: 9006 Supplier Name: ARABIAN RADIO NETWORK LLC|MGTLLC-DUBAI Currency Code: AEDVAT Region: 1000 Freight terms: FOB'
         # language = 'Thai'
-        parsed_input = f"Translate the {user_input} into {language} language and print in a new line"  # Replace this with your user input
+        parsed_input = f"Translate the {user_input} into {language} language "  # Replace this with your user input
         self.convo.send_message(parsed_input)
         model_response = self.convo.last.text
         print(f"model_response - {model_response}")
@@ -300,28 +301,42 @@ class Geminipro:
         print(f"unformatted_output", stored_response)
 
         # Split the response by the line break '\n'
-        lines = stored_response.split('\n')
+        lines = stored_response.split('<br>')
 
         # Initialize an empty dictionary to store the key-value pairs
         parsed_output = {}
         parsed_output_str = ""
-        # Iterate through each line
+
+         # Iterate through each line
         for line in lines:
-            # Split the line by the colon ':' to separate key and value
-            parts = line.split(':')
+            # Remove leading and trailing whitespaces
+            line = line.strip()
             
-            # If there are exactly two parts (key and value), add them to the dictionary
-            if len(parts) == 2:
-                key = parts[0].strip()
-                value = parts[1].strip()
-                parsed_output_str += f"{key}: {value}<br>"  # Append HTML line break
-                
-                # parsed_output[key] = value
-                # return model_response
-                 # Print the parsed output string
+            # Append the line to the formatted output string
+            parsed_output_str += f"{line}<br>"
+
+        # Print the parsed output string
         print("Parsed Output String:")
         print(parsed_output_str)
+
         return parsed_output_str
+        # # Iterate through each line
+        # for line in lines:
+        #     # Split the line by the colon ':' to separate key and value
+        #     parts = line.split(':')
+            
+        #     # If there are exactly two parts (key and value), add them to the dictionary
+        #     if len(parts) == 2:
+        #         key = parts[0].strip()
+        #         value = parts[1].strip()
+        #         parsed_output_str += f"{key}: {value}<br>"  # Append HTML line break
+                
+        #         # parsed_output[key] = value
+        #         # return model_response
+        #          # Print the parsed output string
+        # print("Parsed Output String:")
+        # print(parsed_output_str)
+        # return parsed_output_str
 
             # for key, value in parsed_output.items():
             #     # print(f"{key}: {value}")

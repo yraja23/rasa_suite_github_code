@@ -79,17 +79,18 @@ class ItemDetailsOauthApi(Action):
             # else:
             #     dispatcher.utter_message(text=allItemPrices)
                 # allItemPrices = [allItemPrices]  
-
+            gemini_instance = Geminipro()
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang is not None and lang != 'en' :
-                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                # response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                response_user_lang = gemini_instance.translate_into_user_language_Gemini(allItemPrices, lang)
                 if allItemPrices is None and response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
                 else:
                     dispatcher.utter_message(text=allItemPrices)
                     dispatcher.utter_message(text=response_user_lang)
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 dispatcher.utter_message(text=allItemPrices)  
             # else:
             #     dispatcher.utter_message(text=allItemPrices)  
@@ -123,17 +124,20 @@ class Itemdetails(Action):
             #         message = ""
             #         for key, value in item_data.items():
             #             message += f"{key}: {value}\n"
-
+            gemini_instance = Geminipro()
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang != 'en' and lang is not None:
-                response_user_lang = allFunc.Eng_to_user_language(self, get_price_detail, lang)
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                # response_user_lang = allFunc.Eng_to_user_language(self, get_price_detail, lang)
+                response_user_lang = gemini_instance.translate_into_user_language_Gemini(get_price_detail, lang)
+
                 if get_price_detail is None and response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
                 else:
                     dispatcher.utter_message(text=get_price_detail)
                     dispatcher.utter_message(text=response_user_lang)
-            elif lang is None or lang == 'en' :
+
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 dispatcher.utter_message(text=get_price_detail)  
 
             allFunc.key_of_lang = None
@@ -180,17 +184,20 @@ class GetPriceatAllLocation(Action):
             #         message = ""
             #         for key, value in item_data.items():
             #             message += f"{key}: {value}\n"
+            gemini_instance = Geminipro()
 
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang is not None and lang != 'en' :
-                response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                # response_user_lang = allFunc.Eng_to_user_language(self, allItemPrices, lang)
+                response_user_lang = gemini_instance.translate_into_user_language_Gemini(allItemPrices, lang)
+
                 if allItemPrices is None and response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")            
                 else:
                     dispatcher.utter_message(text=allItemPrices)
                     dispatcher.utter_message(text=response_user_lang)
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 dispatcher.utter_message(text=allItemPrices)  
 
             allFunc.key_of_lang = None
@@ -291,9 +298,9 @@ class SupplierAction(Action):
         access_token = out.generate_token(filename)
         # print(access_token)
         if access_token:
-            supplier_details, file_url, supplier_data = out.supplier_details(supplier_no,access_token)
+            supplier_details, file_url = out.supplier_details(supplier_no,access_token)
             print(f"supplier_details",supplier_details)
-            print(f"supplier_data",supplier_data)
+            # print(f"supplier_data",supplier_data)
 
             # print(file_url)
             # if isinstance(supplier_details, list):
@@ -310,18 +317,18 @@ class SupplierAction(Action):
             lang = allFunc.key_of_lang
             print("Class variable:", lang)
 
-            if lang != 'english' :
+            if lang != 'english' and  allFunc.key_of_lang is not None:
                 # response_user_lang = allFunc.Eng_to_user_language(self, supplier_details, lang)
                 response_user_lang = gemini_instance.translate_into_user_language_Gemini(supplier_details, lang)
                 print(f"response_user_lang from actions {response_user_lang}")
-                if supplier_details is None and response_user_lang is None:
+                if supplier_details is None or response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned supplier or the supplier does not exist. You can try checking for different values.")
                     return [SlotSet('supplier_value',supplier_no),SlotSet('supplier_output',supplier_details),SlotSet('numeric_values',None)]  
                 else:
                     print("if-else lang")
                     dispatcher.utter_message(text=supplier_details)
                     dispatcher.utter_message(text=response_user_lang)
-            elif lang is None or lang == 'english' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 print("elif lang")
                 dispatcher.utter_message(text=supplier_details)
 
@@ -381,15 +388,16 @@ class InventoryAction(Action):
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
                     # dispatcher.utter_message(text=message)
-
+                        
+            gemini_instance = Geminipro()
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
-            if lang is not None and lang != 'en' :
-                translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
-
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                # translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+                translated_message = gemini_instance.translate_into_user_language_Gemini(inventoryDetails, lang)
                 dispatcher.utter_message(text=inventoryDetails)
                 dispatcher.utter_message(text=translated_message)
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 dispatcher.utter_message(text=inventoryDetails)
 
             allFunc.key_of_lang = None
@@ -460,15 +468,18 @@ class InventoryActionWH(Action):
                     for key, value in item_data.items():
                         message += f"{key}: {value}\n"
                     # dispatcher.utter_message(text=message)
+            gemini_instance = Geminipro()
 
             lang = allFunc.key_of_lang
             print("Class variable:", allFunc.key_of_lang)
 
-            if lang is not None and lang != 'en':
-                translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                # translated_message = allFunc.Eng_to_user_language(self, inventoryDetails, lang)
+                translated_message = gemini_instance.translate_into_user_language_Gemini(inventoryDetails, lang)
+
                 dispatcher.utter_message(text=inventoryDetails)
                 dispatcher.utter_message(text=translated_message)
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 dispatcher.utter_message(text=inventoryDetails)
 
             allFunc.key_of_lang = None
@@ -586,11 +597,12 @@ class OrderAction(Action):
             # if orderDetails is None:
             #     # print("inside none")
             #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
+            gemini_instance = Geminipro()
 
             lang = allFunc.key_of_lang
             print("Class variable:", lang)
-            if lang is not None and lang != 'en' :
-                response_user_lang = allFunc.Eng_to_user_language(self, orderDetails, lang)
+            if lang != 'english' and  allFunc.key_of_lang is not None:
+                response_user_lang = gemini_instance.translate_into_user_language_Gemini(orderDetails, lang)
                 if orderDetails is None and response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
                     return [SlotSet('order_value',order_no),SlotSet('order_output',orderDetails)] 
@@ -598,7 +610,7 @@ class OrderAction(Action):
                     # print(f"response_user_lang {response_user_lang}")
                     dispatcher.utter_message(text=orderDetails) 
                     dispatcher.utter_message(text=response_user_lang) 
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 print("elif lang")
                 dispatcher.utter_message(text=orderDetails)
             # else:
@@ -642,18 +654,21 @@ class ItemAction(Action):
             #     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
             #     return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]  
 #
+            gemini_instance = Geminipro()
             lang = allFunc.key_of_lang
             print("Class variable:", lang)
-            if lang is not None and lang != 'en' :
+            # if lang is not None and lang != 'en' :
+            if lang != 'english' and  allFunc.key_of_lang is not None:
                 response_user_lang = allFunc.Eng_to_user_language(self, itemDetails, lang)
+                # response_user_lang = gemini_instance.translate_into_user_language_Gemini(itemDetails, lang)
                 print(f"response_user_lang in item {response_user_lang}")
-                if itemDetails is None and response_user_lang is None:
+                if itemDetails is None or response_user_lang is None:
                     dispatcher.utter_message("Looks like there is no data present for the mentioned order or the order does not exist. You can try checking for different values.")
                     return [SlotSet('supplier_value',item_no),SlotSet('supplier_output',itemDetails),SlotSet('numeric_values',None)]    
                 else:
                     dispatcher.utter_message(text=itemDetails)
                     dispatcher.utter_message(text=response_user_lang)
-            elif lang is None or lang == 'en' :
+            elif allFunc.key_of_lang is None or lang == 'english' :
                 print(f" itemDetails {itemDetails}")
                 dispatcher.utter_message(text=itemDetails)  
 
